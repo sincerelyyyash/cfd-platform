@@ -4,17 +4,15 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/ioredis": "^5.0.0",
+    "@types/ws": "^8.18.1"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "@types/ioredis": "^5.0.0",
-    "@types/websocket": "^1.0.10",
-    "@types/ws": "^8.18.1",
     "ioredis": "^5.7.0",
-    "websocket": "^1.0.35",
     "ws": "^8.18.3"
   }
 }
