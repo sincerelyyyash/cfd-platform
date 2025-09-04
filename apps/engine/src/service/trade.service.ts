@@ -1,4 +1,4 @@
-import { OrderStore } from "../OrderStore";
+import { OrderStore } from "../Store/OrderStore.ts";
 
 type Orders = {
   id: string,
