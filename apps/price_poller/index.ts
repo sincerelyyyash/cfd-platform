@@ -1,10 +1,11 @@
 import WebSocket from "ws";
-import Redis from "ioredis";
-
-export const redisPublisher = new Redis("redis://localhost:6379");
+import { connectProducer, messageProducer } from "@repo/kafka-client/index";
 
 const ws = new WebSocket("wss://ws.backpack.exchange");
+connectProducer();
 
+
+const topic = "trade_stream";
 const latestPrices: Record<string, { price: number; decimal: number }> = {};
 
 ws.on("open", () => {
@@ -46,15 +47,16 @@ ws.on("message", (data: any) => {
 setInterval(() => {
   if (Object.keys(latestPrices).length === 0) return;
 
-  const data = {
-    price_updates: Object.entries(latestPrices).map(([asset, data]) => ({
-      asset,
-      price: data.price,
-      decimal: data.decimal,
-    })),
-  };
+  const snapshot = Object.entries(latestPrices).map(([asset, data]) => ({
+    asset,
+    price: data.price,
+    decimal: data.decimal,
+  }));
 
-  redisPublisher.publish("prices_data", JSON.stringify(data));
+  messageProducer(topic, {
+    key: "asset_prices",
+    value: JSON.stringify({ price_updates: snapshot }),
+  });
 }, 100);
 
 ws.on("close", () => {
