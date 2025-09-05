@@ -1,8 +1,10 @@
 {
   "name": "@repo/kafka-client",
-  "module": "index.ts",
   "exports": {
-    ".": "./src"
+    "./index": "./src/index.ts",
+    "./response": "./src/utils/response.ts",
+    "./request": "./src/utils/request.ts",
+    "./kafkaManager": "./src/kafkaManager.ts"
   },
   "type": "module",
   "private": true,

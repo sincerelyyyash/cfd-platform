@@ -1,11 +1,5 @@
 import { Kafka, type Message, type Admin, type AdminConfig, type EachMessagePayload, type Producer, type KafkaConfig, type ConsumerConfig } from 'kafkajs';
 
-// const kafka = new Kafka({
-//   clientId: 'trade_engine',
-//   brokers: ['localhost:9092'],
-// });
-
-
 
 export class KafkaManager {
   private static instance: KafkaManager;
@@ -47,6 +41,16 @@ export class KafkaManager {
       console.log('Kafka admin disconnected.');
     } catch (error) {
       console.error('Failed to disconnect Kafka admin:', error);
+    }
+  }
+
+  async topicExists(topic: string): Promise<boolean> {
+    try {
+      const topics = await this.admin.listTopics();
+      return topics.includes(topic);
+    } catch (error) {
+      console.error("Failed to check if topic exists:", error);
+      return false;
     }
   }
 

@@ -5,52 +5,57 @@ const kafkaConfig: KafkaConfig = { clientId: 'trade_engine', brokers: ['localhos
 
 const kafkaManager = KafkaManager.getInstance(kafkaConfig);
 
+export const connectProducer = async () => {
+  try {
+    console.log("Connecting producer...");
+    await kafkaManager.connectProducer();
+    console.log("Producer connected successfully.");
+  } catch (error) {
+    console.error('Failed to connect Kafka producer:', error);
+  }
+}
 
-// const initKafka = async () => {
-//
-//   await kafkaManager.connectAdmin();
-//   await kafkaManager.createTopics([{ topic: 'your-topic-name', numPartitions: 2, replicationFactor: 1 }]);
-//   await kafkaManager.connectProducer();
-//
-//   // await kafkaManager.deleteTopics(['user-service']);
-//   // await kafkaManager.disconnectAdmin();
-//
-//   const eachMessageHandler = async (payload: EachMessagePayload) => {
-//     const { topic, partition, message } = payload;
-//     console.log({
-//       topic,
-//       partition,
-//       key: message.key?.toString(),
-//       value: message.value?.toString(),
-//     });
-//   };
-//
-//   await kafkaManager.initializeConsumer('your-topic-name', 'group-Id', eachMessageHandler);
-//   await kafkaManager.disconnectConsumer('topic');
-// };
-//
+export const messageProducer = async (topic: string, data: any) => {
+  try {
+    const exists = await kafkaManager.topicExists(topic);
+    if (!exists) {
+      await kafkaManager.createTopics([{ topic, numPartitions: 1, replicationFactor: 1 }]);
+    }
 
-
-export const produceMessage = async (topic: string, data: any) => {
-  await kafkaManager.connectProducer();
-  await kafkaManager.initializeProducer(topic, data);
-  await kafkaManager.disconnectProducer();
+    await kafkaManager.initializeProducer(topic, data);
+  } catch (err) {
+    console.error("Failed to initialize Kafka producer: " + err);
+  }
 };
 
 
-export const consumeMessages = async (actionFn: any, topic: string, groupId: string) => {
-  const eachMessageHandler = async (payload: EachMessagePayload) => {
-    const { topic, partition, message } = payload;
-
-    actionFn(topic, partition, message);
-
-  };
-  await kafkaManager.initializeConsumer(topic, groupId, eachMessageHandler);
+export const disconnectProducer = async () => {
+  try {
+    console.log("Disconnecting producer...")
+    await kafkaManager.disconnectProducer();
+  } catch (err) {
+    console.error("Failed to disconnect kafka producer: " + err);
+  }
 }
 
+
+export const consumeMessages = async (
+  topic: string,
+  groupId: string,
+  actionFn: (payload: EachMessagePayload) => Promise<void>
+) => {
+  const exists = await kafkaManager.topicExists(topic);
+  if (!exists) {
+    await kafkaManager.createTopics([{ topic, numPartitions: 1, replicationFactor: 1 }]);
+  }
+
+  await kafkaManager.initializeConsumer(topic, groupId, actionFn);
+};
 
 export const disconnectKafka = async (topic: string) => {
   await kafkaManager.disconnectAdmin();
   await kafkaManager.disconnectProducer();
   await kafkaManager.disconnectConsumer(topic);
 }
+
+export { type EachMessagePayload }
