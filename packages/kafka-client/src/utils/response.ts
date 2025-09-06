@@ -1,4 +1,4 @@
-type ResponseTypes = {
+export type ResponseTypes = {
   statusCode: number,
   data?: any,
   message: string,
