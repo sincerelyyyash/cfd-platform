@@ -9,8 +9,8 @@ type User = {
 export class UserStore {
   private static instance: UserStore;
   private users = new Map<string, User>();
-  private SCALE_BALANCE = 100;      // 2 decimals
-  public SCALE_PRICE = 10_000;     // 4 decimals
+  private BALANCE_DECIMAL = 100;      // 2 decimals
+  public PRICE_DECIMAL = 10_000;     // 4 decimals
 
 
   private constructor() { };
@@ -22,7 +22,7 @@ export class UserStore {
     return this.instance;
   }
   addUser(userData: any) {
-    this.users.set(userData.id, { ...userData, balance: 5000 * this.SCALE_BALANCE });
+    this.users.set(userData.id, { ...userData, balance: 5000 * this.BALANCE_DECIMAL });
     return this.users.get(userData.id)
   }
 
@@ -37,16 +37,16 @@ export class UserStore {
     return Object.values(this.users).find(u => u.email === email);
   }
 
-  updateBalance(userId: string, delta: number) {
+  updateBalance(userId: string,) {
     const user = this.getUserById(userId);
     if (!user) throw new Error("User not found");
-    user.balance += Math.round(delta * this.SCALE_BALANCE);
+    user.balance += Math.round(this.BALANCE_DECIMAL);
   }
 
   getBalance(userId: string) {
     const user = this.getUserById(userId);
     if (!user) throw new Error("User not found");
-    return user.balance / this.SCALE_BALANCE;
+    return user.balance;
   }
 
 }

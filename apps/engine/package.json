@@ -5,12 +5,13 @@
   "private": true,
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/ioredis": "^5.0.0"
+    "@types/kafkajs": "^1.9.0"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "ioredis": "^5.7.0"
+    "kafkajs": "^2.2.4",
+    "@repo/kafka-client": "*"
   }
 }
