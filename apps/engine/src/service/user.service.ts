@@ -11,7 +11,7 @@ export const createUser = async (data: any) => {
 
   const existingUser = userStore.getUserById(id);
   if (existingUser) {
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 400,
       message: "User already exists",
       success: false,
@@ -20,14 +20,14 @@ export const createUser = async (data: any) => {
 
   try {
     const user = userStore.addUser(data);
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 200,
       message: "User created successfully",
       success: true,
       data: user,
     }))
   } catch (err) {
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 500,
       message: "Failed to create User.",
       success: false,
@@ -42,7 +42,7 @@ export const getUserById = async (data: any) => {
   try {
     const user = userStore.getUserById(userId);
     if (!user) {
-      return responseProducer(new Response(
+      return responseProducer(data.id, new Response(
         {
           statusCode: 404,
           success: false,
@@ -51,7 +51,7 @@ export const getUserById = async (data: any) => {
       ));
     }
 
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 200,
       success: true,
       message: "User fetched successfully.",
@@ -60,7 +60,7 @@ export const getUserById = async (data: any) => {
 
   } catch (err) {
 
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 500,
       success: false,
       message: "failed to fetch user.",
@@ -75,7 +75,7 @@ export const getUserByEmail = async (data: any) => {
   try {
     const user = userStore.getUserByEmail(email);
     if (!user) {
-      return responseProducer(new Response(
+      return responseProducer(data.id, new Response(
         {
           statusCode: 404,
           success: false,
@@ -84,7 +84,7 @@ export const getUserByEmail = async (data: any) => {
       ));
     }
 
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 200,
       success: true,
       message: "User fetched successfully.",
@@ -93,7 +93,7 @@ export const getUserByEmail = async (data: any) => {
 
   } catch (err) {
 
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 500,
       success: false,
       message: "failed to fetch user.",
@@ -109,7 +109,7 @@ export const getUserBalance = async (data: any) => {
     const user = userStore.getUserById(userId);
 
     if (!user) {
-      return responseProducer(new Response({
+      return responseProducer(data.id, new Response({
         statusCode: 404,
         success: false,
         message: "User not found",
@@ -117,14 +117,14 @@ export const getUserBalance = async (data: any) => {
     }
 
     const balance = user?.balance;
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 200,
       success: true,
       message: "Balance fetched successfully",
       data: balance
     }))
   } catch (err) {
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 500,
       success: false,
       message: "Failed to get balance.",
@@ -138,7 +138,7 @@ export const getAllOpenOrders = async (data: any) => {
   try {
     const user = userStore.getUserById(userId);
     if (!user) {
-      return responseProducer(new Response({
+      return responseProducer(data.id, new Response({
         statusCode: 404,
         success: false,
         message: "User not found"
@@ -147,14 +147,14 @@ export const getAllOpenOrders = async (data: any) => {
 
     const allOpenOrders = orderStore.getOpenOrders(userId);
     if (allOpenOrders.length < 1 || !allOpenOrders) {
-      return responseProducer(new Response({
+      return responseProducer(data.id, new Response({
         statusCode: 400,
         success: false,
         message: "No open orders found."
       }))
     }
 
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 200,
       success: true,
       message: "Open orders fetched successfully.",
@@ -162,7 +162,7 @@ export const getAllOpenOrders = async (data: any) => {
     }))
 
   } catch (err) {
-    return responseProducer(new Response({
+    return responseProducer(data.id, new Response({
       statusCode: 500,
       success: false,
       message: "Could not get orders",

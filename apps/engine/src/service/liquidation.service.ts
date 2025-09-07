@@ -9,7 +9,7 @@ import { Response } from "@repo/kafka-client/response";
 const userStore = UserStore.getInstance();
 const orderStore = OrderStore.getInstance();
 
-export const liquidation = async () => {
+export const liquidationService = async () => {
   const openOrders = orderStore.getAllOpenOrders();
   if (openOrders.length < 1) return;
   try {
@@ -40,7 +40,7 @@ export const liquidation = async () => {
           }
 
           const closedOrder = orderStore.getOrderById(order.id)
-          responseProducer(new Response({
+          responseProducer(order.id, new Response({
             statusCode: 200,
             message: `Order: ${order.id} hit stoploss.`,
             success: true,
@@ -65,7 +65,7 @@ export const liquidation = async () => {
           }
 
           const closedOrder = orderStore.getOrderById(order.id)
-          responseProducer(new Response({
+          responseProducer(order.id, new Response({
             statusCode: 200,
             message: `Order: ${order.id} hit target take-profit.`,
             success: true,
@@ -86,7 +86,7 @@ export const liquidation = async () => {
         }
 
         const closedOrder = orderStore.getOrderById(order.id)
-        responseProducer(new Response({
+        responseProducer(order.id, new Response({
           statusCode: 200,
           message: `Order: ${order.id} liquidated due to margin call.`,
           success: true,
@@ -97,7 +97,7 @@ export const liquidation = async () => {
       }
     }
   } catch (err) {
-    return responseProducer(new Response({
+    return responseProducer("liquidation_fail", new Response({
       statusCode: 500,
       message: "Engine liquidation service failed.",
       success: false,

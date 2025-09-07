@@ -6,9 +6,9 @@ connectProducer();
 const topic = "engine_stream";
 
 
-export const responseProducer = async (response: ResponseTypes) => {
+export const responseProducer = async (key: string, response: ResponseTypes) => {
   messageProducer(topic, {
-    key: "engine_responses",
+    key: key,
     value: JSON.stringify({ engine_responses: response }),
   });
 }
