@@ -4,6 +4,7 @@ export const tradeOpenSchema = z.object({
   type: z.enum(["long", "short"]),
   status: z.enum(["open", "closed", "pending"]),
   asset: z.string(),
+  quantity: z.number(),
   entryPrice: z.number(),
   leverage: z.number().optional(),
   margin: z.number().optional(),
