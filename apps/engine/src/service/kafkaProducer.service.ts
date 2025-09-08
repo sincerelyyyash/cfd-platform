@@ -27,7 +27,7 @@ export const requestProducer = async (key: string, request: RequestTypes) => {
 
   messageProducer(topic,
     String(key),
-    JSON.stringify({ server_requests: payload }),
+    JSON.stringify({ db_requests: payload }),
   );
 }
 
