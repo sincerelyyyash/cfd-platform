@@ -5,6 +5,18 @@ import { updatePrice } from "../Store/PriceStore";
 
 const topic = "trade_stream";
 const groupId = "trade_stream_consumer";
+export let offset: string = "";
+
+export const startEngineKafkaConsumer = () => {
+
+  try {
+    consumeMessages(topic, groupId, eachMessageHandler);
+  } catch (err) {
+    console.error("Failed to start engine consumer : " + err);
+  }
+
+};
+
 
 const requestHandlers: Record<string, (key: string, data: any) => Promise<any> | any> = {
   "trade-open": createTrade,
@@ -36,6 +48,7 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
     return;
   }
 
+  offset = message.offset;
   if (Array.isArray(value.price_updates)) {
     value.price_updates.forEach((update: { asset: string; price: number; decimal: number }) => {
       updatePrice(update.asset, update.price, update.decimal, Number(message.timestamp), message.offset);

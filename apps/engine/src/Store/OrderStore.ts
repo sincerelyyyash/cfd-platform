@@ -68,5 +68,12 @@ export class OrderStore {
     const order = this.orders.get(orderId);
     return order
   }
+
+  addOrdersFromScreenshot(data: [string, Orders][]) {
+    for (const [key, value] of data) {
+      this.orders.set(key, value);
+    }
+  }
+
 }
 

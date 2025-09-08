@@ -49,4 +49,14 @@ export class UserStore {
     return user.balance;
   }
 
+  getAllUsers() {
+    return this.users.values();
+  }
+
+  addUsersFromScreenshot(data: [string, User][]) {
+    for (const [key, value] of data) {
+      this.users.set(key, value);
+    }
+  }
+
 }
