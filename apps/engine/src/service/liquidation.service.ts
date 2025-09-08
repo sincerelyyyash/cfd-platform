@@ -2,8 +2,9 @@ import { getPrice } from "../Store/PriceStore.ts";
 import { OrderStore } from "../Store/OrderStore";
 import { UserStore } from "../Store/UserStore";
 import { calculatePnL } from "./trade.service";
-import { responseProducer } from "./kafkaProducer.service";
+import { requestProducer, responseProducer } from "./kafkaProducer.service";
 import { Response } from "@repo/kafka-client/response";
+import { KafkaRequest } from "@repo/kafka-client/request";
 
 
 const userStore = UserStore.getInstance();
@@ -47,6 +48,21 @@ export const liquidationService = async () => {
             data: closedOrder
           }))
 
+          requestProducer("db", new KafkaRequest({
+            service: "db",
+            action: "user-balance-update",
+            data: { userid: user?.id, balance: user?.balance },
+            message: "Store updated user balance in database."
+          }))
+
+          requestProducer("db", new KafkaRequest({
+            service: "db",
+            action: "store-close-order",
+            data: closedOrder,
+            message: "Stop Loss: Store closed order in database."
+          }))
+          orderStore.deleteOrderFromMemory(order.id);
+
           console.log(`Order ${order.id} stopped out at price ${currentPrice}`);
           continue;
         }
@@ -72,6 +88,22 @@ export const liquidationService = async () => {
             data: closedOrder
           }))
 
+          requestProducer("db", new KafkaRequest({
+            service: "db",
+            action: "user-balance-update",
+            data: user?.balance,
+            message: "Store updated user balance in database."
+          }))
+
+
+          requestProducer("db", new KafkaRequest({
+            service: "db",
+            action: "store-close-order",
+            data: closedOrder,
+            message: "Take Profit: Store closed order in database."
+          }))
+          orderStore.deleteOrderFromMemory(order.id);
+
           console.log(`Order ${order.id} take-profit hit at price ${currentPrice}`);
           continue;
         }
@@ -92,6 +124,21 @@ export const liquidationService = async () => {
           success: true,
           data: closedOrder
         }))
+
+        requestProducer("db", new KafkaRequest({
+          service: "db",
+          action: "user-balance-update",
+          data: user?.balance,
+          message: "Store updated user balance in database."
+        }))
+
+        requestProducer("db", new KafkaRequest({
+          service: "db",
+          action: "store-close-order",
+          data: closedOrder,
+          message: "liquidated due margin call: Store closed order in database."
+        }))
+        orderStore.deleteOrderFromMemory(order.id);
 
         console.log(`Order ${order.id} liquidated at price ${currentPrice}`);
       }

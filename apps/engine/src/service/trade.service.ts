@@ -2,7 +2,8 @@ import { OrderStore, statusType, type Orders } from "../Store/OrderStore.ts";
 import { UserStore } from "../Store/UserStore.ts";
 import { Response } from "@repo/kafka-client/response";
 import { getPrice } from "../Store/PriceStore.ts";
-import { responseProducer } from "./kafkaProducer.service.ts";
+import { requestProducer, responseProducer } from "./kafkaProducer.service.ts";
+import { KafkaRequest } from "@repo/kafka-client/request";
 
 const BALANCE_DECIMAL = 100;      // 2 decimals
 const PRICE_DECIMAL = 10_000;     // 4 decimals
@@ -175,13 +176,29 @@ export const closeTrade = async (key: string, data: any) => {
   order.exitPrice = currentPrice;
   order.pnL = pnL;
   order.liquidated = false;
-
-  return responseProducer(key, new Response({
+  const closedOrder = orderStore.getOrderById(order.id);
+  responseProducer(key, new Response({
     statusCode: 200,
     success: true,
     message: "Order closed successfully",
-    data: order,
+    data: closedOrder,
   }));
+
+  requestProducer("db", new KafkaRequest({
+    service: "db",
+    action: "user-balance-update",
+    data: { userid: user?.id, balance: user?.balance },
+    message: "Store updated user balance in database."
+  }))
+
+  requestProducer("db", new KafkaRequest({
+    service: "db",
+    action: "store-close-order",
+    data: closedOrder,
+    message: "Store closed order in database."
+  }))
+  orderStore.deleteOrderFromMemory(order.id);
+  return;
 };
 
 const getOpenOrderById = async (key: string, data: any) => {

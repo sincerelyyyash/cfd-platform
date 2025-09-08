@@ -1,6 +1,7 @@
+import { KafkaRequest } from "@repo/kafka-client/request";
 import { OrderStore } from "../Store/OrderStore";
 import { UserStore } from "../Store/UserStore";
-import { responseProducer } from "./kafkaProducer.service";
+import { requestProducer, responseProducer } from "./kafkaProducer.service";
 import { Response } from "@repo/kafka-client/response";
 
 const userStore = UserStore.getInstance();
@@ -20,12 +21,20 @@ export const createUser = async (key: string, data: any) => {
 
   try {
     const user = userStore.addUser(data);
-    return responseProducer(key, new Response({
+    responseProducer(key, new Response({
       statusCode: 200,
       message: "User created successfully",
       success: true,
       data: user,
     }))
+
+    requestProducer("db", new KafkaRequest({
+      service: "db",
+      action: "store-new-user",
+      data: user,
+      message: "Store new user in database."
+    }))
+    return;
   } catch (err) {
     return responseProducer(key, new Response({
       statusCode: 500,

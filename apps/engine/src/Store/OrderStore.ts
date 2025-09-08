@@ -77,5 +77,8 @@ export class OrderStore {
     }
   }
 
+  deleteOrderFromMemory(orderId: string) {
+    this.orders.delete(orderId);
+  }
 }
 
