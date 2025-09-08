@@ -43,8 +43,9 @@ export const tradeOpen = async (req: Request, res: Response) => {
     slippage: data?.slippage,
   }
   try {
+    const req_id = uuidv4()
     const response = await sendRequestAndWait(
-      trade.id, new KafkaRequest({
+      req_id, new KafkaRequest({
         service: "trade",
         action: "trade-open",
         data: trade,
@@ -81,7 +82,8 @@ export const tradeClose = async (req: Request, res: Response) => {
   }
 
   try {
-    await requestProducer(trade.orderId, new KafkaRequest({
+    const req_id = uuidv4()
+    await requestProducer(req_id, new KafkaRequest({
       service: "trade",
       action: "trade-close",
       data: trade,

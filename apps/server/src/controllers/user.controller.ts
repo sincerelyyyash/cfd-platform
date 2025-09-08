@@ -50,7 +50,9 @@ export const signInUser = async (req: Request, res: Response) => {
   try {
     const { id, email } = jwt.verify(token, EMAIL_TOKEN_SECRET) as JwtPayload;
 
-    await requestProducer(id, new KafkaRequest({
+    const req_id = uuidv4()
+
+    await requestProducer(req_id, new KafkaRequest({
       service: "user",
       action: "create-user",
       data: { id, email },
