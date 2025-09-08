@@ -83,12 +83,17 @@ export const tradeClose = async (req: Request, res: Response) => {
 
   try {
     const req_id = uuidv4()
-    await requestProducer(req_id, new KafkaRequest({
-      service: "trade",
-      action: "trade-close",
-      data: trade,
-      message: "Close trade order."
-    }))
+    const response = await sendRequestAndWait(
+      req_id, new KafkaRequest({
+        service: "trade",
+        action: "trade-close",
+        data: trade,
+        message: "Close trade order."
+
+      })
+    )
+    return res.json({ response });
+
   } catch (err) {
     return res.status(500).json({
       message: "Internal server errror",
