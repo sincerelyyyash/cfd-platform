@@ -8,11 +8,11 @@ import { waitForResponse } from "../utils/consumer";
 
 export const sendRequestAndWait = async (id: string, request: any, timeout = 10000) => {
   await new Promise((resolve) => setImmediate(resolve));
-  console.log("promise set")
+
   const responsePromise = waitForResponse(id, timeout);
-  console.log("wait for response called")
+
   await requestProducer(id, request);
-  console.log("request producer called")
+
   return responsePromise;
 };
 
