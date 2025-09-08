@@ -7,9 +7,14 @@ const topic = "engine_stream";
 
 
 export const responseProducer = async (key: string, response: ResponseTypes) => {
+  const payload =
+    typeof (response as any).toJSON === "function"
+      ? (response as any).toJSON()
+      : response;
+
   messageProducer(topic, {
-    key: key,
-    value: JSON.stringify({ engine_responses: response }),
+    key: String(key),
+    value: JSON.stringify({ engine_responses: payload }),
   });
 }
 

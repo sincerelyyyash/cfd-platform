@@ -1,7 +1,7 @@
 import { OrderStore, statusType, type Orders } from "../Store/OrderStore.ts";
 import { UserStore } from "../Store/UserStore.ts";
 import { Response } from "@repo/kafka-client/response";
-import { prices } from "./kafkaConsumer.service.ts";
+import { getPrice } from "../Store/PriceStore.ts";
 import { responseProducer } from "./kafkaProducer.service.ts";
 
 const BALANCE_DECIMAL = 100;      // 2 decimals
@@ -58,7 +58,7 @@ export const createTrade = async (data: any) => {
   }
 
 
-  const latest = prices.get(asset);
+  const latest = getPrice(asset);
   if (!latest) {
     return responseProducer(data.id, new Response({
       statusCode: 400,
@@ -130,7 +130,7 @@ export const createTrade = async (data: any) => {
 };
 
 
-export const closeOrder = async (data: any) => {
+export const closeTrade = async (data: any) => {
   const { orderId } = data;
 
   const order = orderStore.getOrderById(orderId);
@@ -150,8 +150,7 @@ export const closeOrder = async (data: any) => {
     }));
   }
 
-
-  const latest = prices.get(order.asset);
+  const latest = getPrice(order.asset);
   if (!latest) {
     return responseProducer(data.id, new Response({
       statusCode: 400,

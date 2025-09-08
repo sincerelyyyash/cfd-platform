@@ -14,10 +14,14 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const decoded = jwt.verify(token, SESSION_SECRET) as JwtPayload;
-    (req as any).user = decoded;
+
+    (req as any).user = {
+      id: decoded.id,
+      email: decoded.email,
+    };
 
     next();
-  } catch (err) {
+  } catch {
     return res.status(403).json({ message: "Invalid or expired token" });
   }
 };

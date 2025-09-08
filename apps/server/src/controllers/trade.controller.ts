@@ -1,8 +1,21 @@
 import type { Request, Response } from "express";
 import { tradeOpenSchema, tradeCloseSchema } from "../types/trade.types";
-import { uuidv4 } from "zod";
+import { v4 as uuidv4 } from "uuid";
 import { KafkaRequest } from "@repo/kafka-client/request";
 import { requestProducer } from "../utils/producer";
+import { waitForResponse } from "../utils/consumer";
+
+
+export const sendRequestAndWait = async (id: string, request: any, timeout = 10000) => {
+  await new Promise((resolve) => setImmediate(resolve));
+  console.log("promise set")
+  const responsePromise = waitForResponse(id, timeout);
+  console.log("wait for response called")
+  await requestProducer(id, request);
+  console.log("request producer called")
+  return responsePromise;
+};
+
 
 export const tradeOpen = async (req: Request, res: Response) => {
   const parsed = tradeOpenSchema.safeParse(req.body);
@@ -12,11 +25,11 @@ export const tradeOpen = async (req: Request, res: Response) => {
       message: "Invalid inputs, please try again."
     })
   }
-  const userId = (req as any).user.userId;
+  const userId = (req as any).user.id;
   const data = parsed.data;
   const trade = {
     actionType: "open-order",
-    id: uuidv4().toString(),
+    id: uuidv4(),
     userId: userId,
     type: data.type,
     status: data.status,
@@ -30,12 +43,16 @@ export const tradeOpen = async (req: Request, res: Response) => {
     slippage: data?.slippage,
   }
   try {
-    await requestProducer(JSON.stringify(trade.id), new KafkaRequest({
-      service: "trade",
-      action: "trade-open",
-      data: trade,
-      message: "Open trade order."
-    }))
+    const response = await sendRequestAndWait(
+      trade.id, new KafkaRequest({
+        service: "trade",
+        action: "trade-open",
+        data: trade,
+        message: "Open trade order."
+      }))
+
+    return res.json({ response });
+
   } catch (err) {
     return res.status(500).json({
       message: "Failed to process your trade.",

@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./src/routes/user.routes.ts"
 import tradeRouter from "./src/routes/trade.routes.ts"
 import assetRouter from "./src/routes/asset.routes.ts"
-
+import { startConsumer } from "./src/utils/consumer.ts";
 
 const PORT = process.env.PORT ?? 8000;
 
@@ -12,6 +12,8 @@ const PORT = process.env.PORT ?? 8000;
 const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+startConsumer();
 
 app.use("/api/v1", userRouter);
 app.use("/api/v1", tradeRouter);

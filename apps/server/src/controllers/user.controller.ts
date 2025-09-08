@@ -1,6 +1,10 @@
 import type { Request, Response } from "express";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import { UserAuthSchema } from "../types/auth.types";
+import { v4 as uuidv4 } from "uuid";
+import { requestProducer } from "../utils/producer";
+import { KafkaRequest } from "@repo/kafka-client/request";
+import { sendLoginMail } from "../utils/mail";
 
 const EMAIL_TOKEN_SECRET = process.env.EMAIL_TOKEN_SECRET ?? "email_secret";
 const SESSION_SECRET = process.env.SESSION_SECRET ?? "session_secret";
@@ -14,20 +18,24 @@ export const signUpUser = async (req: Request, res: Response) => {
   }
 
   const email = parsed.data.email;
-  const loginToken = jwt.sign({ email }, EMAIL_TOKEN_SECRET, {
+  const id = uuidv4();
+  const loginToken = jwt.sign({ id, email }, EMAIL_TOKEN_SECRET, {
     expiresIn: "10m",
   });
 
   try {
     if (process.env.NODE_ENV === "production") {
+
+      sendLoginMail(email, loginToken);
       return res.json({ message: "Login email sent" });
+
     } else {
-      console.log(
-        `${APP_BASE_URL}/signin/verify?token=${loginToken}`
-      );
+
+      console.log(`${APP_BASE_URL}/signin/verify?token=${loginToken}`);
       return res.json({ message: "Login link logged to console" });
+
     }
-  } catch (err) {
+  } catch {
     return res.status(400).json({ message: "Failed to send email" });
   }
 };
@@ -40,14 +48,18 @@ export const signInUser = async (req: Request, res: Response) => {
   }
 
   try {
-    const { email } = jwt.verify(token, EMAIL_TOKEN_SECRET) as JwtPayload;
-    const userId = email;
+    const { id, email } = jwt.verify(token, EMAIL_TOKEN_SECRET) as JwtPayload;
 
-    const sessionToken = jwt.sign(
-      { email, userId },
-      SESSION_SECRET,
-      { expiresIn: "1d" }
-    );
+    await requestProducer(id, new KafkaRequest({
+      service: "user",
+      action: "create-user",
+      data: { id, email },
+      message: "Create user from auth service"
+    }));
+
+    const sessionToken = jwt.sign({ id, email }, SESSION_SECRET, {
+      expiresIn: "1d",
+    });
 
     if (process.env.NODE_ENV !== "production") {
       console.log("Session token:", sessionToken);
@@ -61,9 +73,9 @@ export const signInUser = async (req: Request, res: Response) => {
       })
       .json({
         message: "Signed in successfully",
-        ...(process.env.NODE_ENV !== "production" ? { sessionToken } : {})
+        sessionToken,
       });
-  } catch (err) {
+  } catch {
     return res.status(403).json({ message: "Invalid or expired link" });
   }
 };
