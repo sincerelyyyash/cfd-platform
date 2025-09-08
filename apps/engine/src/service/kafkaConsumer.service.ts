@@ -6,8 +6,7 @@ import { updatePrice } from "../Store/PriceStore";
 const topic = "trade_stream";
 const groupId = "trade_stream_consumer";
 
-
-const requestHandlers: Record<string, (data: any) => Promise<any> | any> = {
+const requestHandlers: Record<string, (key: string, data: any) => Promise<any> | any> = {
   "trade-open": createTrade,
   "trade-close": closeTrade,
   "create-user": createUser,
@@ -17,7 +16,6 @@ const requestHandlers: Record<string, (data: any) => Promise<any> | any> = {
   "get-all-open-orders": getAllOpenOrders,
 };
 
-
 const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayload) => {
   const rawValue = message.value?.toString();
   if (!rawValue) return;
@@ -25,7 +23,14 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
   let value: any;
   try {
     const outer = JSON.parse(rawValue);
-    value = JSON.parse(outer.value);
+    if (outer && typeof outer === "object" && "value" in outer) {
+      value = outer.value;
+    } else {
+      value = outer;
+    }
+    if (typeof value === "string") {
+      value = JSON.parse(value);
+    }
   } catch (err) {
     console.error("Invalid JSON received:", rawValue, err);
     return;
@@ -33,29 +38,33 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
 
   if (Array.isArray(value.price_updates)) {
     value.price_updates.forEach((update: { asset: string; price: number; decimal: number }) => {
-
       updatePrice(update.asset, update.price, update.decimal, Number(message.timestamp), message.offset);
-
     });
   }
 
+
   if (value.server_requests && typeof value.server_requests === "object") {
-
+    let key: string | undefined;
+    if (message.key) {
+      key = message.key.toString();
+    }
+    if (!key) {
+      console.log("no key in Kafka message");
+      return;
+    }
     const request = value.server_requests;
-
     const handler = requestHandlers[request.action];
     if (handler) {
       try {
-        await handler(request.data);
+        await handler(key, request.data);
       } catch (err) {
         console.error(`Error handling action ${request.action}:`, err);
       }
     } else {
       console.log("Invalid request action:", request.action);
     }
-  } else {
-    // console.log("No server_requests in this message");
   }
 };
 
 consumeMessages(topic, groupId, eachMessageHandler);
+

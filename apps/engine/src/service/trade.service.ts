@@ -36,12 +36,12 @@ export const calculatePnL = async (order: Orders, entryPrice: number, currentPri
 }
 
 
-export const createTrade = async (data: any) => {
+export const createTrade = async (key: string, data: any) => {
   const { id, type, userId, quantity, asset, leverage } = data;
 
   const user = userStore.getUserById(userId);
   if (!user) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: "User does not exist.",
@@ -50,7 +50,7 @@ export const createTrade = async (data: any) => {
   }
 
   if (user.balance <= 0) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: "Insufficient balance to place order.",
@@ -60,7 +60,7 @@ export const createTrade = async (data: any) => {
 
   const latest = getPrice(asset);
   if (!latest) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: `No price available for asset ${asset}.`,
@@ -74,7 +74,7 @@ export const createTrade = async (data: any) => {
   try {
     if (type === "long") {
       if (requiredMargin > user.balance) {
-        return responseProducer(data.id, new Response({
+        return responseProducer(key, new Response({
           statusCode: 400,
           success: false,
           message: "Insufficient margin to place LONG order.",
@@ -84,7 +84,7 @@ export const createTrade = async (data: any) => {
       orderStore.createOrder({ ...data, entryPrice });
       user.balance -= requiredMargin;
 
-      return responseProducer(data.id, new Response({
+      return responseProducer(key, new Response({
         statusCode: 200,
         success: true,
         message: "LONG order placed successfully",
@@ -96,7 +96,7 @@ export const createTrade = async (data: any) => {
       const shortMargin = Math.floor(requiredMargin * 1.1);
 
       if (shortMargin > user.balance) {
-        return responseProducer(data.id, new Response({
+        return responseProducer(key, new Response({
           statusCode: 400,
           success: false,
           message: "Insufficient margin to place SHORT order.",
@@ -106,7 +106,7 @@ export const createTrade = async (data: any) => {
       orderStore.createOrder({ ...data, entryPrice });
       user.balance -= shortMargin;
 
-      return responseProducer(data.id, new Response({
+      return responseProducer(key, new Response({
         statusCode: 200,
         success: true,
         message: "SHORT order placed successfully",
@@ -114,14 +114,14 @@ export const createTrade = async (data: any) => {
       }));
     }
 
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: `Invalid order type: ${type}`,
     }));
 
   } catch (err) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 500,
       success: false,
       message: "Internal server error: " + (err as Error).message,
@@ -130,12 +130,12 @@ export const createTrade = async (data: any) => {
 };
 
 
-export const closeTrade = async (data: any) => {
+export const closeTrade = async (key: string, data: any) => {
   const { orderId } = data;
 
   const order = orderStore.getOrderById(orderId);
   if (!order) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: "Order not found.",
@@ -143,7 +143,7 @@ export const closeTrade = async (data: any) => {
   }
 
   if (order.status !== statusType.open) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: "Order is not open.",
@@ -152,7 +152,7 @@ export const closeTrade = async (data: any) => {
 
   const latest = getPrice(order.asset);
   if (!latest) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: `No price available for asset ${order.asset}.`,
@@ -175,7 +175,7 @@ export const closeTrade = async (data: any) => {
   order.exitPrice = currentPrice;
   order.pnL = pnL;
 
-  return responseProducer(data.id, new Response({
+  return responseProducer(key, new Response({
     statusCode: 200,
     success: true,
     message: "Order closed successfully",
@@ -183,19 +183,19 @@ export const closeTrade = async (data: any) => {
   }));
 };
 
-const getOpenOrderById = async (data: any) => {
+const getOpenOrderById = async (key: string, data: any) => {
   const { orderId } = data;
   try {
     const order = orderStore.getOrderById(orderId)
     if (!order) {
-      return responseProducer(data.id, new Response({
+      return responseProducer(key, new Response({
         statusCode: 403,
         message: "Order not found",
         success: false
       }));
     }
 
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 200,
       success: true,
       message: "Open order fetched successfully",
@@ -203,7 +203,7 @@ const getOpenOrderById = async (data: any) => {
     }));
   }
   catch (err) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: "Unable to get open order."
@@ -211,12 +211,12 @@ const getOpenOrderById = async (data: any) => {
   }
 }
 
-const getAllOpenOrders = async (data: any) => {
+const getAllOpenOrders = async (key: string, data: any) => {
   const { userId } = data;
 
   const user = userStore.getUserById(userId);
   if (!user) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 403,
       message: "User not found",
       success: false
@@ -225,7 +225,7 @@ const getAllOpenOrders = async (data: any) => {
 
   try {
     const openOrders = orderStore.getOpenOrders(userId);
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 200,
       success: true,
       message: "All Open orders fetched successfully",
@@ -233,7 +233,7 @@ const getAllOpenOrders = async (data: any) => {
     }));
   }
   catch (err) {
-    return responseProducer(data.id, new Response({
+    return responseProducer(key, new Response({
       statusCode: 400,
       success: false,
       message: "Unable to get open orders."

@@ -15,14 +15,14 @@ export const connectProducer = async () => {
   }
 }
 
-export const messageProducer = async (topic: string, data: any) => {
+export const messageProducer = async (topic: string, key: string, data: any) => {
   try {
     const exists = await kafkaManager.topicExists(topic);
     if (!exists) {
       await kafkaManager.createTopics([{ topic, numPartitions: 1, replicationFactor: 1 }]);
     }
 
-    await kafkaManager.initializeProducer(topic, data);
+    await kafkaManager.initializeProducer(topic, key, data);
   } catch (err) {
     console.error("Failed to initialize Kafka producer: " + err);
   }

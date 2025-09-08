@@ -53,10 +53,10 @@ setInterval(() => {
     decimal: data.decimal,
   }));
 
-  messageProducer(topic, {
-    key: "asset_prices",
-    value: JSON.stringify({ price_updates: snapshot }),
-  });
+  messageProducer(topic,
+    "asset_prices",
+    JSON.stringify({ price_updates: snapshot }),
+  );
 }, 100);
 
 ws.on("close", () => {

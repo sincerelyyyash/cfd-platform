@@ -132,9 +132,10 @@ export class KafkaManager {
     }
   }
 
-  async initializeProducer(topic: string, data: any) {
+  async initializeProducer(topic: string, key: string, data: any) {
     try {
       const msg: Message = {
+        key: key,
         value: JSON.stringify(data)
       }
       await this.producer.send({

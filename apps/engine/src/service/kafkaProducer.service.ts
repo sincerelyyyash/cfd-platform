@@ -12,9 +12,9 @@ export const responseProducer = async (key: string, response: ResponseTypes) => 
       ? (response as any).toJSON()
       : response;
 
-  messageProducer(topic, {
-    key: String(key),
-    value: JSON.stringify({ engine_responses: payload }),
-  });
+  messageProducer(topic,
+    String(key),
+    JSON.stringify({ engine_responses: payload }),
+  );
 }
 

@@ -10,14 +10,21 @@ export const startConsumer = () => {
 };
 
 const eachMessageHandler = async ({ message }: EachMessagePayload) => {
+
   const rawValue = message.value?.toString();
   if (!rawValue) return;
 
-  let parsed: any;
+  let value: any;
   try {
     const outer = JSON.parse(rawValue);
-    parsed = JSON.parse(outer.value);
-    console.log(parsed)
+    if (outer && typeof outer === "object" && "value" in outer) {
+      value = outer.value;
+    } else {
+      value = outer;
+    }
+    if (typeof value === "string") {
+      value = JSON.parse(value);
+    }
   } catch (err) {
     console.error("Invalid JSON received:", rawValue, err);
     return;
@@ -26,22 +33,18 @@ const eachMessageHandler = async ({ message }: EachMessagePayload) => {
 
   let key: string | undefined;
   if (message.key) {
-    try {
-      key = JSON.parse(message.key.toString());
-    } catch {
-      key = message.key.toString();
-    }
+    key = message.key.toString();
   }
+
 
   if (!key) {
     console.log("no key in Kafka message");
     return;
   }
 
-  console.log("Kafka message key:", key);
   if (pendingRequests.has(key)) {
     const resolve = pendingRequests.get(key)!;
-    resolve(parsed.engine_responses ?? parsed);
+    resolve(value.engine_responses ?? value);
     pendingRequests.delete(key);
   }
 };
