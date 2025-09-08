@@ -1,4 +1,4 @@
-import { prices } from "./kafkaConsumer.service";
+import { getPrice } from "../Store/PriceStore.ts";
 import { OrderStore } from "../Store/OrderStore";
 import { UserStore } from "../Store/UserStore";
 import { calculatePnL } from "./trade.service";
@@ -14,7 +14,7 @@ export const liquidationService = async () => {
   if (openOrders.length < 1) return;
   try {
     for (const order of openOrders) {
-      const latest = prices.get(order.asset);
+      const latest = getPrice(order.asset);
       if (!latest) continue;
 
       const currentPrice = latest.price;
@@ -32,7 +32,7 @@ export const liquidationService = async () => {
           (order.type === "long" && currentPrice <= order.stopLoss) ||
           (order.type === "short" && currentPrice >= order.stopLoss)
         ) {
-          orderStore.closeOrder(order, currentPrice, pnl);
+          orderStore.closeOrder(order, currentPrice, pnl, true);
 
           const user = userStore.getUserById(order.userId);
           if (user && equity > 0) {
@@ -57,7 +57,7 @@ export const liquidationService = async () => {
           (order.type === "long" && currentPrice >= order.takeProfit) ||
           (order.type === "short" && currentPrice <= order.takeProfit)
         ) {
-          orderStore.closeOrder(order, currentPrice, pnl);
+          orderStore.closeOrder(order, currentPrice, pnl, false);
 
           const user = userStore.getUserById(order.userId);
           if (user && equity > 0) {
@@ -78,7 +78,7 @@ export const liquidationService = async () => {
       }
 
       if (equity <= 0) {
-        orderStore.closeOrder(order, currentPrice, pnl);
+        orderStore.closeOrder(order, currentPrice, pnl, true);
 
         const user = userStore.getUserById(order.userId);
         if (user && equity > 0) {

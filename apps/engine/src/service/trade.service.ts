@@ -174,6 +174,7 @@ export const closeTrade = async (key: string, data: any) => {
   order.status = statusType.closed;
   order.exitPrice = currentPrice;
   order.pnL = pnL;
+  order.liquidated = false;
 
   return responseProducer(key, new Response({
     statusCode: 200,

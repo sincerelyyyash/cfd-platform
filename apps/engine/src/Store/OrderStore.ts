@@ -14,6 +14,7 @@ export type Orders = {
   slippage?: number,
   stopLoss?: number,
   takeProfit: number,
+  liquidated?: boolean,
 }
 
 
@@ -46,10 +47,11 @@ export class OrderStore {
     return newOrder;
   }
 
-  closeOrder(order: Orders, exitPrice: number, pnL: number) {
+  closeOrder(order: Orders, exitPrice: number, pnL: number, liquidated: boolean) {
     order.status = statusType.closed;
     order.exitPrice = exitPrice;
     order.pnL = pnL;
+    order.liquidated = liquidated
 
   }
 
