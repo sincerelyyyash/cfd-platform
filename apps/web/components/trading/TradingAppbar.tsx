@@ -1,0 +1,53 @@
+"use client";
+import AccountDropDown from "./AccountDropdown";
+import AssetButton from "./AssetButton";
+import BalanceDropDown from "./BalanceDropdown";
+import { useState } from "react";
+
+export default function TradingAppbar() {
+  const [selectedAsset, setSelectedAsset] = useState<string | undefined>("BTCUSDT");
+
+  return (
+    <div className="h-20 border-b flex items-center px-4 justify-between">
+      <div className="relative z-20 bg-gradient-to-b from-neutral-200 to-neutral-500 bg-clip-text text-xl font-bold text-transparent sm:text-4xl">
+        TradePrime
+      </div>
+
+      <div className="flex items-center gap-4">
+        <AssetButton
+          imageURL="/Bitcoin.png"
+          text="BTC"
+          isActive={selectedAsset === "BTCUSDT"}
+          onClickAction={() => setSelectedAsset("BTCUSDT")}
+        />
+        <AssetButton
+          imageURL="/Ethereum.png"
+          text="ETH"
+          isActive={selectedAsset === "ETHUSDT"}
+          onClickAction={() => setSelectedAsset("ETHUSDT")}
+        />
+        <AssetButton
+          imageURL="/Solana.png"
+          text="SOL"
+          isActive={selectedAsset === "SOLUSDT"}
+          onClickAction={() => setSelectedAsset("SOLUSDT")}
+        />
+      </div>
+
+      <div className="flex items-center gap-6">
+        <div className="hover:border rounded-lg hover:bg-zinc-900">
+          <BalanceDropDown />
+        </div>
+        <div>Price Alert</div>
+        <div>
+          <AccountDropDown />
+        </div>
+        <button className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-700">
+          Deposit
+        </button>
+      </div>
+    </div>
+  );
+}
+
+

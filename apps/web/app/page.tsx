@@ -1,12 +1,9 @@
-import { prisma } from "@repo/database";
+import Appbar from "@/components/Appbar";
 
-export default async function IndexPage() {
-  const users = await prisma.user.findMany();
-
+export default function Home() {
   return (
-    <div>
-      <h1>Hello World</h1>
-      <pre>{JSON.stringify(users, null, 2)}</pre>
+    <div className="flex flex-col">
+      <Appbar />
     </div>
   );
 }
