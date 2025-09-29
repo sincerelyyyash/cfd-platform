@@ -3,30 +3,31 @@ import Charts from "@/components/trading/Chart"
 import TradePositions from "@/components/trading/TradePositions"
 import TradingAppbar from "@/components/trading/TradingAppbar"
 import TradingModal from "@/components/trading/TradingModal"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
 
 export default function TradingPage() {
   return (
     <div className="h-screen">
       <TradingAppbar />
-      <ResizablePanelGroup>
-        <ResizablePanel className="w-1/4"><AssetSidebar rows={[]} /></ResizablePanel>
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel defaultSize={25}><AssetSidebar /></ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel className="flex-1">
-          <div className="h-full flex flex-col">
-            <div className="flex-1">
+        <ResizablePanel>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel defaultSize={55}>
               <Charts />
-            </div>
-            <div className="h-2" />
-            <div className="h-[35%]">
-              <TradePositions />
-            </div>
-          </div>
+            </ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={35}><TradePositions /></ResizablePanel>
+          </ResizablePanelGroup>
         </ResizablePanel>
-        <ResizablePanel className="w-1/4"><TradingModal /></ResizablePanel>
+        <ResizablePanel defaultSize={25}><TradingModal /></ResizablePanel>
       </ResizablePanelGroup>
+
     </div>
   )
 }
-
-

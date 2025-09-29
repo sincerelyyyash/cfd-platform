@@ -7,5 +7,3 @@ export default function SigninPage() {
     </div>
   )
 }
-
-
