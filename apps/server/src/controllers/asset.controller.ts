@@ -48,7 +48,7 @@ export const getCandles = async (req: Request, res: Response) => {
     if (!response.ok) {
       return res.status(response.status).json({ message: "Upstream error", status: response.status });
     }
-    const json = await response.json();
+    const json: any = await response.json();
 
     const rows: any[] = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
 
