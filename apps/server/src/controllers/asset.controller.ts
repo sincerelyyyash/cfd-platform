@@ -41,15 +41,44 @@ export const getCandles = async (req: Request, res: Response) => {
   }
 
   try {
-    const base = process.env.BACKPACK_API_BASE || "https://api.backpack.exchange";
-    const url = `${base}/api/v1/candles?symbol=${encodeURIComponent(upstreamSymbol)}&interval=${encodeURIComponent(interval)}&limit=${limit}`;
+    // Try Backpack first
+    const bpBase = process.env.BACKPACK_API_BASE || "https://api.backpack.exchange";
+    const bpUrl = `${bpBase}/api/v1/candles?symbol=${encodeURIComponent(upstreamSymbol)}&interval=${encodeURIComponent(interval)}&limit=${limit}`;
 
-    const response = await fetch(url, { headers: { "accept": "application/json" } });
+    let response = await fetch(bpUrl, { headers: { "accept": "application/json" } });
     if (!response.ok) {
-      return res.status(response.status).json({ message: "Upstream error", status: response.status });
-    }
-    const json: any = await response.json();
+      // Fallback to Binance if Backpack fails
+      const binanceSymbol = asset; // already like BTCUSDT, ETHUSDT, SOLUSDT
+      const binanceInterval = interval; // compatible intervals
+      const binanceUrl = `https://api.binance.com/api/v3/klines?symbol=${encodeURIComponent(binanceSymbol)}&interval=${encodeURIComponent(binanceInterval)}&limit=${limit}`;
+      response = await fetch(binanceUrl, { headers: { "accept": "application/json" } });
+      if (!response.ok) {
+        return res.status(response.status).json({ message: "Upstream error", status: response.status });
+      }
 
+      const binanceJson: any = await response.json();
+      const bRows: any[] = Array.isArray(binanceJson) ? binanceJson : [];
+
+      const bCandles = bRows.map((row: any[]) => {
+        // Binance: [open time, open, high, low, close, volume, close time, ...]
+        const openTime = row[0];
+        const open = row[1];
+        const high = row[2];
+        const low = row[3];
+        const close = row[4];
+        return {
+          time: typeof openTime === "number" && openTime > 1e12 ? Math.floor(openTime / 1000) : Math.floor(Number(openTime) / 1000),
+          open: Number(open),
+          high: Number(high),
+          low: Number(low),
+          close: Number(close),
+        };
+      }).filter((c: any) => Number.isFinite(c?.open) && Number.isFinite(c?.high) && Number.isFinite(c?.low) && Number.isFinite(c?.close));
+
+      return res.json(bCandles);
+    }
+
+    const json: any = await response.json();
     const rows: any[] = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
 
     const candles = rows.map((row: any) => {
