@@ -1,6 +1,7 @@
-import { TradeTable } from "./TradeDataTable";
+"use client";
+import { useState } from "react";
 
-const trades = [
+const mockTrades = [
 	{
 		asset: "BTC",
 		bid: "$27,500",
@@ -28,25 +29,76 @@ const trades = [
 	},
 ]
 
+const tabs = ["Open", "Pending", "Closed"] as const;
 
-export default function() {
+const TradePositions = () => {
+	const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Open");
+
 	return (
-		<div className="flex flex-col gap-2 bg-slate-950/40 border-t border-slate-900 rounded-lg">
-			<div className="flex flex-row justify-between items-center">
-				<div className="flex flex-row justify-center gap-2 sm:gap-4 p-3 sm:p-4">
-					<button className="px-3 py-2 rounded-md bg-slate-900/60 text-slate-200 hover:bg-slate-900 border border-slate-800">Open</button>
-					<button className="px-3 py-2 rounded-md bg-slate-900/60 text-slate-200 hover:bg-slate-900 border border-slate-800">Pending</button>
-					<button className="px-3 py-2 rounded-md bg-slate-900/60 text-slate-200 hover:bg-slate-900 border border-slate-800">Closed</button>
+		<div className="flex flex-col bg-black/40">
+			<div className="flex flex-row items-center justify-between border-b border-neutral-900/60">
+				<div className="flex flex-row gap-1 p-2 sm:gap-2 sm:p-3">
+					<div role="tablist" aria-label="Positions filter" className="flex items-center gap-1">
+						{tabs.map((tab) => {
+							const isActive = tab === activeTab;
+							return (
+								<button
+									key={tab}
+									role="tab"
+									aria-selected={isActive}
+									onClick={() => setActiveTab(tab)}
+						className={
+							"rounded-md px-3 py-2 text-sm transition-colors outline-none border " +
+							(isActive
+								? "border-neutral-800 bg-black/70 text-zinc-200"
+								: "border-neutral-800 bg-black/60 text-zinc-300 hover:bg-black")
+						}
+								>
+									{tab}
+								</button>
+							);
+						})}
+					</div>
 				</div>
-				<div className="flex flex-row justify-center gap-4 p-3 sm:p-4 text-slate-400">
-					<div>Dropdown menu</div>
-					<div>x</div>
+				<div className="flex flex-row items-center gap-2 p-2 sm:p-3 text-zinc-400">
+					<button
+						className="rounded-md border border-neutral-800 bg-black/50 px-2 py-1 text-xs text-zinc-300 hover:bg-black/70"
+						aria-label="Filter positions"
+					>
+						Filter
+					</button>
+					<button
+						className="rounded-md border border-neutral-800 bg-black/50 px-2 py-1 text-xs text-zinc-300 hover:bg-black/70"
+						aria-label="More options"
+					>
+						Options
+					</button>
 				</div>
 			</div>
 			<div className="p-3 sm:p-4">
-				<TradeTable data={trades} />
+				<div role="list" aria-label={`${activeTab} positions`} className="space-y-2">
+					{mockTrades.map((row) => (
+						<div
+							key={row.asset}
+							role="listitem"
+						className="group flex items-center justify-between rounded-lg border border-neutral-900/80 bg-black/30 px-3 py-2 text-zinc-200 transition-colors hover:bg-black/50"
+						>
+							<div className="flex items-center gap-3">
+							<div className="flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-xs font-semibold">
+									{row.asset}
+								</div>
+								<div className="text-sm font-medium tracking-wide">{row.asset}/USDT</div>
+							</div>
+							<div className="flex items-center gap-3">
+								<span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-semibold text-emerald-400 tabular-nums">{row.bid}</span>
+								<span className="rounded-md bg-rose-500/10 px-2 py-0.5 text-xs font-semibold text-rose-400 tabular-nums">{row.ask}</span>
+							</div>
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
+	);
+};
 
-	)
-}
+export default TradePositions;

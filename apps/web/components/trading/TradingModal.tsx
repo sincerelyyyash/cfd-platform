@@ -1,10 +1,11 @@
 "use client";
 import Image from "next/image";
+import { useState } from "react";
 import { useTradeStore } from "@/store/useTradeStore";
 
 const assetLogos: Record<string, string> = {
 	BTCUSDT: "/Bitcoin.png",
-	ETHUSDT: "/Ethereum.png",
+	ETHUSDT: "/ethereum.png",
 	SOLUSDT: "/Solana.png",
 };
 
@@ -12,9 +13,38 @@ export default function TradingModal() {
 	const selectedAsset = useTradeStore((s) => s.selectedAsset);
 	const trades = useTradeStore((s) => s.trades);
 
+	const [volume, setVolume] = useState<number>(0.1);
+	const [takeProfit, setTakeProfit] = useState<number | "">("");
+	const [stopLoss, setStopLoss] = useState<number | "">("");
+	const [selectedLeverage, setSelectedLeverage] = useState<string>("10x");
+
+	const handleIncrement = (setter: (val: number) => void, current: number, step = 0.1) => {
+		const next = parseFloat((current + step).toFixed(4));
+		setter(next);
+	};
+
+	const handleDecrement = (setter: (val: number) => void, current: number, step = 0.1) => {
+		const next = Math.max(0, parseFloat((current - step).toFixed(4)));
+		setter(next);
+	};
+
+	const handleNumericInput = (
+		value: string,
+		setter: (val: number | "") => void
+	) => {
+		if (value.trim() === "") {
+			setter("");
+			return;
+		}
+		const parsed = Number(value);
+		if (!Number.isNaN(parsed)) {
+			setter(parsed);
+		}
+	};
+
 	if (!selectedAsset) {
 		return (
-			<div className="flex flex-col p-4 border-l border-slate-900 bg-slate-950/40 h-screen items-center justify-center text-zinc-400">
+			<div className="flex flex-col p-4 border-l border-slate-900 bg-black/40 h-screen items-center justify-center text-zinc-400">
 				Select an asset to start trading
 			</div>
 		);
@@ -23,7 +53,7 @@ export default function TradingModal() {
 	const trade = trades[selectedAsset];
 	if (!trade) {
 		return (
-			<div className="flex flex-col p-4 border-l border-slate-900 bg-slate-950/40 h-screen items-center justify-center text-zinc-400">
+			<div className="flex flex-col p-4 border-l border-slate-900 bg-black/40 h-screen items-center justify-center text-zinc-400">
 				Waiting for {selectedAsset} data...
 			</div>
 		);
@@ -33,81 +63,174 @@ export default function TradingModal() {
 	const logo = assetLogos[selectedAsset] || "/Bitcoin.png";
 
 	return (
-		<div className="flex flex-col p-4 border-l border-slate-900 bg-slate-950/40 h-screen">
-			<div className="flex items-center gap-2 p-2 py-4 rounded-lg w-32 justify-center text-slate-200">
-				<Image
-					src={logo}
-					alt={`${shortName} logo`}
-					width={24}
-					height={24}
-					className="rounded-full"
-				/>
-				<span>{shortName}</span>
+		<div className="flex h-screen flex-col border-l border-neutral-900 bg-black/40 p-4">
+			<div className="flex items-center justify-between rounded-lg border border-neutral-900/70 bg-black/40 px-3 py-2 text-zinc-200">
+				<div className="flex items-center gap-2">
+					<Image
+						src={logo}
+						alt={`${shortName} logo`}
+						width={24}
+						height={24}
+						className="rounded-full"
+					/>
+					<span className="font-medium tracking-wide">{shortName}</span>
+				</div>
+				<div className="flex items-center gap-2 text-xs">
+					<span className="rounded-md bg-emerald-500/10 px-2 py-0.5 font-semibold text-emerald-400 tabular-nums">
+						{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
+					</span>
+					<span className="rounded-md bg-rose-500/10 px-2 py-0.5 font-semibold text-rose-400 tabular-nums">
+						{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
+					</span>
+				</div>
 			</div>
 
-			<div className="flex flex-row gap-2 p-2 w-full justify-center items-center py-4">
-				<button className="p-3 border border-red-500/70 text-red-300 hover:bg-red-950/30 rounded-lg w-full">
-					{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
+			<div className="flex flex-row items-center justify-center gap-2 py-4">
+				<button
+					className="w-full rounded-lg border border-rose-600/50 bg-rose-600/10 p-3 text-rose-300 outline-none transition-colors hover:bg-rose-900/30 focus:ring-2 focus:ring-rose-600/40"
+					aria-label="Place sell order at bid"
+				>
+					Sell • {(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
 				</button>
-				<button className="p-3 border border-green-500/70 text-green-300 hover:bg-green-950/30 rounded-lg w-full">
-					{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
+				<button
+					className="w-full rounded-lg border border-emerald-600/50 bg-emerald-600/10 p-3 text-emerald-300 outline-none transition-colors hover:bg-emerald-900/30 focus:ring-2 focus:ring-emerald-600/40"
+					aria-label="Place buy order at ask"
+				>
+					Buy • {(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
 				</button>
 			</div>
 
-			<div className="w-full py-4 space-y-2">
-				<div className="text-slate-300">Volume</div>
-				<div className="w-full flex flex-row border border-slate-800 bg-slate-900/50 h-12 rounded-lg justify-end items-center">
+			<div className="w-full space-y-2 py-2">
+				<label htmlFor="volume" className="text-xs text-zinc-300">
+					Volume
+				</label>
+				<div className="flex h-12 w-full items-center justify-end rounded-lg border border-neutral-800 bg-black/50">
 					<input
-						type="text"
+						id="volume"
+						inputMode="decimal"
+						type="number"
+						step={0.1}
+						min={0}
+						value={volume}
+						onChange={(e) => setVolume(Number(e.target.value))}
 						placeholder="0.1"
-						className="w-full p-2 bg-transparent outline-none text-sm text-slate-200 placeholder:text-slate-500"
+						className="w-full bg-transparent p-2 text-sm text-zinc-200 outline-none placeholder:text-zinc-500"
+						aria-label="Trade volume"
 					/>
 					<div className="flex flex-row">
-						<button className="p-2 h-12 w-16 border-l border-slate-800 text-slate-300 hover:bg-slate-800">+</button>
-						<button className="p-2 h-12 w-16 border-l border-slate-800 text-slate-300 hover:bg-slate-800">-</button>
+						<button
+							onClick={() => handleIncrement(setVolume, volume)}
+						className="h-12 w-16 border-l border-neutral-800 p-2 text-zinc-300 hover:bg-black/70"
+							aria-label="Increase volume"
+						>
+							+
+						</button>
+						<button
+							onClick={() => handleDecrement(setVolume, volume)}
+						className="h-12 w-16 border-l border-neutral-800 p-2 text-zinc-300 hover:bg-black/70"
+							aria-label="Decrease volume"
+						>
+							-
+						</button>
 					</div>
 				</div>
 			</div>
 
-			<div className="flex flex-row gap-2 w-full justify-center py-2">
-				{["1x", "5x", "10x", "20x", "100x"].map((lev) => (
-					<button
-						key={lev}
-						className="border border-blue-700/60 text-blue-300 hover:bg-blue-950/40 p-2 rounded-lg w-full"
-					>
-						{lev}
-					</button>
-				))}
+			<div className="flex w-full flex-row justify-center gap-2 py-2">
+				{["1x", "5x", "10x", "20x", "100x"].map((leverage) => {
+					const isActive = leverage === selectedLeverage;
+					return (
+						<button
+							key={leverage}
+							onClick={() => setSelectedLeverage(leverage)}
+							aria-pressed={isActive}
+					className={
+						"w-full rounded-lg p-2 text-sm transition-colors border " +
+						(isActive
+							? "border-neutral-800 bg-black/70 text-zinc-200"
+							: "border-neutral-800 bg-black/50 text-zinc-300 hover:bg-black/60")
+					}
+						>
+							{leverage}
+						</button>
+					);
+				})}
 			</div>
 
-			<div className="w-full py-4 space-y-2">
-				<div className="text-slate-300">Take Profit</div>
-				<div className="w-full flex flex-row border border-slate-800 bg-slate-900/50 h-12 rounded-lg justify-end items-center">
+			<div className="w-full space-y-2 py-2">
+				<label htmlFor="take-profit" className="text-xs text-zinc-300">
+					Take Profit
+				</label>
+				<div className="flex h-12 w-full items-center justify-end rounded-lg border border-neutral-800 bg-black/50">
 					<input
-						type="text"
+						id="take-profit"
+						inputMode="decimal"
+						type="number"
+						step={0.1}
+						min={0}
+						value={takeProfit === "" ? "" : takeProfit}
+						onChange={(e) => handleNumericInput(e.target.value, setTakeProfit)}
 						placeholder="0.1"
-						className="w-full p-2 bg-transparent outline-none text-sm text-slate-200 placeholder:text-slate-500"
+						className="w-full bg-transparent p-2 text-sm text-zinc-200 outline-none placeholder:text-zinc-500"
+						aria-label="Take profit price"
 					/>
 					<div className="flex flex-row">
-						<button className="p-2 h-12 w-16 border-l border-slate-800 text-slate-300 hover:bg-slate-800">+</button>
-						<button className="p-2 h-12 w-16 border-l border-slate-800 text-slate-300 hover:bg-slate-800">-</button>
+						<button
+							onClick={() => handleIncrement((v) => setTakeProfit(v), Number(takeProfit || 0))}
+						className="h-12 w-16 border-l border-neutral-800 p-2 text-zinc-300 hover:bg-black/70"
+							aria-label="Increase take profit"
+						>
+							+
+						</button>
+						<button
+							onClick={() => handleDecrement((v) => setTakeProfit(v), Number(takeProfit || 0))}
+						className="h-12 w-16 border-l border-neutral-800 p-2 text-zinc-300 hover:bg-black/70"
+							aria-label="Decrease take profit"
+						>
+							-
+						</button>
 					</div>
 				</div>
 			</div>
 
-			<div className="w-full py-4 space-y-2">
-				<div className="text-slate-300">Stop Loss</div>
-				<div className="w-full flex flex-row border border-slate-800 bg-slate-900/50 h-12 rounded-lg justify-end items-center">
+			<div className="w-full space-y-2 py-2">
+				<label htmlFor="stop-loss" className="text-xs text-zinc-300">
+					Stop Loss
+				</label>
+				<div className="flex h-12 w-full items-center justify-end rounded-lg border border-neutral-800 bg-black/50">
 					<input
-						type="text"
+						id="stop-loss"
+						inputMode="decimal"
+						type="number"
+						step={0.1}
+						min={0}
+						value={stopLoss === "" ? "" : stopLoss}
+						onChange={(e) => handleNumericInput(e.target.value, setStopLoss)}
 						placeholder="0.1"
-						className="w-full p-2 bg-transparent outline-none text-sm text-slate-200 placeholder:text-slate-500"
+						className="w-full bg-transparent p-2 text-sm text-zinc-200 outline-none placeholder:text-zinc-500"
+						aria-label="Stop loss price"
 					/>
 					<div className="flex flex-row">
-						<button className="p-2 h-12 w-16 border-l border-slate-800 text-slate-300 hover:bg-slate-800">+</button>
-						<button className="p-2 h-12 w-16 border-l border-slate-800 text-slate-300 hover:bg-slate-800">-</button>
+						<button
+							onClick={() => handleIncrement((v) => setStopLoss(v), Number(stopLoss || 0))}
+						className="h-12 w-16 border-l border-neutral-800 p-2 text-zinc-300 hover:bg-black/70"
+							aria-label="Increase stop loss"
+						>
+							+
+						</button>
+						<button
+							onClick={() => handleDecrement((v) => setStopLoss(v), Number(stopLoss || 0))}
+						className="h-12 w-16 border-l border-neutral-800 p-2 text-zinc-300 hover:bg-black/70"
+							aria-label="Decrease stop loss"
+						>
+							-
+						</button>
 					</div>
 				</div>
+			</div>
+
+			<div className="pt-2 text-[11px] text-zinc-500">
+				Indicative prices. Final execution shown in the order confirmation.
 			</div>
 		</div>
 	);

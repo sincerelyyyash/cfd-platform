@@ -4,41 +4,106 @@ import { BidAskTable } from "./BidAskTable";
 import SearchBar from "./SearchBar";
 import { useTradeStore } from "@/store/useTradeStore";
 
-export default function AssetSidebar() {
-	const trades = useTradeStore((s) => s.trades);
+const AssetSidebar = () => {
+	const trades = useTradeStore((state) => state.trades);
 
-	const assetOrder = ["BTCUSDT", "ETHUSDT", "SOLUSDT"];
+	const preferredAssetOrder = ["BTCUSDT", "ETHUSDT", "SOLUSDT"];
 
-	const tableData = assetOrder
+	const tableData = preferredAssetOrder
 		.filter((symbol) => trades[symbol])
 		.map((symbol) => {
-			const t = trades[symbol];
+			const trade = trades[symbol];
 			return {
-				asset: t.asset,
-				bid: (t.bid / 10 ** t.decimals).toFixed(t.decimals),
-				ask: (t.ask / 10 ** t.decimals).toFixed(t.decimals),
+				asset: trade.asset,
+				bid: (trade.bid / 10 ** trade.decimals).toFixed(trade.decimals),
+				ask: (trade.ask / 10 ** trade.decimals).toFixed(trade.decimals),
 			};
 		});
 
+	const isLive = tableData.length > 0;
+
 	return (
-		<div className="flex flex-col p-4 sm:p-6 border-r border-slate-900 bg-slate-950/50">
-			<div className="flex flex-row justify-between py-2 sm:py-4 text-zinc-100 font-semibold tracking-wide">
-				<div>Instruments</div>
-				<div className="text-slate-500">x</div>
+		<aside
+			role="complementary"
+			aria-label="Market instruments sidebar"
+			className="flex h-full flex-col border-r border-neutral-900 bg-gradient-to-b from-black via-black to-black"
+		>
+			<header className="sticky top-0 z-10 border-b border-neutral-900/60 bg-black/70 backdrop-blur">
+				<div className="flex items-center justify-between px-4 py-3 sm:px-6">
+					<h2 id="instruments-heading" className="text-sm sm:text-base font-semibold tracking-wide text-zinc-100">
+						Instruments
+					</h2>
+					<div className="flex items-center gap-3">
+						<span
+							className="inline-flex items-center gap-2 rounded-full border border-slate-800 px-2.5 py-1 text-[11px] font-medium text-zinc-300"
+							aria-live="polite"
+						>
+							<span
+								className={
+									`h-1.5 w-1.5 rounded-full ${isLive ? "bg-emerald-400 shadow-[0_0_0_3px_rgba(16,185,129,0.15)]" : "bg-slate-500"}`
+								}
+							/>
+							{isLive ? "Live" : "Waiting"}
+						</span>
+						<div
+							role="img"
+							aria-label="Sidebar options"
+							className="text-slate-500 hover:text-zinc-200 transition-colors"
+							tabIndex={0}
+							onKeyDown={(event) => {
+								if (event.key === "Enter" || event.key === " ") {
+									return;
+								}
+							}}
+						>
+							{/* Kebab icon */}
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="opacity-80">
+								<circle cx="12" cy="6" r="1.5" fill="currentColor" />
+								<circle cx="12" cy="12" r="1.5" fill="currentColor" />
+								<circle cx="12" cy="18" r="1.5" fill="currentColor" />
+							</svg>
+						</div>
+					</div>
+				</div>
+			</header>
+
+			<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+				<div className="px-4 pb-3 pt-3 sm:px-6 sm:pb-4">
+					<SearchBar />
+				</div>
+
+				<div className="flex-1 overflow-y-auto px-2 sm:px-4 pb-4">
+					<div className="px-2">
+						{isLive ? (
+							<BidAskTable data={tableData} />
+						) : (
+							<div className="space-y-3">
+								{[0, 1, 2].map((index) => (
+									<div key={index} className="animate-pulse">
+									<div className="flex items-center justify-between rounded-md border border-neutral-900/70 bg-black/40 px-3 py-3">
+										<div className="h-3 w-24 rounded bg-neutral-900/70" />
+											<div className="flex items-center gap-4">
+											<div className="h-3 w-12 rounded bg-neutral-900/70" />
+											<div className="h-3 w-12 rounded bg-neutral-900/70" />
+											</div>
+										</div>
+									</div>
+								))}
+								<p className="px-1 pt-1 text-xs text-zinc-400">Waiting for live data…</p>
+							</div>
+						)}
+					</div>
+				</div>
 			</div>
 
-			<div className="py-3 sm:py-4">
-				<SearchBar />
-			</div>
-
-			<div>
-				{tableData.length > 0 ? (
-					<BidAskTable data={tableData} />
-				) : (
-					<p className="text-zinc-400 text-sm">Waiting for live data...</p>
-				)}
-			</div>
-		</div>
+		<footer className="border-t border-neutral-900/60 px-4 py-3 sm:px-6">
+				<p className="text-[11px] text-zinc-500">
+					Prices are indicative. Check the order ticket for final execution.
+				</p>
+			</footer>
+		</aside>
 	);
-}
+};
+
+export default AssetSidebar;
 

@@ -11,8 +11,10 @@ export default function Charts() {
 	useEffect(() => {
 		async function fetchData() {
 			try {
-				const params = new URLSearchParams({ asset: selectedAsset, ts: "1m" });
-				const res = await fetch(`/api/v1/candles?${params.toString()}`);
+				const params = new URLSearchParams({ asset: selectedAsset, ts: "1m", limit: "500" });
+				// Use relative path so Next.js rewrite proxies to backend, avoiding CORS
+				const url = `/api/v1/candles?${params.toString()}`;
+				const res = await fetch(url, { cache: "no-store" });
 				if (!res.ok) {
 					throw new Error(`Failed: ${res.status}`);
 				}
@@ -36,7 +38,7 @@ export default function Charts() {
 	}, [selectedAsset]);
 
 	return (
-		<div className="w-full rounded-lg border border-slate-900 bg-slate-950/40">
+		<div className="w-full bg-black/40">
 			<CandlestickChart data={data} width={900} height={500} />
 		</div>
 	);

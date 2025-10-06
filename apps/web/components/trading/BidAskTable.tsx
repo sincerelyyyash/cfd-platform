@@ -3,16 +3,6 @@
 import Image from "next/image";
 import { useTradeStore } from "@/store/useTradeStore";
 
-import {
-	Table,
-	TableBody,
-	TableCaption,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
-
 type Asset = {
 	asset: string;
 	bid: string;
@@ -26,7 +16,7 @@ type AssetTableProps = {
 
 const assetLogos: Record<string, string> = {
 	BTCUSDT: "/Bitcoin.png",
-	ETHUSDT: "/Ethereum.png",
+	ETHUSDT: "/ethereum.png",
 	SOLUSDT: "/Solana.png",
 };
 
@@ -37,56 +27,63 @@ export function BidAskTable({
 	const selectedAsset = useTradeStore((s) => s.selectedAsset);
 	const setSelectedAsset = useTradeStore((s) => s.setSelectedAsset);
 
-	return (
-		<Table className="border border-slate-900/80 rounded-lg overflow-hidden">
-			<TableCaption className="text-slate-500">{caption}</TableCaption>
-			<TableHeader>
-				<TableRow className="bg-slate-950/60">
-					<TableHead className="w-[120px] border-r border-slate-900 text-slate-300">Asset</TableHead>
-					<TableHead className="text-right text-slate-300">Bid</TableHead>
-					<TableHead className="text-right text-slate-300">Ask</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{data.map((row) => {
-					const shortName = row.asset.replace("USDT", "");
-					const logo = assetLogos[row.asset] || "/default.png";
-					const isSelected = row.asset === selectedAsset;
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, asset: string) => {
+		if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			setSelectedAsset(asset);
+		}
+	};
 
-					return (
-						<TableRow key={row.asset} className="hover:bg-slate-900/40 transition-colors">
-							<TableCell
-								className="font-medium border-r border-slate-900 cursor-pointer flex items-center gap-2 text-slate-200"
-								onClick={() => setSelectedAsset(row.asset)}
-							>
-								<Image
-									src={logo}
-									alt={shortName}
-									width={20}
-									height={20}
-									className="rounded-full"
-								/>
-								<span>{shortName}</span>
-							</TableCell>
-							<TableCell
-								className={`text-right text-slate-200 ${
-									isSelected ? "bg-blue-950/50 text-blue-300" : ""
-								}`}
-							>
+	return (
+		<div aria-label={caption} role="list" className="space-y-2">
+			{data.map((row) => {
+				const shortName = row.asset.replace("USDT", "");
+				const logo = assetLogos[row.asset] || "/default.png";
+				const isSelected = row.asset === selectedAsset;
+
+				return (
+					<div
+						key={row.asset}
+						role="button"
+						aria-pressed={isSelected}
+						tabIndex={0}
+						onClick={() => setSelectedAsset(row.asset)}
+						onKeyDown={(e) => handleKeyDown(e, row.asset)}
+					className={
+						`group flex items-center justify-between rounded-lg border px-3 py-2 transition-colors outline-none ` +
+						(isSelected
+						? "border-neutral-900/80 bg-black/50 text-zinc-200"
+						: "border-neutral-900/80 bg-black/30 text-zinc-200 hover:bg-black/50 focus:ring-2 focus:ring-neutral-400/40")
+					}
+					>
+						<div className="flex items-center gap-2">
+							<Image
+								src={logo}
+								alt={shortName}
+								width={20}
+								height={20}
+								className="rounded-full"
+							/>
+							<span className="font-medium tracking-wide">{shortName}</span>
+						</div>
+						<div className="flex items-center gap-3">
+							<span className={
+								`rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-semibold tabular-nums ` +
+								(isSelected ? "text-emerald-300" : "text-emerald-400")
+							}>
 								{row.bid}
-							</TableCell>
-							<TableCell
-								className={`text-right text-slate-200 ${
-									isSelected ? "bg-blue-950/50 text-blue-300" : ""
-								}`}
-							>
+							</span>
+							<span className={
+								`rounded-md bg-rose-500/10 px-2 py-0.5 text-xs font-semibold tabular-nums ` +
+								(isSelected ? "text-rose-300" : "text-rose-400")
+							}>
 								{row.ask}
-							</TableCell>
-						</TableRow>
-					);
-				})}
-			</TableBody>
-		</Table>
+							</span>
+						</div>
+					</div>
+				);
+			})}
+		</div>
 	);
 }
 

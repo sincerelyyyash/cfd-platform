@@ -9,7 +9,7 @@ export default function TradingAppbar() {
 	const setSelectedAsset = useTradeStore((s) => s.setSelectedAsset);
 
 	return (
-		<div className="h-20 border-b border-slate-800 bg-slate-950/80 backdrop-blur supports-[backdrop-filter]:bg-slate-950/60 flex items-center px-4 justify-between">
+		<div className="sticky top-0 z-30 h-16 sm:h-20 border-b border-neutral-900 bg-black/70 backdrop-blur supports-[backdrop-filter]:bg-black/60 flex items-center px-3 sm:px-4 justify-between">
 			<div className="relative z-20 bg-gradient-to-b from-neutral-200 to-neutral-500 bg-clip-text text-xl font-bold text-transparent sm:text-4xl">
 				TradePrime
 			</div>
@@ -22,7 +22,7 @@ export default function TradingAppbar() {
 					onClickAction={() => setSelectedAsset("BTCUSDT")}
 				/>
 				<AssetButton
-					imageURL="/Ethereum.png"
+					imageURL="/ethereum.png"
 					text="ETH"
 					isActive={selectedAsset === "ETHUSDT"}
 					onClickAction={() => setSelectedAsset("ETHUSDT")}
@@ -35,15 +35,28 @@ export default function TradingAppbar() {
 				/>
 			</div>
 
-			<div className="flex items-center gap-4">
-				<div className="rounded-lg hover:bg-slate-900/70 border border-transparent hover:border-slate-800 transition-colors">
+			<div className="flex items-center gap-2 sm:gap-3">
+				<div className="rounded-lg border border-neutral-900 bg-black/40 hover:bg-black/60 transition-colors">
 					<BalanceDropDown />
 				</div>
-				<div className="text-slate-300">Price Alert</div>
+				<button
+					type="button"
+					aria-label="Manage price alerts"
+					className="inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-black/40 px-3 py-2 text-zinc-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-neutral-600/40"
+				>
+					{/* Bell icon */}
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="opacity-90">
+						<path d="M12 3a6 6 0 00-6 6v2.586l-.707.707A1 1 0 006 14h12a1 1 0 00.707-1.707L18 11.586V9a6 6 0 00-6-6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+						<path d="M9 18a3 3 0 006 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+					</svg>
+					<span className="hidden sm:inline">Alerts</span>
+				</button>
 				<div>
 					<AccountDropDown />
 				</div>
-				<button className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 transition-colors">
+				<button
+					className="px-3 sm:px-4 py-2 rounded-lg border border-emerald-700/60 bg-emerald-600/15 text-emerald-300 hover:bg-emerald-700/25 focus:outline-none focus:ring-2 focus:ring-emerald-600/40"
+				>
 					Deposit
 				</button>
 			</div>

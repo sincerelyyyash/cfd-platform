@@ -1,11 +1,6 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import type {
-	IChartApi,
-	ISeriesApi,
-	CandlestickData,
-} from "lightweight-charts";
-
+import React, { useEffect, useRef, useState } from "react";
+import type { IChartApi, ISeriesApi, CandlestickData } from "lightweight-charts";
 
 type CandlestickChartProps = {
 	data: CandlestickData[];
@@ -21,62 +16,88 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const chartRef = useRef<IChartApi | null>(null);
 	const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
+	const [isReady, setIsReady] = useState(false);
 
 	useEffect(() => {
 		if (!containerRef.current) return;
 
-		let disposed = false;
+		let mounted = true;
 
-		(async () => {
+		const initChart = async () => {
 			try {
-				const mod = await import("lightweight-charts");
-				const createChart = mod.createChart;
+				const { createChart, CandlestickSeries } = await import("lightweight-charts");
+				
+				if (!mounted || !containerRef.current) return;
 
-				if (!createChart || typeof createChart !== "function") {
-					console.warn("lightweight-charts createChart not available");
-					return;
-				}
-
-				if (disposed || !containerRef.current) return;
-
-				chartRef.current = createChart(containerRef.current, {
+				const chart = createChart(containerRef.current, {
 					width,
 					height,
 					layout: {
-						textColor: "white",
-						background: { color: "black" },
+						textColor: "#e5e7eb",
+						background: { color: "#000000" },
+					},
+					grid: {
+						vertLines: { color: "#0b0b0b" },
+						horzLines: { color: "#0b0b0b" },
+					},
+					rightPriceScale: {
+						visible: true,
+						borderVisible: true,
+						borderColor: "#111111",
+					},
+					timeScale: {
+						visible: true,
+						borderVisible: true,
+						borderColor: "#111111",
+						timeVisible: true,
+						secondsVisible: false,
 					},
 				});
 
-				const chartApi = chartRef.current as unknown as {
+				chartRef.current = chart;
+
+				const anyChart = chart as unknown as {
+					addSeries?: (seriesCtor: any, options?: any) => ISeriesApi<"Candlestick">;
 					addCandlestickSeries?: (options?: any) => ISeriesApi<"Candlestick">;
-					timeScale?: () => { fitContent?: () => void };
 				};
 
-				if (chartApi && typeof chartApi.addCandlestickSeries === "function") {
-					seriesRef.current = chartApi.addCandlestickSeries({
+				let series: ISeriesApi<"Candlestick"> | null = null;
+				if (typeof anyChart.addSeries === "function" && CandlestickSeries) {
+					series = anyChart.addSeries(CandlestickSeries as any, {
 						upColor: "#26a69a",
 						downColor: "#ef5350",
 						borderVisible: false,
 						wickUpColor: "#26a69a",
 						wickDownColor: "#ef5350",
 					});
+				} else if (typeof anyChart.addCandlestickSeries === "function") {
+					series = anyChart.addCandlestickSeries({
+					upColor: "#26a69a",
+					downColor: "#ef5350",
+					borderVisible: false,
+					wickUpColor: "#26a69a",
+					wickDownColor: "#ef5350",
+					});
 				} else {
-					console.warn("Chart API missing addCandlestickSeries; rendering without series");
+					console.warn("Chart API missing series methods; rendering without series", anyChart);
+					return;
 				}
 
-				if (typeof chartApi?.timeScale === "function") {
-					chartApi.timeScale()?.fitContent?.();
-				}
+				seriesRef.current = series;
+				setIsReady(true);
+
+				chart.timeScale().fitContent();
 			} catch (err) {
 				console.error("Failed to initialize chart:", err);
 			}
-		})();
+		};
+
+		initChart();
 
 		return () => {
-			disposed = true;
+			mounted = false;
 			try {
-				chartRef.current?.remove?.();
+				chartRef.current?.remove();
 			} catch {}
 			chartRef.current = null;
 			seriesRef.current = null;
@@ -84,25 +105,38 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
 	}, [width, height]);
 
 	useEffect(() => {
-		if (!seriesRef.current || !Array.isArray(data) || data.length === 0) return;
+		if (!isReady || !seriesRef.current || !Array.isArray(data) || data.length === 0) return;
 
-		const normalized = data.map((c) => ({
-			...c,
-			time:
-				typeof c.time === "number" && c.time > 1e12
-					? Math.floor(c.time / 1000)
-					: c.time,
-		}));
+		const numericData = data
+			.map((c) => {
+				const original = c.time as unknown;
+				const timeNum =
+					typeof original === "number"
+						? original > 1e12
+							? Math.floor(original / 1000)
+							: original
+						: NaN;
+
+				if (!Number.isFinite(timeNum)) return null;
+
+				return {
+					time: timeNum as number,
+					open: c.open,
+					high: c.high,
+					low: c.low,
+					close: c.close,
+				} as CandlestickData;
+			})
+			.filter(Boolean) as CandlestickData[];
 
 		try {
-			seriesRef.current.setData(normalized);
+			seriesRef.current.setData(numericData);
 		} catch (err) {
 			console.warn("Failed to set series data:", err);
 		}
-	}, [data]);
+	}, [data, isReady]);
 
 	return <div ref={containerRef} style={{ width, height }} />;
 };
 
 export default CandlestickChart;
-

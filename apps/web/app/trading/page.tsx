@@ -17,14 +17,15 @@ export default function TradingPage() {
         <ResizablePanel defaultSize={25}><AssetSidebar /></ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel defaultSize={55}>
+          <ResizablePanelGroup direction="vertical" id="charts-positions-group">
+            <ResizablePanel defaultSize={60}>
               <Charts />
             </ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel defaultSize={35}><TradePositions /></ResizablePanel>
+            <ResizablePanel defaultSize={40}><TradePositions /></ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
+        <ResizableHandle />
         <ResizablePanel defaultSize={25}><TradingModal /></ResizablePanel>
       </ResizablePanelGroup>
 
