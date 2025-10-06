@@ -142,7 +142,7 @@ export class KafkaManager {
         topic: topic,
         messages: [msg]
       })
-      console.log(`Message sent to topic ${topic}`);
+      // console.log(`Message sent to topic ${topic}`);
     } catch (error) {
       console.error('Failed to initialize producer:', error);
     }
