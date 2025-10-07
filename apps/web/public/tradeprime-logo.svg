@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- TradePrime monogram: minimal T + P within a rounded square, strokes use currentColor -->
+  <rect x="2" y="2" width="28" height="28" rx="6" stroke="currentColor" stroke-width="1.6"/>
+  <!-- T stem and bar -->
+  <path d="M10 10h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M16 10v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- P loop (open) -->
+  <path d="M16 10h4.5a4 4 0 0 1 0 8H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
