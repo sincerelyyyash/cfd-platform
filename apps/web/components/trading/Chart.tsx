@@ -38,8 +38,8 @@ export default function Charts() {
 	}, [selectedAsset]);
 
 	return (
-		<div className="w-full bg-black/40">
-			<CandlestickChart data={data} width={900} height={500} />
+		<div className="w-full bg-black">
+			<CandlestickChart data={data} height={500} />
 		</div>
 	);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { BidAskTable } from "./BidAskTable";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar";
 import { useTradeStore } from "@/store/useTradeStore";
 
 const AssetSidebar = () => {
@@ -26,21 +26,21 @@ const AssetSidebar = () => {
 		<aside
 			role="complementary"
 			aria-label="Market instruments sidebar"
-			className="flex h-full flex-col border-r border-neutral-900 bg-gradient-to-b from-black via-black to-black"
+			className="flex h-full flex-col border-r border-neutral-900 bg-black"
 		>
-			<header className="sticky top-0 z-10 border-b border-neutral-900/60 bg-black/70 backdrop-blur">
-				<div className="flex items-center justify-between px-4 py-3 sm:px-6">
+			<header className="sticky top-0 z-10 border-b border-neutral-900/60 bg-black">
+				<div className="flex items-center justify-between rounded-lg border border-neutral-900/70 bg-black px-3 py-2 text-zinc-200 sm:px-6 mx-auto w-[92%]">
 					<h2 id="instruments-heading" className="text-sm sm:text-base font-semibold tracking-wide text-zinc-100">
 						Instruments
 					</h2>
 					<div className="flex items-center gap-3">
 						<span
-							className="inline-flex items-center gap-2 rounded-full border border-slate-800 px-2.5 py-1 text-[11px] font-medium text-zinc-300"
+							className="inline-flex items-center gap-2 rounded-full border border-neutral-800 px-2.5 py-1 text-[11px] font-medium text-zinc-300"
 							aria-live="polite"
 						>
 							<span
 								className={
-									`h-1.5 w-1.5 rounded-full ${isLive ? "bg-emerald-400 shadow-[0_0_0_3px_rgba(16,185,129,0.15)]" : "bg-slate-500"}`
+									`h-1.5 w-1.5 rounded-full ${isLive ? "bg-emerald-400 shadow-[0_0_0_3px_rgba(16,185,129,0.15)]" : "bg-neutral-500"}`
 								}
 							/>
 							{isLive ? "Live" : "Waiting"}
@@ -68,23 +68,23 @@ const AssetSidebar = () => {
 			</header>
 
 			<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-				<div className="px-4 pb-3 pt-3 sm:px-6 sm:pb-4">
-					<SearchBar />
+				<div className="px-4 pb-3 pt-3 sm:px-6 sm:pb-4 mx-auto w-[92%]">
+					{/* <SearchBar /> */}
 				</div>
 
 				<div className="flex-1 overflow-y-auto px-2 sm:px-4 pb-4">
-					<div className="px-2">
+					<div className="mx-auto w-[92%]">
 						{isLive ? (
 							<BidAskTable data={tableData} />
 						) : (
 							<div className="space-y-3">
 								{[0, 1, 2].map((index) => (
 									<div key={index} className="animate-pulse">
-									<div className="flex items-center justify-between rounded-md border border-neutral-900/70 bg-black/40 px-3 py-3">
-										<div className="h-3 w-24 rounded bg-neutral-900/70" />
-											<div className="flex items-center gap-4">
-											<div className="h-3 w-12 rounded bg-neutral-900/70" />
-											<div className="h-3 w-12 rounded bg-neutral-900/70" />
+										<div className="flex items-center justify-between rounded-lg border border-neutral-900/70 bg-black px-3 py-2 text-zinc-200">
+											<div className="h-3 w-24 rounded bg-neutral-900/70" />
+											<div className="flex items-center gap-3">
+												<div className="h-3 w-12 rounded bg-neutral-900/70" />
+												<div className="h-3 w-12 rounded bg-neutral-900/70" />
 											</div>
 										</div>
 									</div>
@@ -96,7 +96,7 @@ const AssetSidebar = () => {
 				</div>
 			</div>
 
-		<footer className="border-t border-neutral-900/60 px-4 py-3 sm:px-6">
+		<footer className="border-t border-neutral-900/60 px-4 py-3 sm:px-6 bg-black">
 				<p className="text-[11px] text-zinc-500">
 					Prices are indicative. Check the order ticket for final execution.
 				</p>

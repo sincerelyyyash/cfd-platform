@@ -52,8 +52,8 @@ export function BidAskTable({
 					className={
 						`group flex items-center justify-between rounded-lg border px-3 py-2 transition-colors outline-none ` +
 						(isSelected
-						? "border-neutral-900/80 bg-black/50 text-zinc-200"
-						: "border-neutral-900/80 bg-black/30 text-zinc-200 hover:bg-black/50 focus:ring-2 focus:ring-neutral-400/40")
+						? "border-sky-500 bg-black text-zinc-200"
+						: "border-neutral-900/80 bg-black text-zinc-200 hover:bg-black focus:ring-2 focus:ring-neutral-400/40")
 					}
 					>
 						<div className="flex items-center gap-2">

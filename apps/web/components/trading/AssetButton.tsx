@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 type ButtonProps = {
   imageURL: string;
@@ -15,10 +16,11 @@ export default function AssetButton({
   onClickAction,
 }: ButtonProps) {
   return (
-    <button
+    <Button
       onClick={onClickAction}
-      className={`flex items-center gap-2 p-2 rounded-lg w-32 justify-center transition-colors border
-        ${isActive ? "border-slate-900 bg-black/70 text-zinc-200" : "border-slate-900/60 bg-black/30 text-slate-200 hover:bg-black/60"}`}
+      variant={isActive ? "secondary" : "outline"}
+      className={`w-32 gap-2 px-3 py-2 !font-medium ${isActive ? "ring-0" : ""}`}
+      aria-pressed={isActive}
     >
       <Image
         src={imageURL}
@@ -28,7 +30,7 @@ export default function AssetButton({
         className="rounded-full"
       />
       <span>{text}</span>
-    </button>
+    </Button>
   );
 }
 
