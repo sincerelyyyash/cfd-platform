@@ -102,3 +102,41 @@ export const tradeClose = async (req: Request, res: Response) => {
   }
 
 }
+
+export const listOpenOrders = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const req_id = uuidv4();
+    const response = await sendRequestAndWait(
+      req_id,
+      new KafkaRequest({
+        service: "user",
+        action: "get-all-open-orders",
+        data: { userId },
+        message: "List all open orders for user",
+      })
+    );
+    return res.json(response);
+  } catch (err) {
+    return res.status(500).json({ message: "Failed to fetch open orders", error: (err as Error).message });
+  }
+}
+
+export const listClosedOrders = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const req_id = uuidv4();
+    const response = await sendRequestAndWait(
+      req_id,
+      new KafkaRequest({
+        service: "user",
+        action: "get-all-closed-orders",
+        data: { userId },
+        message: "List all closed orders for user",
+      })
+    );
+    return res.json(response);
+  } catch (err) {
+    return res.status(500).json({ message: "Failed to fetch closed orders", error: (err as Error).message });
+  }
+}
