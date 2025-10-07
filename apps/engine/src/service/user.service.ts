@@ -180,6 +180,45 @@ export const getAllOpenOrders = async (key: string, data: any) => {
   }
 }
 
+export const getAllClosedOrders = async (key: string, data: any) => {
+  const { userId } = data;
+  try {
+    const user = userStore.getUserById(userId);
+    if (!user) {
+      return responseProducer(key, new Response({
+        statusCode: 404,
+        success: false,
+        message: "User not found"
+      }))
+    }
+
+    const allClosedOrders = orderStore.getClosedOrders(userId);
+    if (!allClosedOrders || allClosedOrders.length < 1) {
+      return responseProducer(key, new Response({
+        statusCode: 200,
+        success: true,
+        message: "No closed orders found.",
+        data: []
+      }))
+    }
+
+    return responseProducer(key, new Response({
+      statusCode: 200,
+      success: true,
+      message: "Closed orders fetched successfully.",
+      data: allClosedOrders,
+    }))
+
+  } catch (err) {
+    return responseProducer(key, new Response({
+      statusCode: 500,
+      success: false,
+      message: "Could not get closed orders",
+      data: (err as Error).message,
+    }))
+  }
+}
+
 // export const getAllOrders = async()=>{
 //
 // }

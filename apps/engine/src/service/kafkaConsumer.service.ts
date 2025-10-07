@@ -1,6 +1,6 @@
 import { consumeMessages, type EachMessagePayload } from "@repo/kafka-client/index";
 import { closeTrade, createTrade } from "./trade.service";
-import { createUser, getAllOpenOrders, getUserBalance, getUserByEmail, getUserById } from "./user.service";
+import { createUser, getAllOpenOrders, getAllClosedOrders, getUserBalance, getUserByEmail, getUserById } from "./user.service";
 import { updatePrice } from "../Store/PriceStore";
 
 const topic = "trade_stream";
@@ -26,6 +26,7 @@ const requestHandlers: Record<string, (key: string, data: any) => Promise<any> |
   "get-user-id": getUserById,
   "get-user-email": getUserByEmail,
   "get-all-open-orders": getAllOpenOrders,
+  "get-all-closed-orders": getAllClosedOrders,
 };
 
 const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayload) => {
