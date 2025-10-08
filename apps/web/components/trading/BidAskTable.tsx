@@ -49,12 +49,12 @@ export function BidAskTable({
 						tabIndex={0}
 						onClick={() => setSelectedAsset(row.asset)}
 						onKeyDown={(e) => handleKeyDown(e, row.asset)}
-					className={
-						`group flex items-center justify-between rounded-lg border px-3 py-2 transition-colors outline-none ` +
-						(isSelected
-						? "border-sky-500 bg-black text-zinc-200"
-						: "border-neutral-900/80 bg-black text-zinc-200 hover:bg-black focus:ring-2 focus:ring-neutral-400/40")
-					}
+						className={
+							`group flex items-center justify-between rounded-lg px-3 py-2 transition-all duration-200 outline-none ` +
+							(isSelected
+								? "bg-sky-500/15 text-zinc-100 shadow-[inset_0_1px_0_0_rgba(14,165,233,0.3)]"
+								: "bg-neutral-900/30 text-zinc-200 hover:bg-neutral-800/40 focus:ring-2 focus:ring-neutral-400/40 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.02)]")
+						}
 					>
 						<div className="flex items-center gap-2">
 							<Image
@@ -68,14 +68,14 @@ export function BidAskTable({
 						</div>
 						<div className="flex items-center gap-3">
 							<span className={
-								`rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-semibold tabular-nums ` +
-								(isSelected ? "text-emerald-300" : "text-emerald-400")
+								`rounded-lg bg-emerald-500/15 px-2 py-1 text-xs font-semibold tabular-nums shadow-[inset_0_1px_0_0_rgba(16,185,129,0.2)] ` +
+								(isSelected ? "text-emerald-200" : "text-emerald-300")
 							}>
 								{row.bid}
 							</span>
 							<span className={
-								`rounded-md bg-rose-500/10 px-2 py-0.5 text-xs font-semibold tabular-nums ` +
-								(isSelected ? "text-rose-300" : "text-rose-400")
+								`rounded-lg bg-rose-500/15 px-2 py-1 text-xs font-semibold tabular-nums shadow-[inset_0_1px_0_0_rgba(239,68,68,0.2)] ` +
+								(isSelected ? "text-rose-200" : "text-rose-300")
 							}>
 								{row.ask}
 							</span>

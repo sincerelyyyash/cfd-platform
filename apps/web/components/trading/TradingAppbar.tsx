@@ -10,7 +10,7 @@ export default function TradingAppbar() {
 	const setSelectedAsset = useTradeStore((s) => s.setSelectedAsset);
 
 	return (
-			<div className="sticky top-0 z-30 h-16 sm:h-20 border-b border-neutral-900 bg-gradient-to-b from-neutral-900/70 via-black/70 to-black/90 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05),0_10px_24px_-16px_rgba(0,0,0,0.9)] backdrop-blur supports-[backdrop-filter]:bg-transparent flex items-center px-3 sm:px-4 justify-between">
+			<div className="sticky top-0 z-30 h-16 sm:h-20 bg-neutral-950 shadow-[0_1px_0_0_rgba(255,255,255,0.03),0_4px_12px_-4px_rgba(0,0,0,0.4)] backdrop-blur supports-[backdrop-filter]:bg-transparent flex items-center px-3 sm:px-4 justify-between">
 			<div className="relative z-20 flex items-center gap-2 text-neutral-100">
 				<span aria-label="TradePrime" role="img" className="inline-flex items-center justify-center ml-2">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="34" height="34" className="opacity-95">
@@ -45,13 +45,13 @@ export default function TradingAppbar() {
 			</div>
 
 			<div className="flex items-center gap-2 sm:gap-3">
-				<div className="rounded-lg border border-neutral-800 bg-transparent hover:bg-transparent transition-colors">
+				<div className="rounded-lg bg-neutral-900/30 hover:bg-neutral-800/40 transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
 					<BalanceDropDown />
 				</div>
 				<Button
 					variant="outline"
 					aria-label="Manage price alerts"
-					className="inline-flex items-center gap-2 px-3 py-2"
+					className="inline-flex items-center gap-2 px-3 py-2 bg-neutral-900/30 hover:bg-neutral-800/40 border-neutral-800/50 text-zinc-200 hover:text-zinc-100 transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
 				>
 					{/* Bell icon */}
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="opacity-90">
@@ -66,7 +66,7 @@ export default function TradingAppbar() {
 				<Button
 					variant="primary"
 					aria-label="Deposit funds"
-					className="px-3 sm:px-4 py-2"
+					className="px-3 sm:px-4 py-2 bg-sky-500/20 hover:bg-sky-500/30 text-sky-200 hover:text-sky-100 border-sky-500/30 transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(14,165,233,0.3)]"
 				>
 					Deposit
 				</Button>
