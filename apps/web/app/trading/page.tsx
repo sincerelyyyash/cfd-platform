@@ -11,12 +11,12 @@ import {
 
 export default function TradingPage() {
   return (
-    <div className="h-screen bg-black">
+    <div className="h-screen bg-neutral-950">
       <TradingAppbar />
       <div className="flex h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
         <div className="flex-1 min-w-0">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel defaultSize={38} minSize={28} maxSize={55}>
+            <ResizablePanel defaultSize={38} minSize={40} maxSize={55}>
               <div className="min-w-[300px] md:min-w-[340px] lg:min-w-[380px] xl:min-w-[420px] h-full">
                 <AssetSidebar />
               </div>
@@ -35,7 +35,7 @@ export default function TradingPage() {
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
-        <div className="w-[360px] shrink-0 border-l border-neutral-900">
+        <div className="w-[360px] shrink-0 bg-neutral-950 shadow-[inset_1px_0_0_0_rgba(255,255,255,0.03)]">
           <TradingModal />
         </div>
       </div>
