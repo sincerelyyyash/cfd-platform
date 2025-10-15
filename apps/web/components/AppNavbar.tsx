@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Brand from "@/components/Brand";
 import {
   Navbar,
   NavBody,
@@ -32,8 +33,8 @@ export default function AppNavbar() {
     <div className="relative w-full pt-6 md:pt-8">
       <Navbar>
         <NavBody>
-          <Link href="/" aria-label="TradePrime home">
-            <NavbarLogo />
+          <Link href="/" aria-label="TradePrime home" className="inline-flex items-center">
+            <Brand size="md" showText={true} variant="delta" />
           </Link>
           <NavItems items={navItems} />
           <div className="flex items-center gap-3">
