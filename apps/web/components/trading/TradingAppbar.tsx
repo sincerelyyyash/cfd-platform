@@ -4,6 +4,7 @@ import AssetButton from "./AssetButton";
 import BalanceDropDown from "./BalanceDropdown";
 import { useTradeStore } from "@/store/useTradeStore";
 import { Button } from "@/components/ui/button";
+import Brand from "@/components/Brand";
 
 export default function TradingAppbar() {
 	const selectedAsset = useTradeStore((s) => s.selectedAsset);
@@ -12,16 +13,11 @@ export default function TradingAppbar() {
 	return (
 			<div className="sticky top-0 z-30 h-16 sm:h-20 bg-neutral-950 shadow-[0_1px_0_0_rgba(255,255,255,0.03),0_4px_12px_-4px_rgba(0,0,0,0.4)] backdrop-blur supports-[backdrop-filter]:bg-transparent flex items-center px-3 sm:px-4 justify-between">
 			<div className="relative z-20 flex items-center gap-2 text-neutral-100">
-				<span aria-label="TradePrime" role="img" className="inline-flex items-center justify-center ml-2">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="34" height="34" className="opacity-95">
-							<rect x="2" y="2" width="28" height="28" rx="6" stroke="currentColor" strokeWidth="1.6"/>
-							<path d="M10 10h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-							<path d="M16 10v12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-							<path d="M16 10h4.5a4 4 0 0 1 0 8H16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-						</svg>
-					</span>
-					{/* <span className="text-2xl sm:text-3xl font-semibold tracking-tight">TradePrime</span> */}
-				</div>
+				<span className="ml-2">
+					<Brand size="lg" showText={false} variant="orbital" />
+				</span>
+				<span className="hidden sm:inline text-xl sm:text-2xl font-semibold tracking-tight text-neutral-100">TradePrime</span>
+			</div>
 
 			<div className="flex items-center gap-3 sm:gap-4">
 				<AssetButton

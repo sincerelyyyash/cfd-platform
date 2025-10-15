@@ -28,14 +28,14 @@ const AssetSidebar = () => {
 			aria-label="Market instruments sidebar"
 			className="flex h-full flex-col bg-neutral-950"
 		>
-			<header className="sticky top-0 z-10 bg-neutral-950 shadow-[0_1px_0_0_rgba(255,255,255,0.03)]">
-				<div className="flex items-center justify-between rounded-lg bg-neutral-900/30 px-3 py-2.5 text-zinc-100 mx-3 mt-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+			<header className="sticky top-0 z-20 bg-neutral-950 shadow-[0_1px_0_0_rgba(255,255,255,0.03)]">
+				<div className="flex items-center justify-between rounded-lg bg-neutral-900 px-2 py-2 text-zinc-100 mx-2 mt-2 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
 					<h2 id="instruments-heading" className="text-sm font-semibold tracking-wide text-zinc-100">
 						Instruments
 					</h2>
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-1.5">
 						<span
-							className="inline-flex items-center gap-1.5 rounded-md bg-neutral-950/50 px-2 py-1 text-[10px] font-medium text-zinc-300 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.2)]"
+							className="inline-flex items-center gap-1.5 rounded-md bg-neutral-950/50 px-1.5 py-0.5 text-[10px] font-medium text-zinc-300 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.2)]"
 							aria-live="polite"
 						>
 							<span
@@ -48,7 +48,7 @@ const AssetSidebar = () => {
 						<button
 							role="img"
 							aria-label="Sidebar options"
-							className="text-zinc-400 hover:text-zinc-200 transition-colors p-1 rounded hover:bg-neutral-800/30"
+							className="text-zinc-400 hover:text-zinc-200 transition-colors p-0.5 rounded hover:bg-neutral-800/30"
 							tabIndex={0}
 							onKeyDown={(event) => {
 								if (event.key === "Enter" || event.key === " ") {
@@ -68,23 +68,23 @@ const AssetSidebar = () => {
 			</header>
 
 			<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-				<div className="px-3 pb-2 pt-2">
+				<div className="px-2 pb-1.5 pt-1.5">
 					{/* <SearchBar /> */}
 				</div>
 
-				<div className="flex-1 overflow-y-auto px-3 pb-4">
-					<div className="space-y-2">
+				<div className="flex-1 overflow-y-auto px-2 pb-3">
+					<div className="space-y-1.5">
 						{isLive ? (
 							<BidAskTable data={tableData} />
 						) : (
-							<div className="space-y-2">
+							<div className="space-y-1.5">
 								{[0, 1, 2].map((index) => (
 									<div key={index} className="animate-pulse">
-										<div className="flex items-center justify-between rounded-lg bg-neutral-900/30 px-3 py-2 text-zinc-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)]">
-											<div className="h-3 w-24 rounded bg-neutral-800/50" />
-											<div className="flex items-center gap-3">
-												<div className="h-3 w-12 rounded bg-neutral-800/50" />
-												<div className="h-3 w-12 rounded bg-neutral-800/50" />
+										<div className="flex items-center justify-between rounded-lg bg-neutral-900/30 px-2 py-1.5 text-zinc-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)]">
+											<div className="h-3 w-20 rounded bg-neutral-800/50" />
+											<div className="flex items-center gap-2.5">
+												<div className="h-3 w-10 rounded bg-neutral-800/50" />
+												<div className="h-3 w-10 rounded bg-neutral-800/50" />
 											</div>
 										</div>
 									</div>
@@ -96,7 +96,7 @@ const AssetSidebar = () => {
 				</div>
 			</div>
 
-			<footer className="bg-neutral-950 px-3 py-2 shadow-[0_-1px_0_0_rgba(255,255,255,0.03)]">
+			<footer className="bg-neutral-950 px-2 py-1.5 shadow-[0_-1px_0_0_rgba(255,255,255,0.03)]">
 				<p className="text-[10px] text-zinc-500">
 					Prices are indicative. Check the order ticket for final execution.
 				</p>
