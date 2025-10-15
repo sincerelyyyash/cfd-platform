@@ -16,8 +16,8 @@ export default function TradingPage() {
       <div className="flex h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
         <div className="flex-1 min-w-0">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel defaultSize={38} minSize={40} maxSize={55}>
-              <div className="min-w-[300px] md:min-w-[340px] lg:min-w-[380px] xl:min-w-[420px] h-full">
+            <ResizablePanel defaultSize={26} minSize={24} maxSize={33}>
+              <div className="min-w-[180px] md:min-w-[204px] lg:min-w-[228px] xl:min-w-[252px] h-full">
                 <AssetSidebar />
               </div>
             </ResizablePanel>

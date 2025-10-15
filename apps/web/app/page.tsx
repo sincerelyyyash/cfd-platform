@@ -1,14 +1,20 @@
-import AppNavbar from "@/components/AppNavbar";
-import Hero from "@/components/Hero";
-import Link from "next/link";
-import { LineChart, ShieldCheck, Zap } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/app/components/HeroSection";
+import BentoGrid from "@/app/components/BentoGrid";
 
 export default function Home() {
   return (
-    <div className="flex flex-col">
-      <AppNavbar />
-      <main>
-        <Hero />
+    <div className="relative min-h-screen bg-neutral-950 text-neutral-100">
+      
+
+      {/* Minimal, blended navbar */}
+      <Navbar />
+
+      {/* Hero Section (full viewport) */}
+      <main className="relative">
+        <HeroSection />
+
+        <BentoGrid />
       </main>
     </div>
   );
