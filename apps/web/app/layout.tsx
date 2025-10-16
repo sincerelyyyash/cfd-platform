@@ -4,6 +4,7 @@ import "./globals.css";
 import { WebSocketProvider } from "@/components/WebSocketProvider";
 import { Sonar } from "@/components/ui/sonar";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import Footer from "@/components/Footer";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -28,13 +29,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-mono`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased font-mono min-h-screen flex flex-col`}
       >
         <AuthProvider>
           <WebSocketProvider>
-            {children}
+            <main className="flex-1">
+              {children}
+            </main>
           </WebSocketProvider>
         </AuthProvider>
+        <Footer />
         <Sonar />
       </body>
     </html>
