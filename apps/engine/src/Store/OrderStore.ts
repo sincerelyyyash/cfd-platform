@@ -13,7 +13,7 @@ export type Orders = {
   pnL?: number,
   slippage?: number,
   stopLoss?: number,
-  takeProfit: number,
+  takeProfit?: number,
   liquidated?: boolean,
 }
 

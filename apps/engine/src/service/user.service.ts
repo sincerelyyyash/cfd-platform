@@ -9,26 +9,38 @@ const orderStore = OrderStore.getInstance();
 
 export const createUser = async (key: string, data: any) => {
   const { id } = data;
+  console.log(`[Engine] createUser called with key=${key}, id=${id}`);
 
   const existingUser = userStore.getUserById(id);
   if (existingUser) {
-    return responseProducer(key, new Response({
+    console.log(`[Engine] User ${id} already exists, returning 400`);
+    await responseProducer(key, new Response({
       statusCode: 400,
       message: "User already exists",
       success: false,
     }))
+    return;
   }
 
   try {
     const user = userStore.addUser(data);
-    responseProducer(key, new Response({
+    if (!user) {
+      throw new Error("Failed to create user in store");
+    }
+    console.log(`[Engine] User ${id} created in store, balance=${user.balance}`);
+    
+    const response = new Response({
       statusCode: 200,
       message: "User created successfully",
       success: true,
       data: user,
-    }))
+    });
+    
+    console.log(`[Engine] Sending response for key=${key}:`, response);
+    await responseProducer(key, response);
+    console.log(`[Engine] Response sent for key=${key}`);
 
-    requestProducer("db", new KafkaRequest({
+    await requestProducer("db", new KafkaRequest({
       service: "db",
       action: "store-new-user",
       data: user,
@@ -36,12 +48,14 @@ export const createUser = async (key: string, data: any) => {
     }))
     return;
   } catch (err) {
-    return responseProducer(key, new Response({
+    console.error(`[Engine] Error creating user ${id}:`, err);
+    await responseProducer(key, new Response({
       statusCode: 500,
       message: "Failed to create User.",
       success: false,
       data: (err as Error).message,
     }))
+    return;
   }
 }
 
@@ -114,31 +128,44 @@ export const getUserByEmail = async (key: string, data: any) => {
 
 export const getUserBalance = async (key: string, data: any) => {
   const { userId } = data;
+  console.log(`[Engine] getUserBalance called with key=${key}, userId=${userId}`);
+  
   try {
     const user = userStore.getUserById(userId);
 
     if (!user) {
-      return responseProducer(key, new Response({
+      console.log(`[Engine] User ${userId} not found in store`);
+      await responseProducer(key, new Response({
         statusCode: 404,
         success: false,
         message: "User not found",
       }))
+      return;
     }
 
-    const balance = user?.balance;
-    return responseProducer(key, new Response({
+    const balance = user.balance;
+    console.log(`[Engine] User ${userId} balance: ${balance}`);
+    
+    const response = new Response({
       statusCode: 200,
       success: true,
       message: "Balance fetched successfully",
       data: balance
-    }))
+    });
+    
+    console.log(`[Engine] Sending balance response for key=${key}:`, response);
+    await responseProducer(key, response);
+    console.log(`[Engine] Balance response sent for key=${key}`);
+    return;
   } catch (err) {
-    return responseProducer(key, new Response({
+    console.error(`[Engine] Error getting balance for user ${userId}:`, err);
+    await responseProducer(key, new Response({
       statusCode: 500,
       success: false,
       message: "Failed to get balance.",
       data: (err as Error).message,
     }))
+    return;
   }
 }
 
@@ -155,19 +182,12 @@ export const getAllOpenOrders = async (key: string, data: any) => {
     }
 
     const allOpenOrders = orderStore.getOpenOrders(userId);
-    if (allOpenOrders.length < 1 || !allOpenOrders) {
-      return responseProducer(key, new Response({
-        statusCode: 400,
-        success: false,
-        message: "No open orders found."
-      }))
-    }
-
+    // Return empty array if no orders found instead of error
     return responseProducer(key, new Response({
       statusCode: 200,
       success: true,
       message: "Open orders fetched successfully.",
-      data: allOpenOrders,
+      data: allOpenOrders || [],
     }))
 
   } catch (err) {

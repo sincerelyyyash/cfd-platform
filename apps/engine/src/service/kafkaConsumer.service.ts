@@ -67,18 +67,19 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
       return;
     }
     const request = value.server_requests;
+    console.log(`[Engine] Received request: action=${request.action}, key=${key}`);
     const handler = requestHandlers[request.action];
     if (handler) {
       try {
+        console.log(`[Engine] Processing action: ${request.action} with data:`, request.data);
         await handler(key, request.data);
+        console.log(`[Engine] Successfully processed action: ${request.action}`);
       } catch (err) {
-        console.error(`Error handling action ${request.action}:`, err);
+        console.error(`[Engine] Error handling action ${request.action}:`, err);
       }
     } else {
-      console.log("Invalid request action:", request.action);
+      console.log(`[Engine] Invalid request action: ${request.action}`);
     }
   }
 };
-
-consumeMessages(topic, groupId, eachMessageHandler);
 

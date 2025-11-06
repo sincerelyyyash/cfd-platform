@@ -13,10 +13,12 @@ export const responseProducer = async (key: string, response: ResponseTypes) => 
       ? (response as any).toJSON()
       : response;
 
-  messageProducer(topic,
+  console.log(`[Engine Producer] Sending response to topic=${topic}, key=${key}, payload:`, payload);
+  await messageProducer(topic,
     String(key),
     JSON.stringify({ engine_responses: payload }),
   );
+  console.log(`[Engine Producer] Response sent for key=${key}`);
 }
 
 export const requestProducer = async (key: string, request: RequestTypes) => {
@@ -25,9 +27,11 @@ export const requestProducer = async (key: string, request: RequestTypes) => {
       ? (request as any).toJSON()
       : request;
 
-  messageProducer(topic,
+  console.log(`[Engine Producer] Sending DB request to topic=${topic}, key=${key}, action=${payload.action}`);
+  await messageProducer(topic,
     String(key),
     JSON.stringify({ db_requests: payload }),
   );
+  console.log(`[Engine Producer] DB request sent for key=${key}`);
 }
 

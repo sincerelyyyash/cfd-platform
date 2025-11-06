@@ -1,9 +1,9 @@
 import { consumeMessages, type EachMessagePayload } from "@repo/kafka-client/index";
 import { storeClosedOrder } from "./order.db";
-import { createNewUser } from "./user.db";
+import { createNewUser, updateUserBalance } from "./user.db";
 
 export const topic = "engine_stream";
-export const groupId = "engine_stream_consumer";
+export const groupId = "db_worker_consumer_group";
 
 export const startDataBaseWorker = () => {
 
@@ -19,7 +19,7 @@ export const startDataBaseWorker = () => {
 const requestHandlers: Record<string, (data: any) => Promise<any> | any> = {
   "store-close-order": storeClosedOrder,
   "store-new-user": createNewUser,
-  // "user-balance-update" : updateUserBalance,
+  "user-balance-update": updateUserBalance,
 };
 
 const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayload) => {
@@ -66,6 +66,4 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
     }
   }
 };
-
-consumeMessages(topic, groupId, eachMessageHandler);
 

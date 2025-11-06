@@ -21,8 +21,10 @@ export class UserStore {
     }
     return this.instance;
   }
-  addUser(userData: any) {
-    this.users.set(userData.id, { ...userData, balance: 5000 * this.BALANCE_DECIMAL });
+  addUser(userData: any, balance?: number) {
+
+    const initialBalance = balance !== undefined ? balance : 5000 * this.BALANCE_DECIMAL;
+    this.users.set(userData.id, { ...userData, balance: initialBalance });
     return this.users.get(userData.id)
   }
 

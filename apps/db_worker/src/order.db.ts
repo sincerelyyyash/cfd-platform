@@ -43,8 +43,46 @@ export const storeClosedOrder = async (data: OrderType) => {
       },
 
     })
+    console.log(`Closed order ${data.id} stored in database`);
   } catch (err) {
-    return console.error("Error storing order");
+    console.error("Error storing order:", err);
   }
 
+}
+
+export const getClosedOrdersFromDB = async (userId: string) => {
+  try {
+    const closedOrders = await prisma.existingTrade.findMany({
+      where: {
+        userId: userId,
+        status: "closed",
+      },
+      orderBy: {
+        id: "desc", 
+      },
+    });
+
+    const transformedOrders = closedOrders.map(order => ({
+      id: order.id,
+      userId: order.userId,
+      type: order.type,
+      status: order.status,
+      asset: order.assetId, 
+      quantity: order.quantity,
+      entryPrice: order.entryPrice,
+      exitPrice: order.exitPrice,
+      pnL: order.pnL,
+      leverage: order.leverage || undefined,
+      margin: order.margin || undefined,
+      stopLoss: order.stopLoss || undefined,
+      takeProfit: order.takeProfit || undefined,
+      liquidated: order.liquidated || undefined,
+    }));
+
+    console.log(`Retrieved ${transformedOrders.length} closed orders from database for user ${userId}`);
+    return transformedOrders;
+  } catch (err) {
+    console.error("Error fetching closed orders from database:", err);
+    throw err;
+  }
 } 
