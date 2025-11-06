@@ -1,7 +1,6 @@
 "use client";
 
 import { BidAskTable } from "./BidAskTable";
-// import SearchBar from "./SearchBar";
 import { useTradeStore } from "@/store/useTradeStore";
 
 const AssetSidebar = () => {
@@ -56,7 +55,7 @@ const AssetSidebar = () => {
 								}
 							}}
 						>
-							{/* Kebab icon */}
+                            
 							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="opacity-80">
 								<circle cx="12" cy="6" r="1.5" fill="currentColor" />
 								<circle cx="12" cy="12" r="1.5" fill="currentColor" />
@@ -68,9 +67,7 @@ const AssetSidebar = () => {
 			</header>
 
 			<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-				<div className="px-2 pb-1.5 pt-1.5">
-					{/* <SearchBar /> */}
-				</div>
+                <div className="px-2 pb-1.5 pt-1.5"></div>
 
 				<div className="flex-1 overflow-y-auto px-2 pb-3">
 					<div className="space-y-1.5">

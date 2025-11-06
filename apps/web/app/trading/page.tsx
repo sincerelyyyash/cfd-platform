@@ -1,3 +1,4 @@
+"use client";
 import AssetSidebar from "@/components/trading/AssetSidebar"
 import Charts from "@/components/trading/Chart"
 import TradePositions from "@/components/trading/TradePositions"
@@ -8,6 +9,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
+export const dynamic = 'force-dynamic';
 
 export default function TradingPage() {
   return (

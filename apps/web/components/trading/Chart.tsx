@@ -12,7 +12,7 @@ export default function Charts() {
 		async function fetchData() {
 			try {
 				const params = new URLSearchParams({ asset: selectedAsset, ts: "1m", limit: "500" });
-				// Use relative path so Next.js rewrite proxies to backend, avoiding CORS
+
 				const url = `/api/v1/candles?${params.toString()}`;
 				const res = await fetch(url, { cache: "no-store" });
 				if (!res.ok) {

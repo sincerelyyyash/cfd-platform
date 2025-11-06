@@ -1,10 +1,12 @@
 "use client";
 import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { useTradeStore } from "@/store/useTradeStore";
 import { Button } from "@/components/ui/button";
 import { sonar } from "@/components/ui/sonar";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/auth/AuthProvider";
+
 
 const assetLogos: Record<string, string> = {
 	BTCUSDT: "/Bitcoin.png",
@@ -15,6 +17,8 @@ const assetLogos: Record<string, string> = {
 export default function TradingModal() {
 	const selectedAsset = useTradeStore((s) => s.selectedAsset);
 	const trades = useTradeStore((s) => s.trades);
+	const { signedIn } = useAuth();
+	const router = useRouter();
 
 	const [volume, setVolume] = useState<number>(0.1);
 	const [percent, setPercent] = useState<number>(0); // 0-100 slider controlling volume
@@ -24,7 +28,6 @@ export default function TradingModal() {
 	const [side, setSide] = useState<"buy" | "sell">("buy");
 	const [showRiskFields, setShowRiskFields] = useState<boolean>(false);
 	const [submitting, setSubmitting] = useState<boolean>(false);
-	const router = useRouter();
 
 	const handleIncrement = (setter: (val: number) => void, current: number, step = 0.1) => {
 		const next = parseFloat((current + step).toFixed(4));
@@ -53,7 +56,8 @@ export default function TradingModal() {
 
 	// derive displayed price and order value
 	const displayedPrice = side === "buy" ? priceInfo.ask : priceInfo.bid;
-	const accountBalanceUsd = 5000; // replace with real account balance when available
+	const [accountBalanceUsd, setAccountBalanceUsd] = useState<number>(5000); // Default to 5000, will be updated from API
+	const BALANCE_DECIMAL = 100; // Same as BalanceDropdown
 	const leverageNumber = useMemo(() => Number(selectedLeverage.replace("x", "")) || 1, [selectedLeverage]);
 	const maxQuantity = useMemo(() => {
 		if (!displayedPrice || displayedPrice <= 0) return 0;
@@ -61,6 +65,101 @@ export default function TradingModal() {
 		return Number((notionalBuyingPower / displayedPrice).toFixed(8));
 	}, [accountBalanceUsd, leverageNumber, displayedPrice]);
 	const orderValue = useMemo(() => Number((volume * displayedPrice).toFixed(8)), [volume, displayedPrice]);
+
+	// Fetch user balance
+	const fetchBalance = useCallback(async () => {
+		if (!signedIn) return;
+		try {
+			const res = await fetch("/api/v1/balance", { credentials: "include" });
+			if (!res.ok) {
+				console.error("Failed to fetch balance:", res.status);
+				return;
+			}
+			const data = await res.json();
+			
+			// Handle different response formats
+			const rawBalance =
+				typeof data === "number"
+					? data
+					: data?.data !== undefined
+						? data.data
+						: data?.response?.data !== undefined
+							? data.response.data
+							: null;
+			
+			if (rawBalance !== null && typeof rawBalance === "number") {
+				// Convert from BALANCE_DECIMAL format (e.g., 500000 -> 5000 USD)
+				const balanceUsd = rawBalance / BALANCE_DECIMAL;
+				setAccountBalanceUsd(balanceUsd);
+			}
+		} catch (err) {
+			console.error("Error fetching balance:", err);
+		}
+	}, [signedIn]);
+
+	// Fetch balance on mount and when signed in
+	useEffect(() => {
+		if (!signedIn) return;
+		fetchBalance();
+	}, [signedIn, fetchBalance]);
+
+	// Listen for balance refresh events
+	useEffect(() => {
+		if (!signedIn) return;
+
+		const handleBalanceRefresh = () => {
+			console.log("Balance refresh event received in TradingModal, refreshing balance with retries...");
+			// Fetch immediately
+			fetchBalance();
+			// Fetch again after 500ms (backend processing delay)
+			setTimeout(() => {
+				if (signedIn) fetchBalance();
+			}, 500);
+			// Fetch again after 1.5s (ensure backend has updated)
+			setTimeout(() => {
+				if (signedIn) fetchBalance();
+			}, 1500);
+			// Fetch again after 3s (final retry to ensure consistency)
+			setTimeout(() => {
+				if (signedIn) fetchBalance();
+			}, 3000);
+		};
+
+		window.addEventListener("balance-refresh", handleBalanceRefresh);
+
+		return () => {
+			window.removeEventListener("balance-refresh", handleBalanceRefresh);
+		};
+	}, [signedIn, fetchBalance]);
+
+	// Listen for positions refresh events to update balance
+	useEffect(() => {
+		if (!signedIn) return;
+
+		const handlePositionsRefresh = () => {
+			console.log("Positions refresh event received in TradingModal, refreshing balance with retries...");
+			// Fetch immediately
+			fetchBalance();
+			// Fetch again after 500ms (backend processing delay)
+			setTimeout(() => {
+				if (signedIn) fetchBalance();
+			}, 500);
+			// Fetch again after 1.5s (ensure backend has updated)
+			setTimeout(() => {
+				if (signedIn) fetchBalance();
+			}, 1500);
+			// Fetch again after 3s (final retry to ensure consistency)
+			setTimeout(() => {
+				if (signedIn) fetchBalance();
+			}, 3000);
+		};
+
+		window.addEventListener("positions-refresh", handlePositionsRefresh);
+
+		return () => {
+			window.removeEventListener("positions-refresh", handlePositionsRefresh);
+		};
+	}, [signedIn, fetchBalance]);
 
 	const validateOrder = useCallback((): string | null => {
 		if (!selectedAsset) return "Select an asset to trade.";
@@ -85,6 +184,9 @@ export default function TradingModal() {
 			const maybeTP = takeProfit.trim() === "" ? undefined : Number(takeProfit);
 			const maybeSL = stopLoss.trim() === "" ? undefined : Number(stopLoss);
 
+			// Transform asset symbol to match backend format (BTCUSDT -> BTC)
+			const backendAsset = selectedAsset.replace("USDT", "");
+
 			try {
 				setSubmitting(true);
 				const res = await fetch("/api/v1/trade/create", {
@@ -94,7 +196,7 @@ export default function TradingModal() {
 					body: JSON.stringify({
 						type,
 						status: "open",
-						asset: selectedAsset,
+						asset: backendAsset,
 						quantity: volume,
 						entryPrice,
 						leverage,
@@ -118,6 +220,13 @@ export default function TradingModal() {
 				}
 
 				const data = await res.json();
+				// Check if the response indicates success
+				if (data?.success === false || (data?.statusCode && data.statusCode >= 400)) {
+					const msg = data?.message || "Failed to place order";
+					sonar.error("Order failed", msg);
+					return;
+				}
+
 				sonar.success(
 					"Order placed",
 					`${type === "long" ? "Buy" : "Sell"} ${volume} ${selectedAsset.replace(
@@ -125,6 +234,10 @@ export default function TradingModal() {
 						""
 					)} @ ${entryPrice}`
 				);
+
+				// Trigger positions refresh by dispatching a custom event
+				// TradePositions will listen for this event and refresh
+				window.dispatchEvent(new CustomEvent("positions-refresh"));
 			} catch (e) {
 				sonar.error("Network error", (e as Error).message);
 			} finally {

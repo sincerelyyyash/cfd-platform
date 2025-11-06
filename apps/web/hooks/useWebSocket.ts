@@ -5,9 +5,10 @@ import { useTradeStore } from "@/store/useTradeStore";
 
 export function useWebSocket() {
   const updateTrade = useTradeStore((s) => s.updateTrade);
-  const webSocketUrl = process.env.WEBSOCKET_URL ?? "ws://localhost:8080"
+  const webSocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL ?? "ws://localhost:8080"
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const socket = new WebSocket(webSocketUrl);
 
     socket.onopen = () => {
