@@ -1,7 +1,7 @@
 import { consumeMessages, type EachMessagePayload } from "@repo/kafka-client/index";
 
 export const topic = "engine_stream";
-export const groupId = "engine_stream_consumer";
+export const groupId = "server_consumer_group";
 
 const pendingRequests = new Map<string, (response: any) => void>();
 
@@ -43,9 +43,12 @@ const eachMessageHandler = async ({ message }: EachMessagePayload) => {
   }
 
   if (pendingRequests.has(key)) {
+    console.log(`[Server Consumer] Resolving request with key=${key}, response:`, value.engine_responses ?? value);
     const resolve = pendingRequests.get(key)!;
     resolve(value.engine_responses ?? value);
     pendingRequests.delete(key);
+  } else {
+    console.log(`[Server Consumer] No pending request found for key=${key}, message value:`, value);
   }
 };
 

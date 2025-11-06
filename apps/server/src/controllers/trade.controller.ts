@@ -37,7 +37,6 @@ export const tradeOpen = async (req: Request, res: Response) => {
     quantity: data.quantity,
     entryPrice: data.entryPrice,
     leverage: data?.leverage,
-    margin: data?.margin,
     stopLoss: data?.stopLoss,
     takeProfit: data?.takeProfit,
     slippage: data?.slippage,
@@ -52,7 +51,11 @@ export const tradeOpen = async (req: Request, res: Response) => {
         message: "Open trade order."
       }))
 
-    return res.json({ response });
+    if (response?.statusCode && response.statusCode >= 400) {
+      return res.status(response.statusCode).json(response);
+    }
+
+    return res.json(response);
 
   } catch (err) {
     return res.status(500).json({
@@ -92,7 +95,12 @@ export const tradeClose = async (req: Request, res: Response) => {
 
       })
     )
-    return res.json({ response });
+
+    if (response?.statusCode && response.statusCode >= 400) {
+      return res.status(response.statusCode).json(response);
+    }
+
+    return res.json(response);
 
   } catch (err) {
     return res.status(500).json({

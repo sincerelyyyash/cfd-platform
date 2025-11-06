@@ -11,9 +11,11 @@ export const requestProducer = async (key: string, request: RequestTypes) => {
       ? (request as any).toJSON()
       : request;
 
+  console.log(`[Server Producer] Sending request to topic=${topic}, key=${key}, action=${payload.action}`);
   messageProducer(topic,
     String(key),
     JSON.stringify({ server_requests: payload }),
   );
+  console.log(`[Server Producer] Request sent for key=${key}`);
 }
 

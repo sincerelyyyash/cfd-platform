@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const APP_BASE_URL = process.env.APP_BASE_URL ?? "http://localhost:8000/api/v1";
+const FRONTEND_URL = process.env.FRONTEND_URL ?? process.env.WEB_APP_URL ?? "http://localhost:3000";
 
 export const sendLoginMail = async (to: string, token: string) => {
   await resend.emails.send({
@@ -10,7 +10,7 @@ export const sendLoginMail = async (to: string, token: string) => {
     subject: "Login link",
     html: `<center>
             <h1>Please click here to login</h1>
-            <a target="_blank" href="${APP_BASE_URL}/signin/verify?token=${token}">Click here</a>
+            <a target="_blank" href="${FRONTEND_URL}/signin?token=${token}">Click here</a>
         </center>`,
   });
 };
