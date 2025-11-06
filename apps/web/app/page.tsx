@@ -1,8 +1,11 @@
+"use client";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/app/components/HeroSection";
 import BentoGrid from "@/app/components/BentoGrid";
 import Image from "next/image";
 import TestimonialsSection from "@/app/components/TestimonialsSection";
+import { motion, type Variants } from "framer-motion";
+export const dynamic = 'force-dynamic';
 
 type Testimonial = {
   id: string;
@@ -84,22 +87,54 @@ const testimonials: Testimonial[] = [
   },
 ];
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const sectionVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+};
+
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-neutral-950 text-neutral-100">
+    <motion.div
+      className="relative min-h-screen bg-neutral-950 text-neutral-100"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       
-
-      {/* Minimal, blended navbar */}
       <Navbar />
 
-      {/* Hero Section (full viewport) */}
+      
       <main className="relative">
-        <HeroSection />
+        <motion.div variants={sectionVariants}>
+          <HeroSection />
+        </motion.div>
 
-        <BentoGrid />
+        <motion.div variants={sectionVariants}>
+          <BentoGrid />
+        </motion.div>
 
-        <TestimonialsSection />
+        <motion.div variants={sectionVariants}>
+          <TestimonialsSection />
+        </motion.div>
       </main>
-    </div>
+    </motion.div>
   );
 }

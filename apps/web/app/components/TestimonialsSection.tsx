@@ -1,4 +1,6 @@
+"use client";
 import Image from "next/image";
+import { motion, type Variants } from "framer-motion";
 
 type Testimonial = {
   id: string;
@@ -80,11 +82,70 @@ const testimonials: Testimonial[] = [
   },
 ];
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+};
+
+const headerVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+  hover: {
+    scale: 1.02,
+    y: -4,
+    transition: {
+      duration: 0.3,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+};
+
 export default function TestimonialsSection() {
   return (
-    <section
+    <motion.section
       aria-label="User testimonials"
       className="relative min-h-[100svh] sm:min-h-[80vh] overflow-hidden flex items-center py-10 sm:py-16"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
     >
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-28 sm:-top-40 left-1/2 h-[240px] w-[420px] sm:h-[360px] sm:w-[640px] lg:h-[420px] lg:w-[720px] -translate-x-1/2 rounded-full bg-gradient-to-b from-neutral-300/10 to-transparent blur-2xl sm:blur-3xl" />
@@ -93,28 +154,41 @@ export default function TestimonialsSection() {
       </div>
 
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
+        <motion.div
+          className="mx-auto max-w-2xl text-center"
+          variants={headerVariants}
+        >
           <h2 className="text-balance text-2xl font-semibold tracking-tight text-neutral-100 sm:text-3xl">
             Voices from our community
           </h2>
           <p className="mt-3 text-pretty text-sm text-neutral-400 sm:text-base">
             Real experiences from traders and partners who build with us every day.
           </p>
-        </div>
+        </motion.div>
 
-        <ul
+        <motion.ul
           role="list"
           className="mt-8 sm:mt-10 grid auto-rows-fr grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          variants={containerVariants}
         >
           {testimonials.map((item) => (
-            <li key={item.id} className="h-full">
-              <figure
+            <motion.li
+              key={item.id}
+              className="h-full"
+              variants={itemVariants}
+            >
+              <motion.figure
                 tabIndex={0}
                 aria-label={`Testimonial by ${item.name}`}
                 className="group flex h-full flex-col justify-between focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500/60"
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                whileHover="hover"
+                viewport={{ once: true }}
               >
                 <blockquote className="text-pretty text-base leading-7 text-neutral-200 sm:text-lg sm:leading-8">
-                  “{item.quote}”
+                  "{item.quote}"
                 </blockquote>
                 <figcaption className="mt-4 flex items-center gap-3">
                   <span className="relative inline-flex">
@@ -149,12 +223,12 @@ export default function TestimonialsSection() {
                   )}
                 </figcaption>
                 <div className="mt-6 h-px w-full bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
-              </figure>
-            </li>
+              </motion.figure>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

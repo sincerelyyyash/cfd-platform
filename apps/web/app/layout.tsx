@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { WebSocketProvider } from "@/components/WebSocketProvider";
-import { Sonar } from "@/components/ui/sonar";
-import { AuthProvider } from "@/components/auth/AuthProvider";
-import Footer from "@/components/Footer";
+import { ProvidersWrapper } from "@/components/ProvidersWrapper";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -31,15 +28,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-mono min-h-screen flex flex-col`}
       >
-        <AuthProvider>
-          <WebSocketProvider>
-            <main className="flex-1">
-              {children}
-            </main>
-          </WebSocketProvider>
-        </AuthProvider>
-        <Footer />
-        <Sonar />
+        <ProvidersWrapper>
+          {children}
+        </ProvidersWrapper>
       </body>
     </html>
   );
