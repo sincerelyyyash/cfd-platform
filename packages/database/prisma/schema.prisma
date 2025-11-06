@@ -31,6 +31,7 @@ model User {
   id            String           @id
   email         String
   lastLoggedIn  DateTime
+  balance       Int              @default(500000)
   existingTrade ExistingTrade[]  @relation("UserTrades")
 }
 
