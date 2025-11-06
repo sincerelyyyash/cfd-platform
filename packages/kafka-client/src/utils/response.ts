@@ -18,4 +18,13 @@ export class Response<T> {
     this.message = message;
     this.success = success;
   }
+
+  toJSON(): ResponseTypes {
+    return {
+      statusCode: this.statusCode,
+      data: this.data,
+      message: this.message,
+      success: this.success,
+    };
+  }
 }
