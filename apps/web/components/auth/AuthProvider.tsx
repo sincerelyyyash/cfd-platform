@@ -1,26 +1,37 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import * as React from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { sonar } from "@/components/ui/sonar";
 import { useRouter } from "next/navigation";
 
 type AuthContextType = {
   signedIn: boolean;
   setSignedIn: (v: boolean) => void;
-  requestSignIn: (email: string) => Promise<void>;
+  requestSignIn: (email: string) => Promise<boolean>;
   verifyWithToken: (token: string) => Promise<void>;
+  loading: boolean;
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const defaultAuthValue: AuthContextType = {
+  signedIn: false,
+  setSignedIn: () => {},
+  requestSignIn: async () => false,
+  verifyWithToken: async () => {},
+  loading: true,
+};
+
+const AuthContext = createContext<AuthContextType>(defaultAuthValue);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const requestSignIn = useCallback(async (email: string) => {
+  const requestSignIn = useCallback(async (email: string): Promise<boolean> => {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       sonar.error("Invalid email", "Please enter a valid email address.");
-      return;
+      return false;
     }
     try {
       const res = await fetch("/api/v1/signup", {
@@ -32,11 +43,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json().catch(() => ({} as any));
       if (!res.ok) {
         sonar.error("Sign in failed", data?.message || "Unable to start sign in.");
-        return;
+        return false;
       }
       sonar.success("Check your email", data?.message || "We sent you a login link.");
+      return true;
     } catch (e) {
       sonar.error("Network error", (e as Error).message);
+      return false;
     }
   }, []);
 
@@ -60,14 +73,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [router]);
 
-  const value = useMemo<AuthContextType>(() => ({ signedIn, setSignedIn, requestSignIn, verifyWithToken }), [signedIn, requestSignIn, verifyWithToken]);
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/v1/auth/verify", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (res.ok) {
+          setSignedIn(true);
+        } else {
+          setSignedIn(false);
+        }
+      } catch (e) {
+        setSignedIn(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const value = useMemo<AuthContextType>(() => ({ signedIn, setSignedIn, requestSignIn, verifyWithToken, loading }), [signedIn, requestSignIn, verifyWithToken, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
 

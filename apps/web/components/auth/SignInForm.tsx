@@ -5,6 +5,7 @@ import { Input } from "../ui/input";
 import { cn } from "../../lib/utils";
 import { useAuth } from "./AuthProvider";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export function SignInForm() {
   const { requestSignIn, verifyWithToken } = useAuth();
@@ -20,41 +21,99 @@ export function SignInForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    await requestSignIn(email);
+    const success = await requestSignIn(email);
     setSubmitting(false);
+    if (success) {
+      setEmail("");
+    }
   };
-  return (
-    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
-      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to PrimeTrade
-      </h2>
-      <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Login to PrimeTrade & get back to building your wealth
-      </p>
+  const formVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        staggerChildren: 0.1,
+      },
+    },
+  };
 
-      <form className="my-8" onSubmit={handleSubmit}>
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      <motion.h2
+        className="text-xl font-bold text-neutral-800 dark:text-neutral-200"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
+        Welcome to PrimeTrade
+      </motion.h2>
+      <motion.p
+        className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+      >
+        Login to PrimeTrade & get back to building your wealth
+      </motion.p>
+
+      <motion.form
+        className="my-8"
+        onSubmit={handleSubmit}
+        variants={formVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
 
         </div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </LabelInputContainer>
+        <motion.div variants={itemVariants}>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="email">Email Address</Label>
+            <Input id="email" placeholder="your.email@example.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </LabelInputContainer>
+        </motion.div>
 
-        <Button
-          className="h-10 w-full"
-          type="submit"
-          variant="primary"
-          disabled={submitting}
-          aria-label={submitting ? "Sending magic link" : "Send magic link"}
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
-          {submitting ? "Sending link..." : "Send magic link"}
-        </Button>
+          <Button
+            className="h-10 w-full"
+            type="submit"
+            variant="primary"
+            disabled={submitting}
+            aria-label={submitting ? "Sending magic link" : "Send magic link"}
+          >
+            {submitting ? "Sending link..." : "Send magic link"}
+          </Button>
+        </motion.div>
 
-        <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+        <motion.div
+          className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700"
+          variants={itemVariants}
+        />
 
-      </form>
-    </div>
+      </motion.form>
+    </motion.div>
   );
 }
 
