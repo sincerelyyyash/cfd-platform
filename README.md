@@ -1,200 +1,376 @@
-# Turborepo + Prisma ORM starter
+# CFD Trading Platform
 
-This is a example designed to help you quickly set up a Turborepo monorepo with a Next.js app and Prisma ORM. This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+A production-ready Contract for Difference (CFD) trading platform built with modern technologies. This full-stack monorepo enables users to trade cryptocurrency CFDs with leverage, real-time price updates, and automated risk management including stop-loss, take-profit, and automatic liquidation.
 
-## What's inside?
+The platform achieves sub-30ms trade execution latency through in-memory order processing. Trade requests flow from the web interface through the API server to Kafka, where the trading engine processes orders in-memory for instant execution. Database persistence happens asynchronously via background workers, ensuring high-performance trading while maintaining data consistency.
 
-This turborepo includes the following packages/apps:
+## Architecture
 
-### Apps and packages
+The platform follows a microservices architecture with clear separation of concerns:
 
-- `web`: a [Next.js](https://nextjs.org/) app
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/database`: [Prisma ORM](https://prisma.io/) to manage & access your database
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- **Web Application**: Next.js frontend providing the trading interface
+- **API Server**: Express.js REST API for user authentication and trade requests
+- **Trading Engine**: High-performance order processing and risk management service
+- **Price Poller**: Real-time price feed service connecting to external exchanges
+- **Database Worker**: Background service for asynchronous database operations
+- **Message Queue**: Apache Kafka for inter-service communication
+- **Database**: PostgreSQL with Prisma ORM for data persistence
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Technology Stack
 
-### Utilities
+### Frontend
+- **Next.js 15**: React framework with App Router
+- **TailwindCSS**: Utility-first CSS framework
+- **Zustand**: State management
+- **Lightweight Charts**: Trading chart visualization
 
-This turborepo has some additional tools already setup for you:
+### Backend
+- **Bun**: JavaScript runtime and package manager
+- **Express.js**: Web framework
+- **Prisma ORM**: Database toolkit
+- **PostgreSQL**: Relational database
+- **Apache Kafka**: Distributed event streaming platform
+- **WebSocket**: Real-time bidirectional communication
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Prisma ORM](https://prisma.io/) for accessing the database
-- [Docker Compose](https://docs.docker.com/compose/) for a local MySQL database
+## Project Structure
 
-## Getting started
-
-Follow these steps to set up and run your Turborepo project with Prisma ORM:
-
-### 1. Create a Turborepo project
-
-Start by creating a new Turborepo project using the following command:
-
-```sh
-npx create-turbo@latest -e with-prisma
+```
+cfd-platform/
+├── apps/
+│   ├── web/                    # Next.js frontend application
+│   │   ├── app/                # Next.js App Router pages
+│   │   ├── components/         # React components
+│   │   ├── hooks/              # Custom React hooks
+│   │   └── store/              # Zustand state management
+│   ├── server/                 # Express.js API server
+│   │   ├── src/
+│   │   │   ├── controllers/    # Request handlers
+│   │   │   ├── middlewares/   # Express middlewares
+│   │   │   ├── routes/         # API route definitions
+│   │   │   ├── types/          # TypeScript type definitions
+│   │   │   └── utils/          # Utility functions
+│   ├── engine/                 # Trading engine service
+│   │   └── src/
+│   │       ├── service/        # Business logic services
+│   │       └── Store/          # In-memory data stores
+│   ├── price_poller/           # Price feed service
+│   └── db_worker/              # Database worker service
+├── packages/
+│   ├── database/               # Prisma schema and client
+│   │   └── prisma/             # Database migrations
+│   ├── kafka-client/           # Kafka client utilities
+│   ├── config-eslint/          # ESLint configuration
+│   └── config-typescript/      # TypeScript configuration
+└── docker-compose.yml          # Docker services configuration
 ```
 
-Choose your desired package manager when prompted and a name for the app (e.g., `my-turborepo`). This will scaffold a new Turborepo project with Prisma ORM included and dependencies installed.
+## Features
 
-Navigate to your project directory:
+### Trading Features
+- **Long and Short Positions**: Trade both directions with leverage
+- **Leverage Trading**: Configurable leverage for amplified positions
+- **Real-time Price Updates**: Live market data via WebSocket connections
+- **Order Management**: Open, close, and monitor positions
+- **Stop Loss**: Automatic position closure at specified loss threshold
+- **Take Profit**: Automatic position closure at specified profit target
+- **Automatic Liquidation**: Margin call protection with automatic position closure
+- **Position Tracking**: Real-time PnL calculation and position monitoring
 
+### User Features
+- **User Authentication**: JWT-based secure authentication
+- **Account Management**: User registration and login
+- **Balance Management**: Real-time balance updates with trade execution
+- **Trade History**: View open and closed positions
+- **Responsive UI**: Modern, responsive trading interface
+
+### Technical Features
+- **Event-Driven Architecture**: Kafka-based message queue for service communication
+- **In-Memory Stores**: High-performance order and price management
+- **Snapshot System**: State persistence and recovery
+- **Asynchronous Processing**: Background workers for database operations
+- **Type Safety**: End-to-end TypeScript implementation
+- **Monorepo Structure**: Efficient development and build pipeline
+
+## Database Schema
+
+### User Model
+- User identification and authentication
+- Account balance tracking
+- Last login timestamp
+- Relationship to trades
+
+### Asset Model
+- Supported trading assets (BTC, ETH, SOL)
+- Asset metadata (symbol, name, image, decimals)
+
+### ExistingTrade Model
+- Order type (long/short)
+- Order status (open/closed/pending)
+- Entry and exit prices
+- Profit and loss calculation
+- Leverage and margin information
+- Stop loss and take profit levels
+- Liquidation status
+
+### Snapshot Model
+- System state snapshots for recovery
+- JSON data storage for flexible state management
+
+## Services
+
+### Web Application (`apps/web`)
+The frontend Next.js application providing the trading interface. Features include:
+- Trading dashboard with real-time charts
+- Order placement interface
+- Position management
+- Asset selection sidebar
+- Responsive resizable panels
+
+### API Server (`apps/server`)
+Express.js REST API handling:
+- User authentication (signup, signin)
+- Trade operations (open, close)
+- Order queries (open orders, closed orders)
+- Asset information
+- JWT token validation
+
+### Trading Engine (`apps/engine`)
+Core trading logic service responsible for:
+- Order validation and execution
+- Margin calculation
+- PnL computation
+- Liquidation monitoring
+- Stop loss and take profit execution
+- User balance management
+- Kafka message consumption and production
+
+### Price Poller (`apps/price_poller`)
+Real-time price feed service:
+- WebSocket connection to external exchange (Backpack Exchange)
+- Price normalization and processing
+- Kafka price update publishing
+- WebSocket server for frontend connections
+
+### Database Worker (`apps/db_worker`)
+Background service for:
+- Asynchronous database writes
+- Order persistence
+- User balance updates
+- Trade history storage
+
+## Getting Started
+
+### Prerequisites
+- Node.js >= 18
+- Bun >= 1.2.17
+- Docker and Docker Compose
+- PostgreSQL database
+- Apache Kafka (or Docker Compose setup)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-cd ./my-turborepo
+git clone https://github.com/sincerelyyyash/cfd-platform.git
+cd cfd-platform
 ```
 
-### 2. Setup a local database with Docker Compose
+2. Install dependencies:
+```bash
+bun install
+```
 
-We use [Prisma ORM](https://prisma.io/) to manage and access our database. As such you will need a database for this project, either locally or hosted in the cloud.
+3. Set up environment variables:
+Create `.env` files in the following locations:
+- `packages/database/.env`
+- `apps/web/.env`
+- `apps/server/.env`
 
-To make this process easier, a [`docker-compose.yml` file](./docker-compose.yml) is included to setup a MySQL server locally with a new database named `turborepo`:
+Required environment variables:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/cfd_platform"
+SESSION_SECRET="your-secret-key"
+KAFKA_BROKERS="localhost:9092"
+WS_PORT=8080
+PORT=8000
+```
 
-Start the MySQL database using Docker Compose:
-
-```sh
+4. Start PostgreSQL database:
+```bash
 docker-compose up -d
 ```
 
-To change the default database name, update the `MYSQL_DATABASE` environment variable in the [`docker-compose.yml` file](/docker-compose.yml).
-
-### 3. Setup environment variables
-
-Once the database is ready, copy the `.env.example` file to the [`/packages/database`](./packages/database/) and [`/apps/web`](./apps/web/) directories as `.env`:
-
+5. Run database migrations:
 ```bash
-cp .env.example ./packages/database/.env
-cp .env.example ./apps/web/.env
-```
-
-This ensures Prisma has access to the `DATABASE_URL` environment variable, which is required to connect to your database.
-
-If you added a custom database name, or use a cloud based database, you will need to update the `DATABASE_URL` in your `.env` accordingly.
-
-### 4. Migrate your database
-
-Once your database is running, you’ll need to create and apply migrations to set up the necessary tables. Run the database migration command:
-
-```bash
-# Using npm
-npm run db:migrate:dev
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run db:migrate:dev
-
-# Using pnpm
-pnpm run db:migrate:dev
-
-# Using bun
 bun run db:migrate:dev
 ```
 
-</details>
-
-You’ll be prompted to name the migration. Once you provide a name, Prisma will create and apply the migration to your database.
-
-> Note: The `db:migrate:dev` script (located in [packages/database/package.json](/packages/database/package.json)) uses [Prisma Migrate](https://www.prisma.io/migrate) under the hood.
-
-For production environments, always push schema changes to your database using the [`prisma migrate deploy` command](https://www.prisma.io/docs/orm/prisma-client/deployment/deploy-database-changes-with-prisma-migrate). You can find an example `db:migrate:deploy` script in the [`package.json` file](/packages/database/package.json) of the `database` package.
-
-### 5. Seed your database
-
-To populate your database with initial or fake data, use [Prisma's seeding functionality](https://www.prisma.io/docs/guides/database/seed-database).
-
-Update the seed script located at [`packages/database/src/seed.ts`](/packages/database/src/seed.ts) to include any additional data that you want to seed. Once edited, run the seed command:
-
+6. Seed the database (optional):
 ```bash
-# Using npm
-npm run db:seed
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run db:seed
-
-# Using pnpm
-pnpm run db:seed
-
-# Using bun
 bun run db:seed
 ```
 
-</details>
-
-### 6. Build your application
-
-To build all apps and packages in the monorepo, run:
-
+7. Start all services in development mode:
 ```bash
-# Using npm
-npm run build
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run build
-
-# Using pnpm
-pnpm run build
-
-# Using bun
-bun run build
-```
-
-</details>
-
-### 7. Start the application
-
-Finally, start your application with:
-
-```bash
-yarn run dev
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run dev
-
-# Using pnpm
-pnpm run dev
-
-# Using bun
 bun run dev
 ```
 
-</details>
+This will start all services concurrently using Turborepo.
 
-Your app will be running at `http://localhost:3000`. Open it in your browser to see it in action!
+### Individual Service Commands
 
-You can also read the official [detailed step-by-step guide from Prisma ORM](https://pris.ly/guide/turborepo?utm_campaign=turborepo-example) to build a project from scratch using Turborepo and Prisma ORM.
+Start services individually:
 
-## Useful Links
+```bash
+# Web application
+cd apps/web && bun run dev
 
-Learn more about the power of Turborepo:
+# API server
+cd apps/server && bun run dev
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
-# cfd-platform-v2
+# Trading engine
+cd apps/engine && bun run dev
+
+# Price poller
+cd apps/price_poller && bun run dev
+
+# Database worker
+cd apps/db_worker && bun run dev
+```
+
+## Development
+
+### Build
+Build all packages and apps:
+```bash
+bun run build
+```
+
+### Linting
+Run ESLint across all packages:
+```bash
+bun run lint
+```
+
+### Formatting
+Format code with Prettier:
+```bash
+bun run format
+```
+
+### Database Commands
+```bash
+# Create and apply migration
+bun run db:migrate:dev
+
+# Deploy migrations (production)
+bun run db:migrate:deploy
+
+# Push schema changes (development)
+bun run db:push
+
+# Seed database
+bun run db:seed
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/v1/user/signup` - User registration
+- `POST /api/v1/user/signin` - User login
+- `GET /api/v1/user/me` - Get current user (protected)
+
+### Trading
+- `POST /api/v1/trade/open` - Open a new position (protected)
+- `POST /api/v1/trade/close` - Close an existing position (protected)
+- `GET /api/v1/trade/open-orders` - List open positions (protected)
+- `GET /api/v1/trade/closed-orders` - List closed positions (protected)
+
+### Assets
+- `GET /api/v1/asset` - Get all available trading assets
+
+## Trading Logic
+
+### Order Types
+- **Long**: Buy position expecting price increase
+- **Short**: Sell position expecting price decrease
+
+### Margin Calculation
+- Margin = (Quantity × Entry Price) / Leverage
+- Short positions require 110% of calculated margin
+
+### PnL Calculation
+Profit and Loss is calculated based on:
+- Order type (long/short)
+- Entry price vs current price
+- Position quantity
+- Leverage multiplier
+
+### Liquidation
+Positions are automatically liquidated when:
+- Equity (margin + PnL) <= 0
+- Stop loss price is reached
+- Take profit price is reached
+
+## WebSocket Protocol
+
+The price poller service exposes a WebSocket server for real-time price updates:
+
+**Connection**: `ws://localhost:8080`
+
+**Message Format**:
+```json
+{
+  "asset": "BTC",
+  "price": 45000,
+  "bid": 44950,
+  "ask": 45050,
+  "decimals": 4
+}
+```
+
+## Kafka Topics
+
+The platform uses the following Kafka topics:
+- `trade_stream`: Price updates from price poller
+- `trade`: Trade execution requests and responses
+- `db`: Database operation requests
+- `user`: User-related operations
+
+## State Management
+
+### In-Memory Stores
+The trading engine maintains in-memory stores for:
+- **OrderStore**: Active orders and positions
+- **PriceStore**: Latest asset prices
+- **UserStore**: User balances and account information
+
+### Snapshot System
+Periodic snapshots are taken to enable:
+- System recovery after restart
+- State persistence
+- Data consistency
+
+## Security
+
+- JWT-based authentication
+- Password hashing with bcrypt
+- CORS configuration
+- Input validation with Zod
+- Protected API routes
+
+## Performance Considerations
+
+- In-memory stores for low-latency order processing
+- Asynchronous database operations via workers
+- Event-driven architecture for scalability
+- Efficient decimal arithmetic for financial calculations
+- WebSocket connections for real-time updates
+
+## Decimal Precision
+
+The platform uses fixed-point arithmetic for financial calculations:
+- **Balance**: 2 decimal places (multiplier: 100)
+- **Price**: 4 decimal places (multiplier: 10,000)
+- **Quantity**: 4 decimal places (multiplier: 10,000)
+
