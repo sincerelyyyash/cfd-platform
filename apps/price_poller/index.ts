@@ -1,24 +1,36 @@
+import http from "http";
 import WebSocket, { WebSocketServer } from "ws";
 import { connectProducer, messageProducer } from "@repo/kafka-client/index";
 
+
 const ws = new WebSocket("wss://ws.backpack.exchange");
 connectProducer();
-
 
 const topic = "trade_stream";
 type Latest = { bid: number; ask: number; decimals: number };
 const latestPrices: Record<string, Latest> = {};
 
 const WS_PORT = Number(process.env.WS_PORT ?? 8080);
-const wss = new WebSocketServer({ port: WS_PORT });
 
-wss.on("listening", () => {
+
+const server = http.createServer((req, res) => {
+
+  res.writeHead(426, { "Content-Type": "text/plain" });
+  res.end("Upgrade Required");
+});
+
+
+const wss = new WebSocketServer({ server });
+
+server.listen(WS_PORT, () => {
   console.log(`Price WebSocket server listening on ws://localhost:${WS_PORT}`);
 });
+
 
 wss.on("connection", (socket) => {
   socket.send(JSON.stringify({ type: "hello", message: "connected" }));
 });
+
 
 ws.on("open", () => {
   console.log("Connected to backpack exchange");
@@ -40,12 +52,12 @@ ws.on("message", (data: any) => {
   try {
     const parsed = JSON.parse(data.toString());
     const ticker = parsed?.data;
-
     if (!ticker) return;
 
-    const [asset, _quote] = ticker.s.split("_");
+    const [asset] = ticker.s.split("_");
     const ask = parseFloat(ticker.a);
     const bid = parseFloat(ticker.b);
+
     const mid = (ask + bid) / 2;
     const half = 0.01 / 2;
     const synthBid = mid * (1 - half);
@@ -61,6 +73,7 @@ ws.on("message", (data: any) => {
   }
 });
 
+
 setInterval(() => {
   if (Object.keys(latestPrices).length === 0) return;
 
@@ -72,6 +85,7 @@ setInterval(() => {
       ask: data.ask,
       decimals: data.decimals,
     });
+
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(payload);
@@ -85,13 +99,13 @@ setInterval(() => {
     decimal: data.decimals,
   }));
 
-  messageProducer(topic,
+  messageProducer(
+    topic,
     "asset_prices",
     JSON.stringify({ price_updates: snapshot }),
   );
 }, 100);
 
 ws.on("close", () => {
-  console.log("Connection closed");
+  console.log("Connection to backpack closed");
 });
-
