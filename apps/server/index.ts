@@ -11,20 +11,38 @@ const PORT = process.env.PORT ?? 8000;
 
 const app = express();
 
+const allowedOrigins = [
+  "http://trade.sincerelyyyash.com",
+  "http://localhost:3000"
+];
+
 app.use((req, res, next) => {
-  const origin = req.headers.origin || "http://localhost:3000";
-  res.header("Access-Control-Allow-Origin", origin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
+  const origin = req.headers.origin;
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
   }
+
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+
   next();
 });
 
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`[Server] ${req.method} ${req.path} - Headers:`, req.headers);
+  next();
+});
 
 startConsumer();
 

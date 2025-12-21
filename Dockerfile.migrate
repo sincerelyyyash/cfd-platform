@@ -1,0 +1,19 @@
+FROM oven/bun:1.2.17 AS base
+WORKDIR /app
+
+# Copy root package files
+COPY package.json bun.lock turbo.json ./
+
+# Copy all packages
+COPY packages ./packages
+
+# Install all dependencies
+RUN bun install --frozen-lockfile
+
+# Generate Prisma client
+RUN cd packages/database && bunx prisma generate
+
+WORKDIR /app/packages/database
+
+CMD ["bunx", "prisma", "migrate", "deploy"]
+

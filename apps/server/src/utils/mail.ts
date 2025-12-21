@@ -7,9 +7,9 @@ export const sendLoginMail = async (to: string, token: string) => {
   await resend.emails.send({
     from: "Acme <onboarding@resend.dev>",
     to,
-    subject: "Login link",
+    subject: "Login to PrimeTrade",
     html: `<center>
-            <h1>Please click here to login</h1>
+            <h1>Please click here to login your PrimeTrade Account</h1>
             <a target="_blank" href="${FRONTEND_URL}/signin?token=${token}">Click here</a>
         </center>`,
   });

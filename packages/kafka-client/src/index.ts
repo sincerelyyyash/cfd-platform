@@ -1,7 +1,8 @@
 import { type EachMessagePayload, type KafkaConfig } from 'kafkajs';
 import { KafkaManager } from './kafkaManager';
 
-const kafkaConfig: KafkaConfig = { clientId: 'trade_engine', brokers: ['localhost:9092'] };
+const kafkaBrokers = process.env.KAFKA_BROKERS?.split(',') || ['localhost:9092'];
+const kafkaConfig: KafkaConfig = { clientId: 'trade_engine', brokers: kafkaBrokers };
 
 const kafkaManager = KafkaManager.getInstance(kafkaConfig);
 

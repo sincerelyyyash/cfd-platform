@@ -13,6 +13,9 @@ export const getSupportedAssets = async (req: Request, res: Response) => {
 }
 
 export const getCandles = async (req: Request, res: Response) => {
+  console.log("[Candles] Request received:", req.method, req.path, req.query);
+  console.log("[Candles] Headers:", JSON.stringify(req.headers, null, 2));
+  
   const asset = (req.query.asset as string) || "BTCUSDT";
   const ts = (req.query.ts as string) || "1m";
   const limitParam = (req.query.limit as string) || "500";
