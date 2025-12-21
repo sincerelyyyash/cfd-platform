@@ -68,7 +68,7 @@ export const signInUser = async (req: Request, res: Response) => {
             data: { id, email },
             message: "Create user from auth service"
           }),
-          10000 // 10 second timeout
+          10000 
         );
         
         console.log(`[Server] User creation response (attempt ${attempt}):`, createUserResponse);
@@ -146,16 +146,16 @@ export const getUserBalance = async (req: Request, res: Response) => {
         data: { userId },
         message: "Get user balance",
       }),
-      10000 // 10 second timeout
+      10000 
     );
     
     console.log(`[Server] Balance response received:`, response);
     
-    // If user not found (404), try to create them first
+
     if (response?.statusCode === 404 && userEmail) {
       console.log(`[Server] User ${userId} not found in engine, attempting to create...`);
       
-      // Try to create user
+
       try {
         req_id = uuidv4();
         const createResponse = await sendRequestAndWait(
@@ -171,7 +171,7 @@ export const getUserBalance = async (req: Request, res: Response) => {
         
         console.log(`[Server] User creation response:`, createResponse);
         
-        // If user was created successfully, retry balance request
+
         if (createResponse?.statusCode === 200 || createResponse?.statusCode === 400) {
           console.log(`[Server] User created, retrying balance request...`);
           req_id = uuidv4();
@@ -189,17 +189,17 @@ export const getUserBalance = async (req: Request, res: Response) => {
         }
       } catch (createErr) {
         console.error(`[Server] Failed to create user during balance fetch:`, createErr);
-        // Continue with original 404 response
+
       }
     }
     
-    // Check if response has error status code
+
     if (response?.statusCode && response.statusCode >= 400) {
       console.log(`[Server] Balance request failed with status ${response.statusCode}`);
       return res.status(response.statusCode).json(response);
     }
     
-    // Return successful response
+
     return res.json(response);
   } catch (err) {
     console.error(`[Server] Error fetching balance:`, err);

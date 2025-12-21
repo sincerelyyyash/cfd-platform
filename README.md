@@ -240,6 +240,11 @@ cd apps/db_worker && bun run dev
 
 ## Development
 
+### Backend Benchmark Harness
+- `apps/benchmark` contains a CLI load-test that hammers the API server, engine, price poller, and db worker via the `/api/v1/trade` HTTP surface (asset symbols ending in `USDT/USDC` are auto-normalized to the backend format, e.g. `BTCUSDT -> BTC`, and orders can be auto-closed immediately to free margin).
+- Ensure all backend services plus Kafka/Postgres are running, then execute `bun run benchmark:orders -- --baseUrl=http://localhost:8000/api/v1 --orders=200 --concurrency=20` to capture throughput/latency metrics.
+- Every flag has a `BENCHMARK_*` environment override; see `apps/benchmark/README.md` for full usage details.
+
 ### Build
 Build all packages and apps:
 ```bash
