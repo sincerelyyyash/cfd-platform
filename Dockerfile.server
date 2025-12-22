@@ -10,8 +10,8 @@ COPY packages ./packages
 # Copy server app
 COPY apps/server ./apps/server
 
-# Install all dependencies
-RUN bun install --frozen-lockfile
+# Install all dependencies (allow lock updates during build)
+RUN bun install
 
 # Generate Prisma client
 RUN cd packages/database && bunx prisma generate

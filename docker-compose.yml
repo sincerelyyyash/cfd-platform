@@ -100,6 +100,8 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cfd_platform
       KAFKA_BROKERS: kafka:29092
       NODE_ENV: production
+      # Dummy key so Resend doesn't crash in dev
+      RESEND_API_KEY: dev_dummy_key
 
   price_poller:
     build:

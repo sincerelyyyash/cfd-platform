@@ -186,36 +186,77 @@ Create `.env` files in the following locations:
 - `apps/web/.env`
 - `apps/server/.env`
 
-Required environment variables:
+Required environment variables (local development):
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/cfd_platform"
 SESSION_SECRET="your-secret-key"
 KAFKA_BROKERS="localhost:9092"
-WS_PORT=8080
-PORT=8000
+WS_PORT=8080      # local WebSocket port
+PORT=8000         # local API server port
 ```
 
-4. Start PostgreSQL database:
-```bash
-docker-compose up -d
-```
+> When running via Docker Compose, these values are provided by `docker-compose.yml`:
+> - `DATABASE_URL=postgresql://postgres:postgres@postgres:5432/cfd_platform`
+> - `KAFKA_BROKERS=kafka:29092`
+> - `PORT=3001` (API server)
+> - `WS_PORT=3002` (price WebSocket)
 
-5. Run database migrations:
+4. Run database migrations (local development):
 ```bash
 bun run db:migrate:dev
 ```
 
-6. Seed the database (optional):
+5. Seed the database (optional, local development):
 ```bash
 bun run db:seed
 ```
 
-7. Start all services in development mode:
+6. Start all services in development mode (without Docker):
 ```bash
 bun run dev
 ```
 
 This will start all services concurrently using Turborepo.
+
+### Running with Docker (backend services only)
+
+This setup starts **PostgreSQL, Kafka, migrations, API server, trading engine, price poller, and DB worker** in Docker.  
+The web app (`apps/web`) is **not** started in Docker by design.
+
+1. From the project root, build and start all services:
+```bash
+docker-compose up --build
+```
+
+This will:
+- Start `postgres`, `zookeeper`, and `kafka`
+- Run Prisma migrations once via the `migrate` service
+- Start:
+  - `server` (API) on `http://localhost:3001`
+  - `price_poller` (WebSocket) on `ws://localhost:3002`
+  - `engine`
+  - `db_worker`
+
+2. To run in the background:
+```bash
+docker-compose up -d --build
+```
+
+3. To stop everything:
+```bash
+docker-compose down
+```
+
+4. To stop and remove all data volumes (clean slate):
+```bash
+docker-compose down -v
+```
+
+5. To rebuild only the API server image (for API code changes):
+```bash
+docker-compose build server
+docker-compose up -d server
+```
 
 ### Individual Service Commands
 
@@ -239,11 +280,6 @@ cd apps/db_worker && bun run dev
 ```
 
 ## Development
-
-### Backend Benchmark Harness
-- `apps/benchmark` contains a CLI load-test that hammers the API server, engine, price poller, and db worker via the `/api/v1/trade` HTTP surface (asset symbols ending in `USDT/USDC` are auto-normalized to the backend format, e.g. `BTCUSDT -> BTC`, and orders can be auto-closed immediately to free margin).
-- Ensure all backend services plus Kafka/Postgres are running, then execute `bun run benchmark:orders -- --baseUrl=http://localhost:8000/api/v1 --orders=200 --concurrency=20` to capture throughput/latency metrics.
-- Every flag has a `BENCHMARK_*` environment override; see `apps/benchmark/README.md` for full usage details.
 
 ### Build
 Build all packages and apps:
@@ -321,7 +357,8 @@ Positions are automatically liquidated when:
 
 The price poller service exposes a WebSocket server for real-time price updates:
 
-**Connection**: `ws://localhost:8080`
+- **Local dev (bun)**: `ws://localhost:8080`
+- **Docker Compose**: `ws://localhost:3002`
 
 **Message Format**:
 ```json

@@ -10,8 +10,8 @@ COPY packages ./packages
 # Copy price_poller app
 COPY apps/price_poller ./apps/price_poller
 
-# Install all dependencies
-RUN bun install --frozen-lockfile
+# Install all dependencies (allow lock updates during build)
+RUN bun install
 
 # Generate Prisma client
 RUN cd packages/database && bunx prisma generate
