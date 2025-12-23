@@ -220,7 +220,7 @@ This will start all services concurrently using Turborepo.
 
 ### Running with Docker (backend services only)
 
-This setup starts **PostgreSQL, Kafka, migrations, API server, trading engine, price poller, and DB worker** in Docker.  
+This setup starts **PostgreSQL, Kafka (KRaft, no Zookeeper), migrations, API server, trading engine, price poller, and DB worker** in Docker.  
 The web app (`apps/web`) is **not** started in Docker by design.
 
 1. From the project root, build and start all services:
@@ -229,7 +229,7 @@ docker-compose up --build
 ```
 
 This will:
-- Start `postgres`, `zookeeper`, and `kafka`
+- Start `postgres` and `kafka` (single-node KRaft)
 - Run Prisma migrations once via the `migrate` service
 - Start:
   - `server` (API) on `http://localhost:3001`
@@ -359,6 +359,10 @@ The price poller service exposes a WebSocket server for real-time price updates:
 
 - **Local dev (bun)**: `ws://localhost:8080`
 - **Docker Compose**: `ws://localhost:3002`
+
+Kafka connectivity in Docker:
+- In-cluster services use `KAFKA_BROKERS=kafka:29092`.
+- From the host, use the advertised listener `localhost:9092`.
 
 **Message Format**:
 ```json

@@ -1,20 +1,15 @@
 FROM oven/bun:1.2.17 AS base
 WORKDIR /app
 
-# Copy root package files
+# Copy workspace manifests
 COPY package.json bun.lock turbo.json ./
 
-# Copy all packages
+# Copy shared packages and engine app
 COPY packages ./packages
-
-# Copy engine app
 COPY apps/engine ./apps/engine
 
-# Install all dependencies (allow lock updates during build)
+# Install dependencies and generate Prisma client
 RUN bun install
-
-# Generate Prisma client
 RUN cd packages/database && bunx prisma generate
 
 CMD ["bun", "run", "apps/engine/src/index.ts"]
-
