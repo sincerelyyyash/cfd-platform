@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ProvidersWrapper } from "@/components/ProvidersWrapper";
-
+import { Analytics } from "@vercel/analytics/next";
 const geistSans = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,6 +31,7 @@ export default function RootLayout({
         <ProvidersWrapper>
           {children}
         </ProvidersWrapper>
+        <Analytics />
       </body>
     </html>
   );
