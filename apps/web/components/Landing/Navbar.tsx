@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,12 +15,49 @@ function cn(...inputs: ClassValue[]) {
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    tl.from(".nav-logo", {
+      y: -20,
+      opacity: 0,
+      duration: 0.8,
+    })
+      .from(".nav-link", {
+        y: -20,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+      }, "-=0.4")
+      .from(".nav-cta", {
+        y: -20,
+        opacity: 0,
+        duration: 0.6,
+      }, "-=0.4");
+
+  }, { scope: containerRef });
 
   return (
-    <nav className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F] backdrop-blur-md h-[72px] border-white/5">
+    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F] backdrop-blur-md h-[72px] border-white/5 border-b opacity-0 animate-fade-in-nav">
+      {/* Note: I added opacity-0 class initially but GSAP handles it if I set it. 
+          Actually, let's let GSAP handle 'from' states. 
+          However, to prevent FOUC, I might need to ensure they start hidden or just trust the timeline.
+          I'll stick to standard 'from' and let React render. 
+      */}
+      <style jsx global>{`
+        .animate-fade-in-nav {
+          animation: fadeIn 0.1s forwards;
+        }
+        @keyframes fadeIn {
+          to { opacity: 1; }
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
 
-        <div className="flex-shrink-0 flex items-center gap-2">
+        <div className="flex-shrink-0 flex items-center gap-2 nav-logo">
           {/* <div className="w-8 h-8 bg-neutral-800 rounded-md flex items-center justify-center animate-pulse">
             <div className="w-4 h-4 bg-neutral-600 rounded-sm" />
           </div> */}
@@ -27,15 +66,15 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-8">
           <div className="flex items-center gap-6">
-            <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Features</Link>
-            <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">About</Link>
-            <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Architecture</Link>
-            <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Contact</Link>
+            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Features</Link>
+            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">About</Link>
+            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Architecture</Link>
+            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Contact</Link>
           </div>
 
-          <div className="h-4 w-[1px] bg-white/10" />
+          <div className="h-4 w-[1px] bg-white/10 nav-link" />
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 nav-cta">
             <Link href="#" className="px-4 py-2 text-sm font-medium text-black bg-white border border-transparent hover:bg-neutral-200 transition-colors font-bitcount">
               Log in
             </Link>
