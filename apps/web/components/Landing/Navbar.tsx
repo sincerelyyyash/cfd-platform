@@ -40,12 +40,7 @@ export default function Navbar() {
   }, { scope: containerRef });
 
   return (
-    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F] backdrop-blur-md h-[72px] border-white/5 border-b opacity-0 animate-fade-in-nav">
-      {/* Note: I added opacity-0 class initially but GSAP handles it if I set it. 
-          Actually, let's let GSAP handle 'from' states. 
-          However, to prevent FOUC, I might need to ensure they start hidden or just trust the timeline.
-          I'll stick to standard 'from' and let React render. 
-      */}
+    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F] backdrop-blur-md h-[72px] opacity-0 animate-fade-in-nav">
       <style jsx global>{`
         .animate-fade-in-nav {
           animation: fadeIn 0.1s forwards;
