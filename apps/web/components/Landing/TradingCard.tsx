@@ -30,11 +30,9 @@ export const TradingCard = () => {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="relative w-full max-w-[390px] bg-[#050505] border border-white/5 shadow-2xl font-bitcount flex flex-col hover:border-white/10 transition-colors duration-500 group/card">
-            <div className="absolute top-[-1px] left-[-100vw] right-[-100vw] h-[1px] bg-white/5 -z-10 group-hover/card:bg-white/10 transition-colors duration-500" />
-            <div className="absolute bottom-[-1px] left-[-100vw] right-[-100vw] h-[1px] bg-white/5 -z-10 group-hover/card:bg-white/10 transition-colors duration-500" />
-            <div className="absolute left-[-1px] top-[-100vh] bottom-[-100vh] w-[1px] bg-white/5 -z-10 group-hover/card:bg-white/10 transition-colors duration-500" />
-            <div className="absolute right-[-1px] top-[-100vh] bottom-[-100vh] w-[1px] bg-white/5 -z-10 group-hover/card:bg-white/10 transition-colors duration-500" />
+        <div ref={containerRef} className="relative w-full max-w-[390px] bg-[#050505] shadow-2xl font-bitcount flex flex-col transition-colors duration-500 group/card">
+
+
 
             <div className="card-section flex items-center justify-between px-5 py-4 border-b border-white/5 bg-white/[0.02]">
                 <div className="flex flex-col gap-1">
@@ -126,7 +124,7 @@ export const TradingCard = () => {
                 </div>
             </div>
 
-            <div className="card-section flex-1 min-h-[200px] flex flex-col bg-white/[0.01]">
+            <div className="card-section flex-1 min-h-[140px] flex flex-col bg-white/[0.01]">
                 <div className="flex border-b border-white/5">
                     <button className="relative flex-1 py-2 text-[10px] font-medium text-white border-b border-[#B19EEF] bg-white/[0.02]">
                         Recent Trades
@@ -145,9 +143,6 @@ export const TradingCard = () => {
                             { p: "48,234.50", s: "0.45", t: "12:45:02", side: "buy" },
                             { p: "48,234.00", s: "0.12", t: "12:45:01", side: "sell" },
                             { p: "48,234.50", s: "2.50", t: "12:44:58", side: "buy" },
-                            { p: "48,233.50", s: "1.10", t: "12:44:55", side: "sell" },
-                            { p: "48,234.00", s: "0.05", t: "12:44:50", side: "buy" },
-                            { p: "48,235.00", s: "1.50", t: "12:44:48", side: "buy" },
                         ].map((trade, i) => (
                             <div key={i} className="grid grid-cols-3 text-[10px] relative hover:bg-white/5 py-[3px] px-2 cursor-pointer border-b border-white/[0.02] last:border-0 group transition-colors duration-200">
                                 <span className={`font-medium z-10 text-left font-space ${trade.side === 'buy' ? 'text-[#B19EEF]' : 'text-neutral-400'}`}>{trade.p}</span>

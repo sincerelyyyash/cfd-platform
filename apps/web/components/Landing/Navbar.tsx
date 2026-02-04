@@ -40,7 +40,7 @@ export default function Navbar() {
   }, { scope: containerRef });
 
   return (
-    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F] backdrop-blur-md h-[72px] opacity-0 animate-fade-in-nav">
+    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F] backdrop-blur-md h-[72px] opacity-0 animate-fade-in-nav border-b border-white/5">
       <style jsx global>{`
         .animate-fade-in-nav {
           animation: fadeIn 0.1s forwards;
@@ -50,7 +50,7 @@ export default function Navbar() {
         }
       `}</style>
 
-      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between relative">
 
         <div className="flex-shrink-0 flex items-center gap-2 nav-logo">
           {/* <div className="w-8 h-8 bg-neutral-800 rounded-md flex items-center justify-center animate-pulse">
