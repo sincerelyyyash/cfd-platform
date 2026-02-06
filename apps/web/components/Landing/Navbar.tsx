@@ -56,7 +56,7 @@ export default function Navbar() {
           {/* <div className="w-8 h-8 bg-neutral-800 rounded-md flex items-center justify-center animate-pulse">
             <div className="w-4 h-4 bg-neutral-600 rounded-sm" />
           </div> */}
-          <span className="font-semibold text-[32px] text-white tracking-tight font-bitcount">Compass</span>
+          {/* <span className="font-semibold text-[32px] text-white tracking-tight font-bitcount">Compass</span> */}
         </div>
 
         <div className="hidden md:flex items-center gap-8">
