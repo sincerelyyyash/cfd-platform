@@ -40,7 +40,7 @@ export default function Navbar() {
   }, { scope: containerRef });
 
   return (
-    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F] backdrop-blur-md h-[72px] opacity-0 animate-fade-in-nav border-b border-white/5">
+    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F]/80 backdrop-blur-md h-[72px] opacity-0 animate-fade-in-nav">
       <style jsx global>{`
         .animate-fade-in-nav {
           animation: fadeIn 0.1s forwards;
@@ -53,10 +53,6 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between relative">
 
         <div className="flex-shrink-0 flex items-center gap-2 nav-logo">
-          {/* <div className="w-8 h-8 bg-neutral-800 rounded-md flex items-center justify-center animate-pulse">
-            <div className="w-4 h-4 bg-neutral-600 rounded-sm" />
-          </div> */}
-          {/* <span className="font-semibold text-[32px] text-white tracking-tight font-bitcount">Compass</span> */}
         </div>
 
         <div className="hidden md:flex items-center gap-8">
@@ -101,7 +97,6 @@ export default function Navbar() {
               <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount py-2">Architecture</Link>
               <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount py-2">Contact</Link>
               <div className="w-full h-px bg-white/10 my-2" />
-              {/* <Link href="#" className="text-neutral-300 font-medium py-2">Explore docs</Link> */}
               <Link href="#" className="text-white font-medium py-2 font-bitcount">Log in</Link>
             </div>
           </motion.div>
