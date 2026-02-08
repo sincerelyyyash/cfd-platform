@@ -10,40 +10,12 @@ type BrandProps = {
   variant?: "delta" | "orbital" | "spark" | "glyph";
 };
 
-const sizeToDimension: Record<NonNullable<BrandProps["size"]>, number> = {
-  sm: 24,
-  md: 28,
-  lg: 34,
-};
-
-export const Brand: React.FC<BrandProps> = ({ showText = true, size = "md", className = "", textClassName = "", variant }) => {
-  const dimension = sizeToDimension[size];
-
+export const Brand: React.FC<BrandProps> = ({ showText = true, className = "", textClassName = "" }) => {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`} aria-label="TradePrime logo">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 32 32"
-        width={dimension}
-        height={dimension}
-        className="text-white flex-shrink-0"
-        style={{ imageRendering: "pixelated" }}
-        shapeRendering="crispEdges"
-        aria-hidden="true"
-        focusable="false"
-      >
-        {/* White dot in the middle */}
-        <circle
-          cx="16"
-          cy="16"
-          r="4"
-          fill="currentColor"
-          shapeRendering="crispEdges"
-        />
-      </svg>
+    <span className={`inline-flex items-center gap-2 ${className}`} aria-label="Compass logo">
       {showText ? (
-        <span className={`text-lg sm:text-xl font-semibold tracking-tight text-neutral-100 ${textClassName}`}>
-          TradePrime
+        <span className={`text-lg sm:text-xl font-bold tracking-tight text-white font-bitcount ${textClassName}`}>
+          Compass
         </span>
       ) : null}
     </span>
@@ -51,5 +23,3 @@ export const Brand: React.FC<BrandProps> = ({ showText = true, size = "md", clas
 };
 
 export default Brand;
-
-

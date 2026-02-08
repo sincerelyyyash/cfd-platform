@@ -67,7 +67,7 @@ export default function Navbar() {
 
           <div className="flex items-center gap-3 nav-cta">
             <Link href="#" className="px-4 py-2 text-sm font-medium text-black bg-white border border-transparent hover:bg-neutral-200 transition-colors font-bitcount">
-              Log in
+              Sign Up
             </Link>
           </div>
         </div>

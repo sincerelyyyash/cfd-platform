@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PixelBlast from "../ui/PixelBlast";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -63,10 +64,10 @@ export const HeroSection = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12">
         <div className="max-w-3xl">
 
-          <div className="hero-sub mb-6 flex items-center gap-2">
+          {/* <div className="hero-sub mb-6 flex items-center gap-2">
             <div className="w-1 h-1 bg-[#B19EEF] rounded-full" />
             <span className="text-xs font-mono text-[#B19EEF] tracking-widest uppercase">Algorithmic Trading Protocol</span>
-          </div>
+          </div> */}
 
           <div className="mb-8">
             <div className="overflow-hidden mb-1">
@@ -91,13 +92,13 @@ export const HeroSection = () => {
           </p>
 
           <div className="flex flex-row items-center gap-4">
-            <button className="hero-cta group relative px-8 py-3.5 bg-[#B19EEF] hover:bg-[#9f85e8] text-black font-bold text-sm uppercase tracking-wide transition-all duration-300 hover:scale-[1.02] flex items-center gap-3 overflow-hidden rounded-[1px]">
+            <Link href="/trading" className="hero-cta group relative px-8 py-3.5 bg-[#B19EEF] hover:bg-[#9f85e8] text-black font-bold text-sm uppercase tracking-wide transition-all duration-300 hover:scale-[1.02] flex items-center gap-3 overflow-hidden rounded-[1px]">
               <span className="relative z-10 font-bitcount">Start Trading</span>
               <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
 
             <button className="hero-cta group px-8 py-3.5 bg-transparent hover:bg-white/[0.05] text-white font-medium text-sm uppercase tracking-wide border border-white/10 hover:border-white/20 transition-all duration-300 font-bitcount rounded-[1px]">
-              Documentation
+              Sign In
             </button>
           </div>
 
