@@ -21,7 +21,7 @@ export default function TradingModal() {
 	const router = useRouter();
 
 	const [volume, setVolume] = useState<number>(0.1);
-	const [percent, setPercent] = useState<number>(0); // 0-100 slider controlling volume
+	const [percent, setPercent] = useState<number>(0);
 	const [takeProfit, setTakeProfit] = useState<string>("");
 	const [stopLoss, setStopLoss] = useState<string>("");
 	const [selectedLeverage, setSelectedLeverage] = useState<string>("1x");
@@ -56,8 +56,8 @@ export default function TradingModal() {
 
 	// derive displayed price and order value
 	const displayedPrice = side === "buy" ? priceInfo.ask : priceInfo.bid;
-	const [accountBalanceUsd, setAccountBalanceUsd] = useState<number>(5000); // Default to 5000, will be updated from API
-	const BALANCE_DECIMAL = 100; // Same as BalanceDropdown
+	const [accountBalanceUsd, setAccountBalanceUsd] = useState<number>(5000);
+	const BALANCE_DECIMAL = 100;
 	const leverageNumber = useMemo(() => Number(selectedLeverage.replace("x", "")) || 1, [selectedLeverage]);
 	const maxQuantity = useMemo(() => {
 		if (!displayedPrice || displayedPrice <= 0) return 0;
@@ -66,7 +66,6 @@ export default function TradingModal() {
 	}, [accountBalanceUsd, leverageNumber, displayedPrice]);
 	const orderValue = useMemo(() => Number((volume * displayedPrice).toFixed(8)), [volume, displayedPrice]);
 
-	// Fetch user balance
 	const fetchBalance = useCallback(async () => {
 		if (!signedIn) return;
 		try {
@@ -76,8 +75,7 @@ export default function TradingModal() {
 				return;
 			}
 			const data = await res.json();
-			
-			// Handle different response formats
+
 			const rawBalance =
 				typeof data === "number"
 					? data
@@ -86,9 +84,8 @@ export default function TradingModal() {
 						: data?.response?.data !== undefined
 							? data.response.data
 							: null;
-			
+
 			if (rawBalance !== null && typeof rawBalance === "number") {
-				// Convert from BALANCE_DECIMAL format (e.g., 500000 -> 5000 USD)
 				const balanceUsd = rawBalance / BALANCE_DECIMAL;
 				setAccountBalanceUsd(balanceUsd);
 			}
@@ -97,29 +94,23 @@ export default function TradingModal() {
 		}
 	}, [signedIn]);
 
-	// Fetch balance on mount and when signed in
 	useEffect(() => {
 		if (!signedIn) return;
 		fetchBalance();
 	}, [signedIn, fetchBalance]);
 
-	// Listen for balance refresh events
 	useEffect(() => {
 		if (!signedIn) return;
 
 		const handleBalanceRefresh = () => {
 			console.log("Balance refresh event received in TradingModal, refreshing balance with retries...");
-			// Fetch immediately
 			fetchBalance();
-			// Fetch again after 500ms (backend processing delay)
 			setTimeout(() => {
 				if (signedIn) fetchBalance();
 			}, 500);
-			// Fetch again after 1.5s (ensure backend has updated)
 			setTimeout(() => {
 				if (signedIn) fetchBalance();
 			}, 1500);
-			// Fetch again after 3s (final retry to ensure consistency)
 			setTimeout(() => {
 				if (signedIn) fetchBalance();
 			}, 3000);
@@ -132,23 +123,18 @@ export default function TradingModal() {
 		};
 	}, [signedIn, fetchBalance]);
 
-	// Listen for positions refresh events to update balance
 	useEffect(() => {
 		if (!signedIn) return;
 
 		const handlePositionsRefresh = () => {
 			console.log("Positions refresh event received in TradingModal, refreshing balance with retries...");
-			// Fetch immediately
 			fetchBalance();
-			// Fetch again after 500ms (backend processing delay)
 			setTimeout(() => {
 				if (signedIn) fetchBalance();
 			}, 500);
-			// Fetch again after 1.5s (ensure backend has updated)
 			setTimeout(() => {
 				if (signedIn) fetchBalance();
 			}, 1500);
-			// Fetch again after 3s (final retry to ensure consistency)
 			setTimeout(() => {
 				if (signedIn) fetchBalance();
 			}, 3000);
@@ -184,7 +170,6 @@ export default function TradingModal() {
 			const maybeTP = takeProfit.trim() === "" ? undefined : Number(takeProfit);
 			const maybeSL = stopLoss.trim() === "" ? undefined : Number(stopLoss);
 
-			// Transform asset symbol to match backend format (BTCUSDT -> BTC)
 			const backendAsset = selectedAsset.replace("USDT", "");
 
 			try {
@@ -200,7 +185,6 @@ export default function TradingModal() {
 						quantity: volume,
 						entryPrice,
 						leverage,
-						// send only if provided to satisfy backend schema while keeping null semantics client-side
 						...(maybeTP !== undefined ? { takeProfit: maybeTP } : {}),
 						...(maybeSL !== undefined ? { stopLoss: maybeSL } : {}),
 					}),
@@ -235,8 +219,6 @@ export default function TradingModal() {
 					)} @ ${entryPrice}`
 				);
 
-				// Trigger positions refresh by dispatching a custom event
-				// TradePositions will listen for this event and refresh
 				window.dispatchEvent(new CustomEvent("positions-refresh"));
 			} catch (e) {
 				sonar.error("Network error", (e as Error).message);
@@ -249,7 +231,7 @@ export default function TradingModal() {
 
 	if (!selectedAsset) {
 		return (
-			<div className="flex flex-col p-4 border-l border-slate-900 bg-black h-screen items-center justify-center text-zinc-400">
+			<div className="flex flex-col p-4 border-l border-white/5 bg-[#050505] h-screen items-center justify-center text-zinc-400 font-sans text-sm">
 				Select an asset to start trading
 			</div>
 		);
@@ -258,7 +240,7 @@ export default function TradingModal() {
 	const trade = trades[selectedAsset];
 	if (!trade) {
 		return (
-			<div className="flex flex-col p-4 border-l border-slate-900 bg-black h-screen items-center justify-center text-zinc-400">
+			<div className="flex flex-col p-4 border-l border-white/5 bg-[#050505] h-screen items-center justify-center text-zinc-400 font-sans text-sm">
 				Waiting for {selectedAsset} data...
 			</div>
 		);
@@ -268,24 +250,24 @@ export default function TradingModal() {
 	const logo = assetLogos[selectedAsset] || "/Bitcoin.png";
 
 	return (
-		<div className="flex h-screen flex-col bg-neutral-950 p-4">
-			{/* Asset header with depth layering */}
-			<div className="flex items-center justify-between rounded-xl bg-neutral-900/40 px-4 py-3 text-zinc-100 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05),0_2px_8px_-2px_rgba(0,0,0,0.3)]">
-				<div className="flex items-center gap-3">
-					<Image
-						src={logo}
-						alt={`${shortName} logo`}
-						width={24}
-						height={24}
-						className="rounded-full"
-					/>
-					<span className="font-medium tracking-wide text-zinc-100">{shortName}</span>
+		<div className="flex h-screen flex-col bg-[#050505] border-l border-white/5 p-4 font-sans">
+			<div className="flex items-center justify-between rounded-[2px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
+				<div className="absolute inset-0 bg-[#B19EEF]/5 opacity-20 pointer-events-none" />
+				<div className="flex flex-row items-center gap-3">
+					<div className="relative h-8 w-8 overflow-hidden rounded-full bg-white/5 border border-white/10 p-0.5">
+						<Image src={logo} alt={selectedAsset} fill className="object-cover" />
+					</div>
+					<div>
+						<h2 className="text-lg font-bold tracking-tight text-white font-space">
+							{selectedAsset}
+						</h2>
+					</div>
 				</div>
-				<div className="flex items-center gap-2 text-xs">
-					<span className="rounded-lg bg-emerald-500/15 px-3 py-1 font-semibold text-emerald-300 tabular-nums shadow-[inset_0_1px_0_0_rgba(16,185,129,0.2)]">
+				<div className="flex items-center gap-2 text-xs relative z-10 font-mono">
+					<span className="rounded-[1px] bg-white/5 border border-white/10 px-2 py-0.5 font-medium text-zinc-300 tabular-nums">
 						{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
 					</span>
-					<span className="rounded-lg bg-rose-500/15 px-3 py-1 font-semibold text-rose-300 tabular-nums shadow-[inset_0_1px_0_0_rgba(239,68,68,0.2)]">
+					<span className="rounded-[1px] bg-white/5 border border-white/10 px-2 py-0.5 font-medium text-zinc-300 tabular-nums">
 						{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
 					</span>
 				</div>
@@ -293,16 +275,14 @@ export default function TradingModal() {
 
 
 
-			{/* Trading form with depth layering */}
-			<div className="mt-4 w-full rounded-xl bg-neutral-900/30 p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03),0_2px_8px_-2px_rgba(0,0,0,0.4)]">
-				{/* Buy/Sell toggle with enhanced depth */}
-				<div className="flex w-full rounded-lg bg-neutral-950/50 p-1 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.2)]">
+			<div className="mt-4 w-full rounded-[2px] bg-[#0A0A0A] border border-white/5 p-4 shadow-xl">
+				<div className="flex w-full rounded-[1px] bg-black border border-white/5 p-[2px] gap-1">
 					<button
 						className={
-							"flex-1 rounded-md px-3 py-2 text-sm font-semibold transition-all duration-200 " +
-							(side === "buy" 
-								? "bg-emerald-500/20 text-emerald-200 shadow-[inset_0_1px_0_0_rgba(16,185,129,0.3)]" 
-								: "text-zinc-400 hover:text-zinc-200 hover:bg-neutral-800/30")
+							"flex-1 text-left px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 font-space border-l-2 " +
+							(side === "buy"
+								? "border-emerald-500 bg-emerald-500/5 text-emerald-400"
+								: "border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-white/5")
 						}
 						onClick={() => setSide("buy")}
 						aria-pressed={side === "buy"}
@@ -311,10 +291,10 @@ export default function TradingModal() {
 					</button>
 					<button
 						className={
-							"flex-1 rounded-md px-3 py-2 text-sm font-semibold transition-all duration-200 " +
-							(side === "sell" 
-								? "bg-rose-500/20 text-rose-200 shadow-[inset_0_1px_0_0_rgba(239,68,68,0.3)]" 
-								: "text-zinc-400 hover:text-zinc-200 hover:bg-neutral-800/30")
+							"flex-1 text-left px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 font-space border-l-2 " +
+							(side === "sell"
+								? "border-rose-500 bg-rose-500/5 text-rose-400"
+								: "border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-white/5")
 						}
 						onClick={() => setSide("sell")}
 						aria-pressed={side === "sell"}
@@ -324,59 +304,109 @@ export default function TradingModal() {
 				</div>
 
 
-				{/* Market price input with depth */}
 				<div className="mt-4">
-					<div className="flex items-center gap-2 text-xs text-zinc-400">
+					<div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">
 						<span>Market Price</span>
-						<span className={side === "buy" ? "text-emerald-300" : "text-rose-300"}>
+						<span className={side === "buy" ? "text-emerald-400" : "text-rose-400"}>
 							{side === "buy" ? "(Ask)" : "(Bid)"}
 						</span>
 					</div>
-					<div className="mt-2 flex h-12 w-full items-center justify-between rounded-lg bg-neutral-950/60 px-3 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.3)]">
+					<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-black border border-white/10 px-3 focus-within:border-white/20 transition-colors">
 						<input
 							value={displayedPrice ? displayedPrice.toFixed(priceInfo.decimals) : "0"}
 							readOnly
-							className="w-full bg-transparent text-sm text-zinc-100 outline-none"
+							className="w-full bg-transparent text-lg font-bitcount text-zinc-100 outline-none font-space"
 							aria-label="Display price"
 						/>
-						<span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300 shadow-[inset_0_1px_0_0_rgba(16,185,129,0.2)]">$</span>
+						<span className="text-zinc-600 text-xs font-mono">USD</span>
 					</div>
 				</div>
 
-				{/* Quantity input with depth */}
 				<div className="mt-4">
-					<div className="text-xs text-zinc-400">Quantity</div>
-					<div className="mt-2 flex h-12 w-full items-center justify-between rounded-lg bg-neutral-950/60 px-3 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.3)]">
+					<style jsx>{`
+						input[type="number"].no-spinners::-webkit-inner-spin-button,
+						input[type="number"].no-spinners::-webkit-outer-spin-button {
+							-webkit-appearance: none;
+							margin: 0;
+						}
+						input[type="number"].no-spinners {
+							-moz-appearance: textfield;
+						}
+					`}</style>
+					<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">Quantity</div>
+					<div className="flex w-full items-center justify-between rounded-[1px] bg-[#0A0A0A] border border-white/10 px-3 py-2 transition-colors focus-within:border-[#B19EEF]/50 focus-within:ring-1 focus-within:ring-[#B19EEF]/50">
 						<input
 							id="volume"
-							inputMode="decimal"
-							type="text"
-							pattern="^[0-9]*[.,]?[0-9]*$"
-							step={0.1}
-							min={0}
-							value={String(volume)}
+							type="number"
+							value={volume}
 							onChange={(e) => {
-								const next = Number(e.target.value.replace(/,/g, "."));
+								const next = Number(e.target.value);
 								const clamped = Math.max(0, Math.min(maxQuantity, next));
 								setVolume(clamped);
 								const p = maxQuantity > 0 ? Math.max(0, Math.min(100, Math.round((clamped / maxQuantity) * 100))) : 0;
 								setPercent(Number.isFinite(p) ? p : 0);
 							}}
-							placeholder="0.1"
-							className="w-full bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
+							className="no-spinners w-full bg-transparent text-right text-lg font-bold font-space text-white placeholder-neutral-600 outline-none"
+							placeholder="0.00"
+							step="0.01"
+							min="0"
 							aria-label="Trade volume"
 						/>
-						<div className="flex items-center pr-2">
-							<Image src={logo} alt={`${shortName} logo`} width={22} height={22} className="rounded-full" />
-						</div>
+						<span className="ml-2 text-zinc-600 text-xs font-mono shrink-0">{shortName}</span>
 					</div>
 				</div>
 
-				{/* Percentage slider */}
 				<div className="mt-4">
-					<div className="flex items-center justify-between text-xs text-zinc-400">
-						<span>0</span>
-						<span>100%</span>
+					<style jsx>{`
+						input[type="range"].custom-slider {
+							-webkit-appearance: none;
+							appearance: none;
+							background: transparent;
+							cursor: pointer;
+						}
+						input[type="range"].custom-slider::-webkit-slider-track {
+							background: rgba(255, 255, 255, 0.05);
+							height: 4px;
+							border-radius: 1px;
+							border: 1px solid rgba(255, 255, 255, 0.1);
+						}
+						input[type="range"].custom-slider::-webkit-slider-thumb {
+							-webkit-appearance: none;
+							appearance: none;
+							width: 14px;
+							height: 14px;
+							background: #B19EEF;
+							border-radius: 1px;
+							border: 1px solid rgba(255, 255, 255, 0.2);
+							margin-top: -5px;
+							transition: all 0.2s;
+						}
+						input[type="range"].custom-slider::-webkit-slider-thumb:hover {
+							background: #9f85e8;
+							box-shadow: 0 0 8px rgba(177, 158, 239, 0.5);
+						}
+						input[type="range"].custom-slider::-moz-range-track {
+							background: rgba(255, 255, 255, 0.05);
+							height: 4px;
+							border-radius: 1px;
+							border: 1px solid rgba(255, 255, 255, 0.1);
+						}
+						input[type="range"].custom-slider::-moz-range-thumb {
+							width: 14px;
+							height: 14px;
+							background: #B19EEF;
+							border-radius: 1px;
+							border: 1px solid rgba(255, 255, 255, 0.2);
+							transition: all 0.2s;
+						}
+						input[type="range"].custom-slider::-moz-range-thumb:hover {
+							background: #9f85e8;
+							box-shadow: 0 0 8px rgba(177, 158, 239, 0.5);
+						}
+					`}</style>
+					<div className="flex items-center justify-between mb-2">
+						<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider font-sans">Amount</div>
+						<div className="text-xs font-bold font-space text-[#B19EEF]">{percent}%</div>
 					</div>
 					<input
 						type="range"
@@ -389,28 +419,44 @@ export default function TradingModal() {
 							const nextVol = parseFloat(((p / 100) * maxQuantity).toFixed(4));
 							setVolume(nextVol);
 						}}
-						className="mt-2 w-full cursor-pointer appearance-none rounded-full bg-neutral-900 accent-sky-500"
+						className="custom-slider w-full mb-3"
 						aria-label="Volume percentage"
 					/>
-				</div>
-
-				{/* Order value with depth */}
-				<div className="mt-4">
-					<div className="text-xs text-zinc-400">Order Value</div>
-					<div className="mt-2 flex h-12 w-full items-center justify-between rounded-lg bg-neutral-950/60 px-3 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.3)]">
-						<div className="text-sm text-zinc-100 tabular-nums">{orderValue || 0}</div>
-						<span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300 shadow-[inset_0_1px_0_0_rgba(16,185,129,0.2)]">$</span>
+					<div className="flex gap-1">
+						{[25, 50, 75, 100].map((preset) => (
+							<button
+								key={preset}
+								onClick={() => {
+									setPercent(preset);
+									const nextVol = parseFloat(((preset / 100) * maxQuantity).toFixed(4));
+									setVolume(nextVol);
+								}}
+								className={`flex-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wide rounded-[1px] border transition-all ${percent === preset
+									? 'bg-[#B19EEF] text-black border-[#B19EEF]'
+									: 'bg-white/[0.02] text-neutral-400 border-white/10 hover:bg-white/[0.05] hover:text-white hover:border-white/20'
+									}`}
+							>
+								{preset}%
+							</button>
+						))}
 					</div>
 				</div>
 			</div>
 
-			{/* Leverage section with depth */}
-			<div className="mt-4 rounded-xl bg-neutral-900/20 p-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.02)]">
-				<div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
-					<span>Selected leverage</span>
-					<span className="rounded-lg bg-neutral-950/60 px-3 py-1 text-zinc-100 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.3)]" aria-live="polite">{selectedLeverage}</span>
+			<div className="mt-4">
+				<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">Order Value</div>
+				<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-[#0E0E0F] border border-white/5 px-3">
+					<div className="text-sm font-bitcount text-zinc-300 tabular-nums font-space">{orderValue || 0}</div>
+					<span className="text-zinc-600 text-xs font-mono">USD</span>
 				</div>
-				<div className="flex w-full flex-row justify-center gap-2">
+			</div>
+
+			<div className="mt-4 rounded-[2px] bg-[#0A0A0A] border border-white/5 p-3">
+				<div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-3">
+					<span>Leverage</span>
+					<span className="text-[#B19EEF] font-bitcount font-space" aria-live="polite">{selectedLeverage}</span>
+				</div>
+				<div className="flex w-full flex-row justify-center gap-1">
 					{["1x", "5x", "10x", "20x", "100x"].map((leverage) => {
 						const isActive = leverage === selectedLeverage;
 						return (
@@ -418,7 +464,6 @@ export default function TradingModal() {
 								key={leverage}
 								onClick={() => {
 									setSelectedLeverage(leverage);
-									// Recompute percent based on new maxQuantity keeping order value proportion
 									setPercent((prev) => {
 										const newMaxQ = (accountBalanceUsd * Number(leverage.replace("x", ""))) / (displayedPrice || 1);
 										const newP = newMaxQ > 0 ? Math.max(0, Math.min(100, Math.round((volume / newMaxQ) * 100))) : 0;
@@ -427,10 +472,10 @@ export default function TradingModal() {
 								}}
 								aria-pressed={isActive}
 								className={
-									"w-full rounded-lg p-2 text-sm transition-all duration-200 " +
+									"w-full rounded-[1px] py-1.5 text-[10px] font-mono transition-all duration-200 border " +
 									(isActive
-										? "bg-sky-500/20 text-sky-200 shadow-[inset_0_1px_0_0_rgba(14,165,233,0.3)]"
-										: "bg-neutral-950/40 text-zinc-300 hover:bg-neutral-800/50 hover:text-zinc-200")
+										? "bg-[#B19EEF]/10 text-[#B19EEF] border-[#B19EEF]/30 shadow-[0_0_8px_rgba(177,158,239,0.1)]"
+										: "bg-transparent text-zinc-500 border-transparent hover:bg-white/5 hover:text-zinc-300")
 								}
 							>
 								{leverage}
@@ -440,19 +485,20 @@ export default function TradingModal() {
 				</div>
 			</div>
 
-			{/* Advanced options with depth */}
 			<div className="w-full pt-2">
 				<button
 					onClick={() => setShowRiskFields((s) => !s)}
 					aria-expanded={showRiskFields}
-					className="flex w-full items-center justify-between rounded-lg bg-neutral-950/40 px-3 py-2 text-left text-sm text-zinc-300 hover:bg-neutral-900/50 transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.2)]"
+					className="flex w-full items-center justify-between rounded-[1px] bg-white/[0.02] border border-white/5 px-3 py-2 text-left text-xs hover:bg-white/5 transition-all duration-200"
 				>
-					<span className="flex items-center gap-2">
-						<span className="text-zinc-100">Advanced (optional)</span>
-						<span className="text-[11px] text-zinc-500">TP / SL</span>
-					</span>
+					<div className="flex items-center gap-2">
+						<span className="text-zinc-500 font-sans text-xs uppercase tracking-wide">Available</span>
+						<span className="text-zinc-200 font-space font-bold text-sm tracking-tight hover:text-white transition-colors cursor-default">
+							${(accountBalanceUsd).toFixed(2)}
+						</span>
+					</div>
 					<svg
-						className={"h-4 w-4 transition-transform " + (showRiskFields ? "rotate-180" : "rotate-0")}
+						className={"h-3 w-3 text-zinc-500 transition-transform " + (showRiskFields ? "rotate-180" : "rotate-0")}
 						viewBox="0 0 20 20"
 						fill="currentColor"
 						aria-hidden="true"
@@ -461,39 +507,33 @@ export default function TradingModal() {
 					</svg>
 				</button>
 				{showRiskFields && (
-					<div className="mt-3 grid grid-cols-1 gap-3">
-						<div className="space-y-2">
-							<label htmlFor="take-profit" className="text-xs text-zinc-300">Take Profit</label>
-							<div className="flex h-12 w-full items-center justify-end rounded-lg bg-neutral-950/60 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.3)]">
+					<div className="mt-2 grid grid-cols-2 gap-2">
+						<div className="space-y-1">
+							<label htmlFor="take-profit" className="text-[9px] text-zinc-500 uppercase tracking-wide">Take Profit</label>
+							<div className="flex h-9 w-full items-center justify-end rounded-[1px] bg-black border border-white/10 px-2 focus-within:border-white/20 transition-colors">
 								<input
 									id="take-profit"
-									inputMode="decimal"
-									type="text"
-									pattern="^[0-9]*[.,]?[0-9]*$"
-									step={0.1}
-									min={0}
-									value={takeProfit}
+									type="number"
+									value={takeProfit || ""}
 									onChange={(e) => handleNumericStringInput(e.target.value, setTakeProfit)}
-									placeholder={(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
-									className="w-full bg-transparent px-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
+									className="block w-full rounded-[1px] border border-white/10 bg-[#0A0A0A] p-2.5 text-right text-sm font-bold font-space text-white placeholder-neutral-600 focus:border-[#B19EEF]/50 focus:bg-black focus:outline-none focus:ring-1 focus:ring-[#B19EEF]/50 transition-all"
+									placeholder="0.00"
 									aria-label="Take profit price"
 								/>
 							</div>
 						</div>
-						<div className="space-y-2">
-							<label htmlFor="stop-loss" className="text-xs text-zinc-300">Stop Loss</label>
-							<div className="flex h-12 w-full items-center justify-end rounded-lg bg-neutral-950/60 shadow-[inset_0_1px_0_0_rgba(0,0,0,0.3)]">
+						<div className="space-y-1">
+							<label htmlFor="stop-loss" className="text-[9px] text-zinc-500 uppercase tracking-wide">Stop Loss</label>
+							<div className="flex h-9 w-full items-center justify-end rounded-[1px] bg-black border border-white/10 px-2 focus-within:border-white/20 transition-colors">
 								<input
 									id="stop-loss"
-									inputMode="decimal"
-									type="text"
 									pattern="^[0-9]*[.,]?[0-9]*$"
 									step={0.1}
 									min={0}
 									value={stopLoss}
 									onChange={(e) => handleNumericStringInput(e.target.value, setStopLoss)}
 									placeholder={(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
-									className="w-full bg-transparent px-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
+									className="w-full bg-transparent text-xs font-bitcount text-zinc-100 outline-none placeholder:text-zinc-700"
 									aria-label="Stop loss price"
 								/>
 							</div>
@@ -502,23 +542,25 @@ export default function TradingModal() {
 				)}
 			</div>
 
-			<div className="pt-3 text-[11px] text-zinc-500">
-				Indicative prices. Final execution shown in the order confirmation.
+			<div className="pt-4 text-[9px] text-zinc-600 text-center font-mono">
+				Prices are indicative. Final execution shown in confirmation.
 			</div>
 
-			{/* Submit */}
 			<div className="mt-4 flex gap-3">
 				<Button
-					variant={side === "buy" ? "primary" : "destructive"}
-					className="w-full h-12 text-sm"
+					variant="ghost"
+					className={`w-full h-12 text-sm font-bold uppercase tracking-wider rounded-[1px] font-space transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${side === 'buy'
+						? 'bg-[#B19EEF] hover:bg-[#9f85e8] text-black shadow-[0_0_20px_rgba(177,158,239,0.2)]'
+						: 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.1)]'
+						}`}
 					disabled={submitting}
 					onClick={() => placeOrder(side)}
 					aria-label={side === "buy" ? "Place buy order" : "Place sell order"}
 				>
-					{side === "buy" ? "Buy" : "Sell"}
+					{submitting ? "Processing..." : (side === "buy" ? "Place Buy Order" : "Place Sell Order")}
 				</Button>
 			</div>
-		</div>
+		</div >
 	);
 }
 

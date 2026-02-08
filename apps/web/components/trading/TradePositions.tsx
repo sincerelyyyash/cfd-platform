@@ -51,8 +51,8 @@ const TradePositions = () => {
 			const endpoint = tab === "Open" ? "/api/v1/trade/open" : "/api/v1/trade/closed";
 			const res = await fetch(endpoint, { credentials: "include" });
 			const data = await res.json().catch(() => ({} as any));
-			
-            if (!res.ok) {
+
+			if (!res.ok) {
 				if (tab === "Closed" && res.status === 404) {
 					console.log("No closed orders found (404)");
 					setClosedOrders([]);
@@ -66,17 +66,17 @@ const TradePositions = () => {
 				if (!isPolling) setLoading(false);
 				return;
 			}
-			
-			const rows: OrderRow[] = Array.isArray(data?.data) 
-				? data.data 
-				: Array.isArray(data) 
-					? data 
-					: Array.isArray(data?.response?.data) 
-						? data.response.data 
+
+			const rows: OrderRow[] = Array.isArray(data?.data)
+				? data.data
+				: Array.isArray(data)
+					? data
+					: Array.isArray(data?.response?.data)
+						? data.response.data
 						: [];
-			
+
 			console.log(`Fetched ${tab} orders:`, rows.length, rows);
-			
+
 			if (tab === "Open") {
 				setOpenOrders(rows);
 			} else {
@@ -115,10 +115,10 @@ const TradePositions = () => {
 
 	useEffect(() => {
 		if (!signedIn) return;
-		
+
 		handleFetch("Open", false);
 		handleFetch("Closed", false);
-		
+
 		if (activeTab === "Open") {
 			startPolling();
 		} else {
@@ -164,30 +164,30 @@ const TradePositions = () => {
 
 	const calculateRealTimePnL = (order: OrderRow): number | null => {
 		if (order.status !== "open") return null;
-		
+
 		const frontendAsset = `${order.asset}USDT`;
 		const currentTrade = trades[frontendAsset];
-		
+
 		if (!currentTrade) return null;
-		
+
 		const entryPriceScaled = order.entryPrice;
 		const currentPriceScaled = order.type === "long" ? currentTrade.bid : currentTrade.ask;
 		const decimals = currentTrade.decimals;
 		const priceDecimal = 10 ** decimals;
-		
+
 		let pnL = 0;
-		const priceDiff = order.type === "long" 
+		const priceDiff = order.type === "long"
 			? (currentPriceScaled - entryPriceScaled)
 			: (entryPriceScaled - currentPriceScaled);
-		
+
 		pnL = (priceDiff * order.quantity) / (priceDecimal * QUANTITY_DECIMAL);
-		
+
 		return Number.isFinite(pnL) ? pnL : null;
 	};
 
 	const handleCloseOrder = async (orderId: string) => {
 		if (!signedIn) return;
-		
+
 		setClosingOrderId(orderId);
 		try {
 			const res = await fetch("/api/v1/trade/close", {
@@ -212,7 +212,7 @@ const TradePositions = () => {
 
 			const pnLScaled = data?.data?.pnL;
 			const pnL = typeof pnLScaled === "number" ? pnLScaled / BALANCE_DECIMAL : null;
-			const pnLMessage = typeof pnL === "number" 
+			const pnLMessage = typeof pnL === "number"
 				? ` P&L: ${pnL >= 0 ? "+" : ""}${pnL.toFixed(2)} USD`
 				: "";
 
@@ -238,9 +238,9 @@ const TradePositions = () => {
 
 	if (!signedIn) {
 		return (
-			<div className="flex flex-col bg-neutral-950">
-				<div className="flex flex-row items-center justify-between bg-neutral-950 shadow-[0_1px_0_0_rgba(255,255,255,0.03)]">
-					<div className="flex flex-row gap-1 p-2 sm:gap-2 sm:p-3">
+			<div className="flex flex-col bg-[#0E0E0F]">
+				<div className="flex flex-row items-center justify-between border-b border-white/5 bg-[#0E0E0F]">
+					<div className="flex flex-row gap-1 p-2">
 						<div role="tablist" aria-label="Positions filter" className="flex items-center gap-1">
 							{tabs.map((tab) => {
 								const isActive = tab === activeTab;
@@ -251,10 +251,10 @@ const TradePositions = () => {
 										aria-selected={isActive}
 										onClick={() => setActiveTab(tab)}
 										className={
-											"rounded-md px-3 py-2 text-sm transition-all duration-200 outline-none " +
+											"rounded-[1px] px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 outline-none font-space " +
 											(isActive
-												? "bg-neutral-900/40 text-zinc-100 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
-												: "bg-neutral-950/40 text-zinc-300 hover:bg-neutral-800/30")
+												? "bg-white text-black"
+												: "text-neutral-500 hover:text-white hover:bg-white/5")
 										}
 									>
 										{tab}
@@ -263,10 +263,10 @@ const TradePositions = () => {
 							})}
 						</div>
 					</div>
-					<div className="flex flex-row items-center gap-2 p-2 sm:p-3 text-zinc-400">
+					<div className="flex flex-row items-center gap-2 p-2 text-zinc-400">
 						<Button
 							variant="outline"
-							className="px-2 py-1 text-xs"
+							className="px-2 py-1 text-[10px] h-7 bg-transparent border-white/10 hover:bg-white/5"
 							aria-label="Refresh positions"
 							disabled
 						>
@@ -274,12 +274,12 @@ const TradePositions = () => {
 						</Button>
 					</div>
 				</div>
-				<div className="p-3 sm:p-4">
-					<div className="flex flex-col items-center justify-center rounded-xl bg-neutral-900/30 px-3 py-10 text-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)]">
-						<div className="mb-4 text-sm text-zinc-300">Log in to view your open and closed positions.</div>
+				<div className="p-4">
+					<div className="flex flex-col items-center justify-center rounded-[1px] border border-white/5 bg-white/[0.01] px-4 py-12 text-center">
+						<div className="mb-4 text-xs text-neutral-500 font-mono">Log in to view your open and closed positions.</div>
 						<Button
 							variant="outline"
-							className="px-6 py-2 text-sm"
+							className="px-6 py-2 text-xs font-bold uppercase tracking-wider bg-white/5 border-white/10 text-white hover:bg-white/10 rounded-[1px]"
 							aria-label="Log in to view your positions"
 							onClick={() => (window.location.href = "/signin")}
 						>
@@ -292,9 +292,9 @@ const TradePositions = () => {
 	}
 
 	return (
-		<div className="flex flex-col bg-neutral-950">
-			<div className="flex flex-row items-center justify-between bg-neutral-950 shadow-[0_1px_0_0_rgba(255,255,255,0.03)]">
-				<div className="flex flex-row gap-1 p-2 sm:gap-2 sm:p-3">
+		<div className="flex flex-col bg-[#0E0E0F] h-full">
+			<div className="flex flex-row items-center justify-between border-b border-white/5 bg-[#0E0E0F] sticky top-0 z-10">
+				<div className="flex flex-row gap-1 p-2">
 					<div role="tablist" aria-label="Positions filter" className="flex items-center gap-1">
 						{tabs.map((tab) => {
 							const isActive = tab === activeTab;
@@ -305,10 +305,10 @@ const TradePositions = () => {
 									aria-selected={isActive}
 									onClick={() => setActiveTab(tab)}
 									className={
-										"rounded-md px-3 py-2 text-sm transition-all duration-200 outline-none " +
+										"rounded-[1px] px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 outline-none font-space " +
 										(isActive
-											? "bg-neutral-900/40 text-zinc-100 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
-											: "bg-neutral-950/40 text-zinc-300 hover:bg-neutral-800/30")
+											? "bg-white text-black"
+											: "text-neutral-500 hover:text-white hover:bg-white/5")
 									}
 								>
 									{tab}
@@ -317,10 +317,10 @@ const TradePositions = () => {
 						})}
 					</div>
 				</div>
-				<div className="flex flex-row items-center gap-2 p-2 sm:p-3 text-zinc-400">
+				<div className="flex flex-row items-center gap-2 p-2 text-zinc-400">
 					<Button
 						variant="outline"
-						className="px-2 py-1 text-xs"
+						className="px-2 py-1 text-[10px] h-7 bg-transparent border-white/10 hover:bg-white/5 uppercase tracking-wide rounded-[1px]"
 						aria-label="Refresh positions"
 						onClick={() => handleFetch(activeTab)}
 						disabled={loading}
@@ -329,98 +329,126 @@ const TradePositions = () => {
 					</Button>
 				</div>
 			</div>
-			<div className="p-3 sm:p-4">
-				<div role="list" aria-label={`${activeTab} positions`} className="space-y-2">
+			<div className="flex-1 overflow-auto">
+				<div role="list" aria-label={`${activeTab} positions`} className="w-full">
 					{rows.length === 0 ? (
-						<div className="flex items-center justify-center rounded-xl bg-neutral-900/30 px-3 py-6 text-zinc-400 text-sm shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)]">
-							No {activeTab.toLowerCase()} positions.
+						<div className="flex items-center justify-center py-12 text-neutral-600 text-xs font-mono uppercase tracking-wider">
+							No {activeTab.toLowerCase()} positions
 						</div>
 					) : (
-						rows.map((row) => (
-							<div
-								key={row.id}
-								role="listitem"
-								className="group flex items-center justify-between rounded-lg bg-neutral-900/30 px-3 py-2 text-zinc-200 transition-all duration-200 hover:bg-neutral-800/40 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.02)]"
-							>
-								<div className="flex items-center gap-3">
-									{(() => {
-										// Convert asset from backend format (BTC) to frontend format (BTCUSDT)
-										const frontendAsset = `${row.asset}USDT`;
-										const logo = assetLogos[frontendAsset] || "/Bitcoin.png";
-										const shortName = row.asset.replace("USDT", "");
-										
-										return (
-											<>
-												<Image
-													src={logo}
-													alt={`${shortName} logo`}
-													width={24}
-													height={24}
-													className="rounded-full"
-												/>
-												<div className="text-sm font-medium tracking-wide text-zinc-100">{row.asset}</div>
-											</>
-										);
-									})()}
-								</div>
-								<div className="flex items-center gap-3">
-									<span className="rounded-lg bg-emerald-500/15 px-2 py-1 text-xs font-semibold text-emerald-300 tabular-nums shadow-[inset_0_1px_0_0_rgba(16,185,129,0.2)]">Entry {(row.entryPrice / PRICE_DECIMAL).toFixed(2)}</span>
-									{typeof row.exitPrice === "number" ? (
-										<span className="rounded-lg bg-rose-500/15 px-2 py-1 text-xs font-semibold text-rose-300 tabular-nums shadow-[inset_0_1px_0_0_rgba(239,68,68,0.2)]">Exit {(row.exitPrice / PRICE_DECIMAL).toFixed(2)}</span>
-									) : null}
-									{activeTab === "Open" && (() => {
-										const realTimePnL = calculateRealTimePnL(row);
-										const displayPnL = realTimePnL !== null ? realTimePnL : (typeof row.pnL === "number" ? row.pnL / BALANCE_DECIMAL : null);
-										
-										if (displayPnL === null) return null;
-										
-										return (
-											<span className={`rounded-lg px-2 py-1 text-xs font-semibold tabular-nums shadow-[inset_0_1px_0_0_rgba(0,0,0,0.2)] ${
-												displayPnL >= 0 
-													? "bg-emerald-500/15 text-emerald-300" 
-													: "bg-rose-500/15 text-rose-300"
-											}`}>
-												{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
-											</span>
-										);
-									})()}
-									{activeTab === "Closed" && typeof row.pnL === "number" && (() => {
-										// PnL from backend is in BALANCE_DECIMAL scale, so convert to USD
-										const displayPnL = row.pnL / BALANCE_DECIMAL;
-										return (
-											<span className={`rounded-lg px-2 py-1 text-xs font-semibold tabular-nums shadow-[inset_0_1px_0_0_rgba(0,0,0,0.2)] ${
-												displayPnL >= 0 
-													? "bg-emerald-500/15 text-emerald-300" 
-													: "bg-rose-500/15 text-rose-300"
-											}`}>
-												{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
-											</span>
-										);
-									})()}
-									{activeTab === "Open" && row.leverage && (
-										<span className="rounded-lg bg-blue-500/15 px-2 py-1 text-xs font-semibold text-blue-300 tabular-nums shadow-[inset_0_1px_0_0_rgba(59,130,246,0.2)]">
-											{row.leverage}x
-										</span>
-									)}
-									{activeTab === "Closed" && row.leverage && (
-										<span className="rounded-lg bg-blue-500/15 px-2 py-1 text-xs font-semibold text-blue-300 tabular-nums shadow-[inset_0_1px_0_0_rgba(59,130,246,0.2)]">
-											{row.leverage}x
-										</span>
-									)}
-									{activeTab === "Open" && (
-										<Button
-											variant="destructive"
-											className="px-3 py-1 text-xs h-7"
-											onClick={() => handleCloseOrder(row.id)}
-											disabled={closingOrderId === row.id}
-											aria-label={`Close order ${row.id}`}
-										>
-											{closingOrderId === row.id ? "Closing..." : "Close"}
-										</Button>
-									)}
-								</div>
+						<div className="min-w-full">
+							<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-sans font-bold sticky top-0 bg-[#0E0E0F] z-10">
+								<div className="col-span-3">Asset</div>
+								<div className="col-span-2 text-right">Size</div>
+								<div className="col-span-2 text-right">Entry</div>
+								<div className="col-span-2 text-right">Mark</div>
+								<div className="col-span-2 text-right">PnL</div>
+								<div className="col-span-1"></div>
 							</div>
-						))
+							{rows.map((row) => (
+								<div
+									key={row.id}
+									role="listitem"
+									className="group grid grid-cols-12 items-center px-4 py-3 border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors"
+								>
+									<div className="col-span-3 flex items-center gap-3">
+										{(() => {
+											// Convert asset from backend format (BTC) to frontend format (BTCUSDT)
+											const frontendAsset = `${row.asset}USDT`;
+											const logo = assetLogos[frontendAsset] || "/Bitcoin.png";
+											const shortName = row.asset.replace("USDT", "");
+
+											return (
+												<>
+													<Image
+														src={logo}
+														alt={`${shortName} logo`}
+														width={20}
+														height={20}
+														className="rounded-full"
+													/>
+													<div className="flex flex-col">
+														<span className="text-sm font-bold tracking-tight text-white font-space">{row.asset}</span>
+														<span className={`text-[10px] uppercase tracking-wider font-bold ${row.type === 'long' ? 'text-emerald-500' : 'text-rose-500'}`}>{row.type} {row.leverage}x</span>
+													</div>
+												</>
+											);
+										})()}
+									</div>
+									<div className="col-span-2 text-right text-sm font-bold font-space text-neutral-400">
+										{row.quantity}
+									</div>
+									<div className="col-span-2 text-right text-sm font-bold font-space text-neutral-300">
+										{(row.entryPrice / PRICE_DECIMAL).toFixed(2)}
+									</div>
+
+									<div className="col-span-2 text-right">
+										{activeTab === "Open" && (() => {
+											const frontendAsset = `${row.asset}USDT`;
+											const currentTrade = trades[frontendAsset];
+											const markPrice = row.type === "long" ? currentTrade?.bid : currentTrade?.ask;
+
+											if (!markPrice || !currentTrade) return <span className="text-sm font-space text-neutral-600">-</span>;
+
+											return (
+												<span className="text-sm font-bold font-space text-neutral-300">
+													{(markPrice / (10 ** currentTrade.decimals)).toFixed(2)}
+												</span>
+											)
+										})()}
+										{activeTab === "Closed" && typeof row.exitPrice === "number" && (
+											<span className="text-sm font-bold font-space text-neutral-300">
+												{(row.exitPrice / PRICE_DECIMAL).toFixed(2)}
+											</span>
+										)}
+									</div>
+
+									<div className="col-span-2 text-right">
+										{activeTab === "Open" && (() => {
+											const realTimePnL = calculateRealTimePnL(row);
+											const displayPnL = realTimePnL !== null ? realTimePnL : (typeof row.pnL === "number" ? row.pnL / BALANCE_DECIMAL : null);
+
+											if (displayPnL === null) return <span className="text-sm font-space text-neutral-600">-</span>;
+
+											return (
+												<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
+													? "text-[#B19EEF]"
+													: "text-rose-500"
+													}`}>
+													{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
+												</div>
+											);
+										})()}
+										{activeTab === "Closed" && typeof row.pnL === "number" && (() => {
+											// PnL from backend is in BALANCE_DECIMAL scale, so convert to USD
+											const displayPnL = row.pnL / BALANCE_DECIMAL;
+											return (
+												<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
+													? "text-[#B19EEF]"
+													: "text-rose-500"
+													}`}>
+													{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
+												</div>
+											);
+										})()}
+									</div>
+
+									<div className="col-span-1 flex justify-end">
+										{activeTab === "Open" && (
+											<Button
+												variant="ghost"
+												className="px-2 py-0.5 text-[9px] h-6 bg-white/5 hover:bg-white/10 text-white rounded-[1px] border border-white/5 uppercase tracking-wide hover:border-red-500/50 hover:text-red-400 transition-colors"
+												onClick={() => handleCloseOrder(row.id)}
+												disabled={closingOrderId === row.id}
+												aria-label={`Close order ${row.id}`}
+											>
+												{closingOrderId === row.id ? "..." : "Close"}
+											</Button>
+										)}
+									</div>
+								</div>
+							))}
+						</div>
 					)}
 				</div>
 			</div>

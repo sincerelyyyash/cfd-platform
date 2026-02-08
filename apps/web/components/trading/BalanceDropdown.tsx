@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState, useRef, useMemo } from "react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTradeStore } from "@/store/useTradeStore";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -32,27 +32,27 @@ const QUANTITY_DECIMAL = 10000;
 
 const calculateRealTimePnL = (order: OrderRow, trades: Record<string, any>): number => {
 	if (order.status !== "open") return order.pnL || 0;
-	
+
 	const frontendAsset = `${order.asset}USDT`;
 	const currentTrade = trades[frontendAsset];
-	
+
 	if (!currentTrade) {
 		return order.pnL || 0;
 	}
-	
+
 	const entryPriceScaled = order.entryPrice;
 	const currentPriceScaled = order.type === "long" ? currentTrade.bid : currentTrade.ask;
 	const decimals = currentTrade.decimals || 4;
 	const priceDecimal = 10 ** decimals;
-	
-	
+
+
 	let pnL = 0;
-	const priceDiff = order.type === "long" 
+	const priceDiff = order.type === "long"
 		? (currentPriceScaled - entryPriceScaled)
 		: (entryPriceScaled - currentPriceScaled);
-	
+
 	pnL = (priceDiff * order.quantity) / (priceDecimal * QUANTITY_DECIMAL);
-	
+
 	return Number.isFinite(pnL) ? pnL : (order.pnL || 0);
 };
 
@@ -73,7 +73,7 @@ export default function BalanceDropDown() {
 		if (!isPolling) setLoading(true);
 		try {
 			const res = await fetch("/api/v1/balance", { credentials: "include" });
-			
+
 			if (!res.ok) {
 				if (res.status === 404 && !isPolling) {
 					console.log("User not found, retrying...");
@@ -91,13 +91,13 @@ export default function BalanceDropDown() {
 				}
 				return;
 			}
-			
+
 			const data = await res.json().catch(() => null);
-			
+
 			console.log("Balance API response:", data);
-			
+
 			setError(false);
-			
+
 			let balanceValue: number | null = null;
 			if (typeof data?.data === "number") {
 				balanceValue = data.data;
@@ -110,9 +110,9 @@ export default function BalanceDropDown() {
 					balanceValue = data.data;
 				}
 			}
-			
+
 			console.log("Parsed balance value:", balanceValue);
-			
+
 			if (typeof balanceValue === "number") {
 				const balanceInUSD = balanceValue / BALANCE_DECIMAL;
 				console.log("Setting balance to:", balanceInUSD, "USD");
@@ -144,7 +144,7 @@ export default function BalanceDropDown() {
 		if (!signedIn) return;
 		try {
 			const res = await fetch("/api/v1/trade/open", { credentials: "include" });
-			
+
 			if (!res.ok) {
 				// If 404 or 400, set empty array (no open orders) - this is normal
 				// No error notification needed for empty orders
@@ -152,9 +152,9 @@ export default function BalanceDropDown() {
 				setOpenOrders([]);
 				return;
 			}
-			
+
 			const data = await res.json().catch(() => null);
-			
+
 			// Response structure: { statusCode: 200, success: true, message: "...", data: [...] }
 			// Handle different response structures
 			let rows: OrderRow[] = [];
@@ -165,7 +165,7 @@ export default function BalanceDropDown() {
 			} else if (Array.isArray(data?.response?.data)) {
 				rows = data.response.data;
 			}
-			
+
 			console.log("Open orders response:", data, "Parsed rows:", rows);
 			setOpenOrders(rows || []);
 		} catch (e) {
@@ -206,7 +206,7 @@ export default function BalanceDropDown() {
 		}
 
 		retryCountRef.current = 0;
-		
+
 		handleFetch();
 		startPolling();
 
@@ -223,7 +223,7 @@ export default function BalanceDropDown() {
 				if (signedIn) handleFetch(true);
 			}, 3000);
 		};
-		
+
 		window.addEventListener("balance-refresh", handleBalanceRefresh);
 
 		return () => {
@@ -280,29 +280,35 @@ export default function BalanceDropDown() {
 	return (
 		<div className="p-2 width-60">
 			<DropdownMenu>
-				<DropdownMenuTrigger 
-					className="text-zinc-100 hover:text-zinc-200 transition-colors"
+				<DropdownMenuTrigger
+					className="text-neutral-200 hover:text-white transition-colors font-space text-sm tracking-tight"
 					disabled={loading && balance === null}
 				>
 					{displayNetWorth}
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="bg-neutral-900/95 border-neutral-800/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.4)]">
-					<DropdownMenuLabel className="text-zinc-100">My Account</DropdownMenuLabel>
-					<DropdownMenuItem className="text-zinc-200 hover:bg-neutral-800/50">
-						Balance: {formatCurrency(balance)}
+				<DropdownMenuContent className="bg-[#0E0E0F] border-white/5 shadow-2xl min-w-[240px]">
+					<DropdownMenuLabel className="font-bitcount text-xs uppercase tracking-widest text-[#B19EEF] mb-1 px-2">Account Overview</DropdownMenuLabel>
+					<div className="h-px bg-white/5 mx-2 mb-2" />
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+						<span>Balance</span>
+						<span className="font-space text-white">{formatCurrency(balance)}</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem className="text-zinc-200 hover:bg-neutral-800/50">
-						Equity: {formatCurrency(equity)}
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+						<span>Equity</span>
+						<span className="font-space text-white">{formatCurrency(equity)}</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem className="text-zinc-200 hover:bg-neutral-800/50">
-						Margin: {formatCurrency(totalMargin)}
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+						<span>Margin</span>
+						<span className="font-space text-white">{formatCurrency(totalMargin)}</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem className="text-zinc-200 hover:bg-neutral-800/50">
-						Free Margin: {formatCurrency(freeMargin)}
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+						<span>Free Margin</span>
+						<span className="font-space text-white">{formatCurrency(freeMargin)}</span>
 					</DropdownMenuItem>
 					{openOrders.length > 0 && (
-						<DropdownMenuItem className="text-zinc-200 hover:bg-neutral-800/50">
-							Unrealized P&L: {formatCurrency(totalPnL)}
+						<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+							<span>Unrealized P&L</span>
+							<span className={`font-space ${totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>{formatCurrency(totalPnL)}</span>
 						</DropdownMenuItem>
 					)}
 				</DropdownMenuContent>

@@ -12,7 +12,7 @@ export default function TradingAppbar() {
 	const { signedIn } = useAuth();
 
 	return (
-			<div className="sticky top-0 z-30 h-16 sm:h-20 bg-neutral-950 shadow-[0_1px_0_0_rgba(255,255,255,0.03),0_4px_12px_-4px_rgba(0,0,0,0.4)] backdrop-blur supports-[backdrop-filter]:bg-transparent flex items-center px-3 sm:px-4 justify-between">
+		<div className="sticky top-0 z-30 h-16 sm:h-20 bg-[#0E0E0F] border-b border-white/5 flex items-center px-6 justify-between">
 			<div className="relative z-20 flex items-center gap-2 text-neutral-100">
 				<Brand size="lg" showText={true} variant="orbital" className="hidden sm:flex" />
 				<span className="sm:hidden">

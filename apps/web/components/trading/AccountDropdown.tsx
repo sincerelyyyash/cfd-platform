@@ -26,15 +26,15 @@ export default function AccountDropDown() {
         "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax",
         "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure",
       ];
-      
+
       cookieOptions.forEach(cookie => {
         document.cookie = cookie;
       });
-      
+
       setSignedIn(false);
-      
+
       sonar.success("Signed out", "You have been signed out successfully.");
-      
+
       setTimeout(() => {
         router.push("/signin");
       }, 500);
@@ -48,8 +48,8 @@ export default function AccountDropDown() {
   return (
     <div className="p-2 width-60">
       <DropdownMenu>
-        <DropdownMenuTrigger 
-          className="text-zinc-100 hover:text-zinc-200 transition-colors p-2 rounded-lg hover:bg-neutral-800/40"
+        <DropdownMenuTrigger
+          className="text-neutral-400 hover:text-white transition-colors p-2 rounded-[1px] hover:bg-white/5"
           aria-label="Account menu"
         >
           <svg
@@ -66,9 +66,9 @@ export default function AccountDropDown() {
             <circle cx="12" cy="7" r="4" />
           </svg>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-neutral-900/95 border-neutral-800/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.4)]">
-          <DropdownMenuItem 
-            className="text-zinc-200 hover:bg-neutral-800/50 cursor-pointer"
+        <DropdownMenuContent className="bg-[#0E0E0F] border-white/5 shadow-2xl min-w-[160px]">
+          <DropdownMenuItem
+            className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-pointer focus:bg-white/5 focus:text-white transition-colors"
             onClick={handleSignOut}
           >
             Sign Out
