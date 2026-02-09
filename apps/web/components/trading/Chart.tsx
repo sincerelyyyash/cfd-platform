@@ -38,7 +38,7 @@ export default function Charts() {
 	}, [selectedAsset]);
 
 	return (
-		<div className="w-full bg-[#0E0E0F] border border-white/5 rounded-[1px]">
+		<div className="w-full bg-[#08080a] border border-white/5 rounded-[1px]">
 			<CandlestickChart data={data} height={550} />
 		</div>
 	);

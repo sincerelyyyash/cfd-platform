@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export default function TradingPage() {
   return (
-    <div className="h-screen bg-neutral-950">
+    <div className="h-screen bg-[#08080a]">
       <TradingAppbar />
       <div className="flex h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
         <div className="flex-1 min-w-0">
@@ -37,7 +37,7 @@ export default function TradingPage() {
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
-        <div className="w-[360px] shrink-0 bg-neutral-950 shadow-[inset_1px_0_0_0_rgba(255,255,255,0.03)]">
+        <div className="w-[360px] shrink-0 bg-[#08080a] shadow-[inset_1px_0_0_0_rgba(255,255,255,0.03)]">
           <TradingModal />
         </div>
       </div>

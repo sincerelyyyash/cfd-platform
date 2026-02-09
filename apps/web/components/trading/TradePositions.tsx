@@ -238,8 +238,8 @@ const TradePositions = () => {
 
 	if (!signedIn) {
 		return (
-			<div className="flex flex-col bg-[#0E0E0F]">
-				<div className="flex flex-row items-center justify-between border-b border-white/5 bg-[#0E0E0F]">
+			<div className="flex flex-col bg-[#08080a]">
+				<div className="flex flex-row items-center justify-between border-b border-white/5 bg-[#08080a]">
 					<div className="flex flex-row gap-1 p-2">
 						<div role="tablist" aria-label="Positions filter" className="flex items-center gap-1">
 							{tabs.map((tab) => {
@@ -292,8 +292,8 @@ const TradePositions = () => {
 	}
 
 	return (
-		<div className="flex flex-col bg-[#0E0E0F] h-full">
-			<div className="flex flex-row items-center justify-between border-b border-white/5 bg-[#0E0E0F] sticky top-0 z-10">
+		<div className="flex flex-col bg-[#08080a] h-full">
+			<div className="flex flex-row items-center justify-between border-b border-white/5 bg-[#08080a] sticky top-0 z-10">
 				<div className="flex flex-row gap-1 p-2">
 					<div role="tablist" aria-label="Positions filter" className="flex items-center gap-1">
 						{tabs.map((tab) => {
@@ -337,7 +337,7 @@ const TradePositions = () => {
 						</div>
 					) : (
 						<div className="min-w-full">
-							<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-sans font-bold sticky top-0 bg-[#0E0E0F] z-10">
+							<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-sans font-bold sticky top-0 bg-[#08080a] z-10">
 								<div className="col-span-3">Asset</div>
 								<div className="col-span-2 text-right">Size</div>
 								<div className="col-span-2 text-right">Entry</div>
@@ -412,7 +412,7 @@ const TradePositions = () => {
 
 											return (
 												<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
-													? "text-[#B19EEF]"
+													? "text-emerald-400"
 													: "text-rose-500"
 													}`}>
 													{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
@@ -420,11 +420,10 @@ const TradePositions = () => {
 											);
 										})()}
 										{activeTab === "Closed" && typeof row.pnL === "number" && (() => {
-											// PnL from backend is in BALANCE_DECIMAL scale, so convert to USD
 											const displayPnL = row.pnL / BALANCE_DECIMAL;
 											return (
 												<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
-													? "text-[#B19EEF]"
+													? "text-emerald-400"
 													: "text-rose-500"
 													}`}>
 													{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}

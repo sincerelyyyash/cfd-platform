@@ -252,7 +252,7 @@ export default function TradingModal() {
 	return (
 		<div className="flex h-screen flex-col bg-[#050505] border-l border-white/5 p-4 font-sans">
 			<div className="flex items-center justify-between rounded-[2px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
-				<div className="absolute inset-0 bg-[#B19EEF]/5 opacity-20 pointer-events-none" />
+				<div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
 				<div className="flex flex-row items-center gap-3">
 					<div className="relative h-8 w-8 overflow-hidden rounded-full bg-white/5 border border-white/10 p-0.5">
 						<Image src={logo} alt={selectedAsset} fill className="object-cover" />
@@ -315,7 +315,7 @@ export default function TradingModal() {
 						<input
 							value={displayedPrice ? displayedPrice.toFixed(priceInfo.decimals) : "0"}
 							readOnly
-							className="w-full bg-transparent text-lg font-bitcount text-zinc-100 outline-none font-space"
+							className="w-full bg-transparent text-lg font-space text-zinc-100 outline-none font-space"
 							aria-label="Display price"
 						/>
 						<span className="text-zinc-600 text-xs font-mono">USD</span>
@@ -334,7 +334,7 @@ export default function TradingModal() {
 						}
 					`}</style>
 					<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">Quantity</div>
-					<div className="flex w-full items-center justify-between rounded-[1px] bg-[#0A0A0A] border border-white/10 px-3 py-2 transition-colors focus-within:border-[#B19EEF]/50 focus-within:ring-1 focus-within:ring-[#B19EEF]/50">
+					<div className="flex w-full items-center justify-between rounded-[1px] bg-[#0A0A0A] border border-white/10 px-3 py-2 transition-colors focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/20">
 						<input
 							id="volume"
 							type="number"
@@ -375,15 +375,15 @@ export default function TradingModal() {
 							appearance: none;
 							width: 14px;
 							height: 14px;
-							background: #B19EEF;
+							background: #ffffff;
 							border-radius: 1px;
-							border: 1px solid rgba(255, 255, 255, 0.2);
+							border: 1px solid rgba(255, 255, 255, 0.3);
 							margin-top: -5px;
 							transition: all 0.2s;
 						}
 						input[type="range"].custom-slider::-webkit-slider-thumb:hover {
-							background: #9f85e8;
-							box-shadow: 0 0 8px rgba(177, 158, 239, 0.5);
+							background: #e0e0e0;
+							box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 						}
 						input[type="range"].custom-slider::-moz-range-track {
 							background: rgba(255, 255, 255, 0.05);
@@ -394,19 +394,19 @@ export default function TradingModal() {
 						input[type="range"].custom-slider::-moz-range-thumb {
 							width: 14px;
 							height: 14px;
-							background: #B19EEF;
+							background: #ffffff;
 							border-radius: 1px;
-							border: 1px solid rgba(255, 255, 255, 0.2);
+							border: 1px solid rgba(255, 255, 255, 0.3);
 							transition: all 0.2s;
 						}
 						input[type="range"].custom-slider::-moz-range-thumb:hover {
-							background: #9f85e8;
-							box-shadow: 0 0 8px rgba(177, 158, 239, 0.5);
+							background: #e0e0e0;
+							box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 						}
 					`}</style>
 					<div className="flex items-center justify-between mb-2">
 						<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider font-sans">Amount</div>
-						<div className="text-xs font-bold font-space text-[#B19EEF]">{percent}%</div>
+						<div className="text-xs font-bold font-space text-white">{percent}%</div>
 					</div>
 					<input
 						type="range"
@@ -432,7 +432,7 @@ export default function TradingModal() {
 									setVolume(nextVol);
 								}}
 								className={`flex-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wide rounded-[1px] border transition-all ${percent === preset
-									? 'bg-[#B19EEF] text-black border-[#B19EEF]'
+									? 'bg-white text-black border-white'
 									: 'bg-white/[0.02] text-neutral-400 border-white/10 hover:bg-white/[0.05] hover:text-white hover:border-white/20'
 									}`}
 							>
@@ -445,8 +445,8 @@ export default function TradingModal() {
 
 			<div className="mt-4">
 				<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">Order Value</div>
-				<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-[#0E0E0F] border border-white/5 px-3">
-					<div className="text-sm font-bitcount text-zinc-300 tabular-nums font-space">{orderValue || 0}</div>
+				<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-[#08080a] border border-white/5 px-3">
+					<div className="text-sm font-space text-zinc-300 tabular-nums font-space">{orderValue || 0}</div>
 					<span className="text-zinc-600 text-xs font-mono">USD</span>
 				</div>
 			</div>
@@ -454,7 +454,7 @@ export default function TradingModal() {
 			<div className="mt-4 rounded-[2px] bg-[#0A0A0A] border border-white/5 p-3">
 				<div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-3">
 					<span>Leverage</span>
-					<span className="text-[#B19EEF] font-bitcount font-space" aria-live="polite">{selectedLeverage}</span>
+					<span className="text-white font-space" aria-live="polite">{selectedLeverage}</span>
 				</div>
 				<div className="flex w-full flex-row justify-center gap-1">
 					{["1x", "5x", "10x", "20x", "100x"].map((leverage) => {
@@ -474,7 +474,7 @@ export default function TradingModal() {
 								className={
 									"w-full rounded-[1px] py-1.5 text-[10px] font-mono transition-all duration-200 border " +
 									(isActive
-										? "bg-[#B19EEF]/10 text-[#B19EEF] border-[#B19EEF]/30 shadow-[0_0_8px_rgba(177,158,239,0.1)]"
+										? "bg-white/10 text-white border-white/20"
 										: "bg-transparent text-zinc-500 border-transparent hover:bg-white/5 hover:text-zinc-300")
 								}
 							>
@@ -516,7 +516,7 @@ export default function TradingModal() {
 									type="number"
 									value={takeProfit || ""}
 									onChange={(e) => handleNumericStringInput(e.target.value, setTakeProfit)}
-									className="block w-full rounded-[1px] border border-white/10 bg-[#0A0A0A] p-2.5 text-right text-sm font-bold font-space text-white placeholder-neutral-600 focus:border-[#B19EEF]/50 focus:bg-black focus:outline-none focus:ring-1 focus:ring-[#B19EEF]/50 transition-all"
+									className="block w-full rounded-[1px] border border-white/10 bg-[#0A0A0A] p-2.5 text-right text-sm font-bold font-space text-white placeholder-neutral-600 focus:border-white/30 focus:bg-black focus:outline-none focus:ring-1 focus:ring-white/20 transition-all"
 									placeholder="0.00"
 									aria-label="Take profit price"
 								/>
@@ -533,7 +533,7 @@ export default function TradingModal() {
 									value={stopLoss}
 									onChange={(e) => handleNumericStringInput(e.target.value, setStopLoss)}
 									placeholder={(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
-									className="w-full bg-transparent text-xs font-bitcount text-zinc-100 outline-none placeholder:text-zinc-700"
+									className="w-full bg-transparent text-xs font-space text-zinc-100 outline-none placeholder:text-zinc-700"
 									aria-label="Stop loss price"
 								/>
 							</div>
@@ -550,8 +550,8 @@ export default function TradingModal() {
 				<Button
 					variant="ghost"
 					className={`w-full h-12 text-sm font-bold uppercase tracking-wider rounded-[1px] font-space transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${side === 'buy'
-						? 'bg-[#B19EEF] hover:bg-[#9f85e8] text-black shadow-[0_0_20px_rgba(177,158,239,0.2)]'
-						: 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.1)]'
+						? 'bg-white hover:bg-neutral-200 text-black shadow-[0_0_20px_rgba(255,255,255,0.08)]'
+						: 'bg-neutral-300 text-black hover:bg-neutral-400 shadow-[0_0_20px_rgba(255,255,255,0.05)]'
 						}`}
 					disabled={submitting}
 					onClick={() => placeOrder(side)}
