@@ -2,7 +2,7 @@
 
 A production-ready Contract for Difference (CFD) trading platform built with modern technologies. This full-stack monorepo enables users to trade cryptocurrency CFDs with leverage, real-time price updates, and automated risk management including stop-loss, take-profit, and automatic liquidation.
 
-The platform achieves sub-30ms trade execution latency through in-memory order processing. Trade requests flow from the web interface through the API server to Kafka, where the trading engine processes orders in-memory for instant execution. Database persistence happens asynchronously via background workers, ensuring high-performance trading while maintaining data consistency.
+The platform achieves sub-30ms trade execution latency through in-memory order processing. Trade requests flow from the web interface through the API server to Redis Streams, where the trading engine processes orders in-memory for instant execution. Database persistence happens asynchronously via background workers, ensuring high-performance trading while maintaining data consistency.
 
 ## Architecture
 
@@ -13,7 +13,7 @@ The platform follows a microservices architecture with clear separation of conce
 - **Trading Engine**: High-performance order processing and risk management service
 - **Price Poller**: Real-time price feed service connecting to external exchanges
 - **Database Worker**: Background service for asynchronous database operations
-- **Message Queue**: Apache Kafka for inter-service communication
+- **Message Queue**: Redis Streams for inter-service communication
 - **Database**: PostgreSQL with Prisma ORM for data persistence
 
 ## Technology Stack
@@ -29,7 +29,7 @@ The platform follows a microservices architecture with clear separation of conce
 - **Express.js**: Web framework
 - **Prisma ORM**: Database toolkit
 - **PostgreSQL**: Relational database
-- **Apache Kafka**: Distributed event streaming platform
+- **Redis Streams**: Message queue for inter-service communication
 - **WebSocket**: Real-time bidirectional communication
 
 ## Project Structure
@@ -58,7 +58,7 @@ cfd-platform/
 ├── packages/
 │   ├── database/               # Prisma schema and client
 │   │   └── prisma/             # Database migrations
-│   ├── kafka-client/           # Kafka client utilities
+│   ├── redis-client/           # Redis Streams client utilities
 │   ├── config-eslint/          # ESLint configuration
 │   └── config-typescript/      # TypeScript configuration
 └── docker-compose.yml          # Docker services configuration
@@ -84,7 +84,7 @@ cfd-platform/
 - **Responsive UI**: Modern, responsive trading interface
 
 ### Technical Features
-- **Event-Driven Architecture**: Kafka-based message queue for service communication
+- **Event-Driven Architecture**: Redis Streams-based message queue for service communication
 - **In-Memory Stores**: High-performance order and price management
 - **Snapshot System**: State persistence and recovery
 - **Asynchronous Processing**: Background workers for database operations
@@ -142,13 +142,13 @@ Core trading logic service responsible for:
 - Liquidation monitoring
 - Stop loss and take profit execution
 - User balance management
-- Kafka message consumption and production
+- Redis Streams message consumption and production
 
 ### Price Poller (`apps/price_poller`)
 Real-time price feed service:
 - WebSocket connection to external exchange (Backpack Exchange)
 - Price normalization and processing
-- Kafka price update publishing
+- Redis Streams price update publishing
 - WebSocket server for frontend connections
 
 ### Database Worker (`apps/db_worker`)
@@ -165,7 +165,7 @@ Background service for:
 - Bun >= 1.2.17
 - Docker and Docker Compose
 - PostgreSQL database
-- Apache Kafka (or Docker Compose setup)
+- Redis (or Docker Compose setup)
 
 ### Installation
 
@@ -190,14 +190,14 @@ Required environment variables (local development):
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/cfd_platform"
 SESSION_SECRET="your-secret-key"
-KAFKA_BROKERS="localhost:9092"
+REDIS_URL="redis://localhost:6379"
 WS_PORT=8080      # local WebSocket port
 PORT=8000         # local API server port
 ```
 
 > When running via Docker Compose, these values are provided by `docker-compose.yml`:
 > - `DATABASE_URL=postgresql://postgres:postgres@postgres:5432/cfd_platform`
-> - `KAFKA_BROKERS=kafka:29092`
+> - `REDIS_URL=redis://redis:6379`
 > - `PORT=3001` (API server)
 > - `WS_PORT=3002` (price WebSocket)
 
@@ -220,7 +220,7 @@ This will start all services concurrently using Turborepo.
 
 ### Running with Docker (backend services only)
 
-This setup starts **PostgreSQL, Kafka (KRaft, no Zookeeper), migrations, API server, trading engine, price poller, and DB worker** in Docker.  
+This setup starts **PostgreSQL, Redis, migrations, API server, trading engine, price poller, and DB worker** in Docker.  
 The web app (`apps/web`) is **not** started in Docker by design.
 
 1. From the project root, build and start all services:
@@ -229,7 +229,7 @@ docker-compose up --build
 ```
 
 This will:
-- Start `postgres` and `kafka` (single-node KRaft)
+- Start `postgres` and `redis`
 - Run Prisma migrations once via the `migrate` service
 - Start:
   - `server` (API) on `http://localhost:3001`
@@ -360,9 +360,9 @@ The price poller service exposes a WebSocket server for real-time price updates:
 - **Local dev (bun)**: `ws://localhost:8080`
 - **Docker Compose**: `ws://localhost:3002`
 
-Kafka connectivity in Docker:
-- In-cluster services use `KAFKA_BROKERS=kafka:29092`.
-- From the host, use the advertised listener `localhost:9092`.
+Redis connectivity in Docker:
+- In-cluster services use `REDIS_URL=redis://redis:6379`.
+- From the host, use `redis://localhost:6379`.
 
 **Message Format**:
 ```json
@@ -375,13 +375,11 @@ Kafka connectivity in Docker:
 }
 ```
 
-## Kafka Topics
+## Redis Streams
 
-The platform uses the following Kafka topics:
-- `trade_stream`: Price updates from price poller
-- `trade`: Trade execution requests and responses
-- `db`: Database operation requests
-- `user`: User-related operations
+The platform uses the following Redis Streams for inter-service communication:
+- `trade_stream`: Server requests and price updates flow to the trading engine
+- `engine_stream`: Engine responses and database operation requests flow to the server and DB worker
 
 ## State Management
 
@@ -419,4 +417,3 @@ The platform uses fixed-point arithmetic for financial calculations:
 - **Balance**: 2 decimal places (multiplier: 100)
 - **Price**: 4 decimal places (multiplier: 10,000)
 - **Quantity**: 4 decimal places (multiplier: 10,000)
-
