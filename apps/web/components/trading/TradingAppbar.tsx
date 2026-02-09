@@ -4,7 +4,6 @@ import AssetButton from "./AssetButton";
 import BalanceDropDown from "./BalanceDropdown";
 import { useTradeStore } from "@/store/useTradeStore";
 import { useAuth } from "@/components/auth/AuthProvider";
-import Brand from "@/components/Brand";
 
 export default function TradingAppbar() {
 	const selectedAsset = useTradeStore((s) => s.selectedAsset);
@@ -14,9 +13,13 @@ export default function TradingAppbar() {
 	return (
 		<div className="sticky top-0 z-30 h-16 sm:h-20 bg-[#08080a] border-b border-white/5 flex items-center px-6 justify-between">
 			<div className="relative z-20 flex items-center gap-2 text-neutral-100">
-				<Brand size="lg" showText={true} variant="orbital" className="hidden sm:flex" />
-				<span className="sm:hidden">
-					<Brand size="lg" showText={false} variant="orbital" />
+				<span className="inline-flex items-center gap-1.5 bg-[#B19EEF]/15 border border-[#B19EEF]/30 px-2.5 py-0.5">
+					<span className="text-[#B19EEF] text-sm md:text-base font-bold leading-none">
+						✱
+					</span>
+					<span className="text-[#B19EEF] text-xs md:text-sm font-semibold tracking-widest font-space">
+						AXIS
+					</span>
 				</span>
 			</div>
 
