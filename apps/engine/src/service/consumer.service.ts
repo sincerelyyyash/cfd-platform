@@ -1,4 +1,4 @@
-import { consumeMessages, type EachMessagePayload } from "@repo/kafka-client/index";
+import { consumeMessages, type EachMessagePayload } from "@repo/redis-client/index";
 import { closeTrade, createTrade } from "./trade.service";
 import { createUser, getAllOpenOrders, getAllClosedOrders, getUserBalance, getUserByEmail, getUserById } from "./user.service";
 import { updatePrice } from "../Store/PriceStore";
@@ -7,7 +7,7 @@ const topic = "trade_stream";
 const groupId = "trade_stream_consumer";
 export let offset: string = "";
 
-export const startEngineKafkaConsumer = () => {
+export const startEngineConsumer = () => {
 
   try {
     consumeMessages(topic, groupId, eachMessageHandler);
@@ -63,7 +63,7 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
       key = message.key.toString();
     }
     if (!key) {
-      console.log("no key in Kafka message");
+      console.log("no key in message");
       return;
     }
     const request = value.server_requests;
@@ -82,4 +82,3 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
     }
   }
 };
-

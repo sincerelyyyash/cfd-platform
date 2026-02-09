@@ -3,7 +3,7 @@ import jwt, { type JwtPayload } from "jsonwebtoken";
 import { UserAuthSchema } from "../types/auth.types";
 import { v4 as uuidv4 } from "uuid";
 import { requestProducer } from "../utils/producer";
-import { KafkaRequest } from "@repo/kafka-client/request";
+import { MessageRequest } from "@repo/redis-client/request";
 import { sendLoginMail } from "../utils/mail";
 import { sendRequestAndWait } from "./trade.controller";
 
@@ -62,7 +62,7 @@ export const signInUser = async (req: Request, res: Response) => {
         
         const createUserResponse = await sendRequestAndWait(
           req_id,
-          new KafkaRequest({
+          new MessageRequest({
             service: "user",
             action: "create-user",
             data: { id, email },
@@ -140,7 +140,7 @@ export const getUserBalance = async (req: Request, res: Response) => {
     let req_id = uuidv4();
     let response = await sendRequestAndWait(
       req_id,
-      new KafkaRequest({
+      new MessageRequest({
         service: "user",
         action: "get-balance",
         data: { userId },
@@ -160,7 +160,7 @@ export const getUserBalance = async (req: Request, res: Response) => {
         req_id = uuidv4();
         const createResponse = await sendRequestAndWait(
           req_id,
-          new KafkaRequest({
+          new MessageRequest({
             service: "user",
             action: "create-user",
             data: { id: userId, email: userEmail },
@@ -177,7 +177,7 @@ export const getUserBalance = async (req: Request, res: Response) => {
           req_id = uuidv4();
           response = await sendRequestAndWait(
             req_id,
-            new KafkaRequest({
+            new MessageRequest({
               service: "user",
               action: "get-balance",
               data: { userId },
@@ -209,4 +209,3 @@ export const getUserBalance = async (req: Request, res: Response) => {
     });
   }
 };
-

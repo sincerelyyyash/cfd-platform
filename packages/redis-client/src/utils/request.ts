@@ -6,7 +6,7 @@ export type RequestTypes = {
   message: string
 }
 
-export class KafkaRequest<T> {
+export class MessageRequest<T> {
   public service: string;
   public action: string;
   public message: string;

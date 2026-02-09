@@ -2,9 +2,9 @@ import { getPrice } from "../Store/PriceStore.ts";
 import { OrderStore } from "../Store/OrderStore";
 import { UserStore } from "../Store/UserStore";
 import { calculatePnL } from "./trade.service";
-import { requestProducer, responseProducer } from "./kafkaProducer.service";
-import { Response } from "@repo/kafka-client/response";
-import { KafkaRequest } from "@repo/kafka-client/request";
+import { requestProducer, responseProducer } from "./producer.service";
+import { Response } from "@repo/redis-client/response";
+import { MessageRequest } from "@repo/redis-client/request";
 
 
 const userStore = UserStore.getInstance();
@@ -48,14 +48,14 @@ export const liquidationService = async () => {
             data: closedOrder
           }))
 
-          requestProducer("db", new KafkaRequest({
+          requestProducer("db", new MessageRequest({
             service: "db",
             action: "user-balance-update",
             data: { userid: user?.id, balance: user?.balance },
             message: "Store updated user balance in database."
           }))
 
-          requestProducer("db", new KafkaRequest({
+          requestProducer("db", new MessageRequest({
             service: "db",
             action: "store-close-order",
             data: closedOrder,
@@ -88,7 +88,7 @@ export const liquidationService = async () => {
             data: closedOrder
           }))
 
-          requestProducer("db", new KafkaRequest({
+          requestProducer("db", new MessageRequest({
             service: "db",
             action: "user-balance-update",
             data: user?.balance,
@@ -96,7 +96,7 @@ export const liquidationService = async () => {
           }))
 
 
-          requestProducer("db", new KafkaRequest({
+          requestProducer("db", new MessageRequest({
             service: "db",
             action: "store-close-order",
             data: closedOrder,
@@ -125,14 +125,14 @@ export const liquidationService = async () => {
           data: closedOrder
         }))
 
-        requestProducer("db", new KafkaRequest({
+        requestProducer("db", new MessageRequest({
           service: "db",
           action: "user-balance-update",
           data: user?.balance,
           message: "Store updated user balance in database."
         }))
 
-        requestProducer("db", new KafkaRequest({
+        requestProducer("db", new MessageRequest({
           service: "db",
           action: "store-close-order",
           data: closedOrder,
@@ -152,4 +152,3 @@ export const liquidationService = async () => {
     }))
   }
 };
-

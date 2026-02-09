@@ -1,7 +1,7 @@
 import { prisma } from "@repo/database";
 import { OrderStore } from "../Store/OrderStore";
 import { UserStore } from "../Store/UserStore"
-import { offset } from "./kafkaConsumer.service";
+import { offset } from "./consumer.service";
 
 const userStore = UserStore.getInstance();
 const orderStore = OrderStore.getInstance();

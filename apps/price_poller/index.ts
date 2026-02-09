@@ -1,6 +1,6 @@
 import http from "http";
 import WebSocket, { WebSocketServer } from "ws";
-import { connectProducer, messageProducer } from "@repo/kafka-client/index";
+import { connectProducer, messageProducer } from "@repo/redis-client/index";
 
 
 const ws = new WebSocket("wss://ws.backpack.exchange");

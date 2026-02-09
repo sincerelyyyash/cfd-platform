@@ -1,21 +1,20 @@
 {
-  "name": "@repo/kafka-client",
+  "name": "@repo/redis-client",
   "exports": {
     "./index": "./src/index.ts",
     "./response": "./src/utils/response.ts",
     "./request": "./src/utils/request.ts",
-    "./kafkaManager": "./src/kafkaManager.ts"
+    "./redisManager": "./src/redisManager.ts"
   },
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/kafkajs": "^1.9.0",
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "kafkajs": "^2.2.4"
+    "ioredis": "^5.7.0"
   }
 }

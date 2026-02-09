@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { tradeOpenSchema, tradeCloseSchema } from "../types/trade.types";
 import { v4 as uuidv4 } from "uuid";
-import { KafkaRequest } from "@repo/kafka-client/request";
+import { MessageRequest } from "@repo/redis-client/request";
 import { requestProducer } from "../utils/producer";
 import { waitForResponse } from "../utils/consumer";
 
@@ -44,7 +44,7 @@ export const tradeOpen = async (req: Request, res: Response) => {
   try {
     const req_id = uuidv4()
     const response = await sendRequestAndWait(
-      req_id, new KafkaRequest({
+      req_id, new MessageRequest({
         service: "trade",
         action: "trade-open",
         data: trade,
@@ -87,7 +87,7 @@ export const tradeClose = async (req: Request, res: Response) => {
   try {
     const req_id = uuidv4()
     const response = await sendRequestAndWait(
-      req_id, new KafkaRequest({
+      req_id, new MessageRequest({
         service: "trade",
         action: "trade-close",
         data: trade,
@@ -117,7 +117,7 @@ export const listOpenOrders = async (req: Request, res: Response) => {
     const req_id = uuidv4();
     const response = await sendRequestAndWait(
       req_id,
-      new KafkaRequest({
+      new MessageRequest({
         service: "user",
         action: "get-all-open-orders",
         data: { userId },
@@ -136,7 +136,7 @@ export const listClosedOrders = async (req: Request, res: Response) => {
     const req_id = uuidv4();
     const response = await sendRequestAndWait(
       req_id,
-      new KafkaRequest({
+      new MessageRequest({
         service: "user",
         action: "get-all-closed-orders",
         data: { userId },

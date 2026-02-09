@@ -1,5 +1,5 @@
-import { connectProducer, messageProducer } from "@repo/kafka-client/index";
-import { type RequestTypes } from "@repo/kafka-client/request";
+import { connectProducer, messageProducer } from "@repo/redis-client/index";
+import { type RequestTypes } from "@repo/redis-client/request";
 
 
 connectProducer();
@@ -18,4 +18,3 @@ export const requestProducer = async (key: string, request: RequestTypes) => {
   );
   console.log(`[Server Producer] Request sent for key=${key}`);
 }
-

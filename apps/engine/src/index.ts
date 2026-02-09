@@ -1,4 +1,4 @@
-import { startEngineKafkaConsumer } from "./service/kafkaConsumer.service";
+import { startEngineConsumer } from "./service/consumer.service";
 import { liquidationService } from "./service/liquidation.service";
 import { getDataFromSnapshot, runSnapshotService } from "./service/snapshot.service";
 import { UserStore } from "./Store/UserStore";
@@ -18,7 +18,7 @@ const runEngine = async () => {
   }
 
   liquidationService();
-  startEngineKafkaConsumer();
+  startEngineConsumer();
   await runSnapshotService();
 
 

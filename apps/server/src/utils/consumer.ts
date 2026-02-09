@@ -1,4 +1,4 @@
-import { consumeMessages, type EachMessagePayload } from "@repo/kafka-client/index";
+import { consumeMessages, type EachMessagePayload } from "@repo/redis-client/index";
 
 export const topic = "engine_stream";
 export const groupId = "server_consumer_group";
@@ -38,7 +38,7 @@ const eachMessageHandler = async ({ message }: EachMessagePayload) => {
 
 
   if (!key) {
-    console.log("no key in Kafka message");
+    console.log("no key in message");
     return;
   }
 
@@ -65,4 +65,3 @@ export const waitForResponse = (id: string, timeout = 10000): Promise<any> => {
     });
   });
 };
-

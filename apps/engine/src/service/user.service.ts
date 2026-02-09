@@ -1,8 +1,8 @@
-import { KafkaRequest } from "@repo/kafka-client/request";
+import { MessageRequest } from "@repo/redis-client/request";
 import { OrderStore } from "../Store/OrderStore";
 import { UserStore } from "../Store/UserStore";
-import { requestProducer, responseProducer } from "./kafkaProducer.service";
-import { Response } from "@repo/kafka-client/response";
+import { requestProducer, responseProducer } from "./producer.service";
+import { Response } from "@repo/redis-client/response";
 
 const userStore = UserStore.getInstance();
 const orderStore = OrderStore.getInstance();
@@ -40,7 +40,7 @@ export const createUser = async (key: string, data: any) => {
     await responseProducer(key, response);
     console.log(`[Engine] Response sent for key=${key}`);
 
-    await requestProducer("db", new KafkaRequest({
+    await requestProducer("db", new MessageRequest({
       service: "db",
       action: "store-new-user",
       data: user,
@@ -182,7 +182,6 @@ export const getAllOpenOrders = async (key: string, data: any) => {
     }
 
     const allOpenOrders = orderStore.getOpenOrders(userId);
-    // Return empty array if no orders found instead of error
     return responseProducer(key, new Response({
       statusCode: 200,
       success: true,
@@ -238,7 +237,3 @@ export const getAllClosedOrders = async (key: string, data: any) => {
     }))
   }
 }
-
-// export const getAllOrders = async()=>{
-//
-// }

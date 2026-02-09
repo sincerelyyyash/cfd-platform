@@ -1,4 +1,4 @@
-import { consumeMessages, type EachMessagePayload } from "@repo/kafka-client/index";
+import { consumeMessages, type EachMessagePayload } from "@repo/redis-client/index";
 import { storeClosedOrder } from "./order.db";
 import { createNewUser, updateUserBalance } from "./user.db";
 
@@ -50,7 +50,7 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
       key = message.key.toString();
     }
     if (!key) {
-      console.log("no key in Kafka message");
+      console.log("no key in message");
       return;
     }
     const request = value.db_requests;
@@ -66,4 +66,3 @@ const eachMessageHandler = async ({ topic, partition, message }: EachMessagePayl
     }
   }
 };
-

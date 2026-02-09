@@ -1,9 +1,9 @@
 import { OrderStore, statusType, type Orders } from "../Store/OrderStore.ts";
 import { UserStore } from "../Store/UserStore.ts";
-import { Response } from "@repo/kafka-client/response";
+import { Response } from "@repo/redis-client/response";
 import { getPrice } from "../Store/PriceStore.ts";
-import { requestProducer, responseProducer } from "./kafkaProducer.service.ts";
-import { KafkaRequest } from "@repo/kafka-client/request";
+import { requestProducer, responseProducer } from "./producer.service.ts";
+import { MessageRequest } from "@repo/redis-client/request";
 
 const BALANCE_DECIMAL = 100;      // 2 decimals
 const PRICE_DECIMAL = 10_000;     // 4 decimals
@@ -188,15 +188,14 @@ export const closeTrade = async (key: string, data: any) => {
   const closedOrder = orderStore.getOrderById(order.id);
   
 
-  requestProducer("db", new KafkaRequest({
+  requestProducer("db", new MessageRequest({
     service: "db",
     action: "store-close-order",
     data: closedOrder,
     message: "Store closed order in database."
   }))
   
-  // Persist updated balance to database
-  requestProducer("db", new KafkaRequest({
+  requestProducer("db", new MessageRequest({
     service: "db",
     action: "user-balance-update",
     data: { userid: user?.id, balance: user?.balance },
