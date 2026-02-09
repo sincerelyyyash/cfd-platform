@@ -25,9 +25,9 @@ const AssetSidebar = () => {
 		<aside
 			role="complementary"
 			aria-label="Market instruments sidebar"
-			className="flex h-full flex-col bg-[#0E0E0F] border-r border-white/5"
+			className="flex h-full flex-col bg-[#08080a] border-r border-white/5"
 		>
-			<header className="sticky top-0 z-20 bg-[#0E0E0F]/80 backdrop-blur-md border-b border-white/5">
+			<header className="sticky top-0 z-20 bg-[#08080a]/80 backdrop-blur-md border-b border-white/5">
 				<div className="flex items-center justify-between px-4 py-3">
 					<h2 id="instruments-heading" className="text-xs font-bold tracking-widest text-neutral-500 uppercase font-space">
 						Markets
@@ -39,7 +39,7 @@ const AssetSidebar = () => {
 						>
 							<span
 								className={
-									`h-1 w-1 rounded-[1px] ${isLive ? "bg-[#B19EEF] shadow-[0_0_4px_#B19EEF]" : "bg-neutral-600"}`
+									`h-1 w-1 rounded-[1px] ${isLive ? "bg-white shadow-[0_0_4px_rgba(255,255,255,0.4)]" : "bg-neutral-600"}`
 								}
 							/>
 							<span className="text-[9px] font-medium text-neutral-400 uppercase tracking-wider font-sans">
@@ -77,7 +77,7 @@ const AssetSidebar = () => {
 				</div>
 			</div>
 
-			<footer className="bg-[#0E0E0F] px-4 py-2 border-t border-white/5">
+			<footer className="bg-[#08080a] px-4 py-2 border-t border-white/5">
 				<div className="flex items-center gap-2 text-[9px] text-neutral-600">
 					<div className="w-1 h-1 bg-neutral-700 rounded-full" />
 					<span className="font-mono uppercase">System Normal</span>

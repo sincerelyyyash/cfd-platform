@@ -66,9 +66,9 @@ export default function AccountDropDown() {
             <circle cx="12" cy="7" r="4" />
           </svg>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-[#0E0E0F] border-white/5 shadow-2xl min-w-[160px]">
+        <DropdownMenuContent className="bg-[#08080a] border-white/5 shadow-2xl min-w-[160px]">
           <DropdownMenuItem
-            className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-pointer focus:bg-white/5 focus:text-white transition-colors"
+            className="text-neutral-400 hover:text-white hover:bg-white/5 font-space text-xs uppercase tracking-wide cursor-pointer focus:bg-white/5 focus:text-white transition-colors"
             onClick={handleSignOut}
           >
             Sign Out

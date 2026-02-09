@@ -286,27 +286,27 @@ export default function BalanceDropDown() {
 				>
 					{displayNetWorth}
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="bg-[#0E0E0F] border-white/5 shadow-2xl min-w-[240px]">
-					<DropdownMenuLabel className="font-bitcount text-xs uppercase tracking-widest text-[#B19EEF] mb-1 px-2">Account Overview</DropdownMenuLabel>
+				<DropdownMenuContent className="bg-[#08080a] border-white/5 shadow-2xl min-w-[240px]">
+					<DropdownMenuLabel className="font-space text-xs uppercase tracking-widest text-neutral-500 mb-1 px-2">Account Overview</DropdownMenuLabel>
 					<div className="h-px bg-white/5 mx-2 mb-2" />
-					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-space text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
 						<span>Balance</span>
 						<span className="font-space text-white">{formatCurrency(balance)}</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-space text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
 						<span>Equity</span>
 						<span className="font-space text-white">{formatCurrency(equity)}</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-space text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
 						<span>Margin</span>
 						<span className="font-space text-white">{formatCurrency(totalMargin)}</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+					<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-space text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
 						<span>Free Margin</span>
 						<span className="font-space text-white">{formatCurrency(freeMargin)}</span>
 					</DropdownMenuItem>
 					{openOrders.length > 0 && (
-						<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-bitcount text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
+						<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-space text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
 							<span>Unrealized P&L</span>
 							<span className={`font-space ${totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>{formatCurrency(totalPnL)}</span>
 						</DropdownMenuItem>
