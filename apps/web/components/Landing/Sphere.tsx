@@ -29,7 +29,7 @@ const SphereModel = () => {
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.material = new THREE.MeshStandardMaterial({
-          color: new THREE.Color("#c8ccd4"),
+          color: new THREE.Color("#B19EEF"),
           metalness: 1,
           roughness: 0.18,
           envMapIntensity: 2,

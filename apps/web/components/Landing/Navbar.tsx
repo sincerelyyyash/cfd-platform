@@ -69,10 +69,10 @@ export default function Navbar() {
             className="md:hidden bg-[#08080a] border-b border-white/10 overflow-hidden absolute top-[72px] left-0 right-0 shadow-2xl"
           >
             <div className="px-6 py-6 flex flex-col gap-4">
-              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Features</Link>
-              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">About</Link>
-              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Architecture</Link>
-              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Contact</Link>
+              <Link href="#features" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Features</Link>
+              <Link href="#about" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">About</Link>
+              <Link href="#faq" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">FAQ</Link>
+              <Link href="#connect" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Connect</Link>
               <div className="w-full h-px bg-white/10 my-2" />
               <Link href="/trading" className="text-white font-medium py-2 font-space">Launch Terminal</Link>
             </div>

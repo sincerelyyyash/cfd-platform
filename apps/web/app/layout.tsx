@@ -18,8 +18,8 @@ const ibmPlexSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Compass",
-  description: "Navigate Markets with Compass",
+  title: "Axis",
+  description: "Navigate Markets with Axis",
 };
 
 const spaceGrotesk = Space_Grotesk({

@@ -7,11 +7,12 @@ import dynamic from "next/dynamic";
 
 const Sphere = dynamic(() => import("./Sphere"), { ssr: false });
 
+
 const NAV_ITEMS = [
-  { label: "Features", href: "#", index: "01" },
-  { label: "About", href: "#", index: "02" },
-  { label: "Architecture", href: "#", index: "03" },
-  { label: "Contact", href: "#", index: "04" },
+  { label: "Features", href: "#features", index: "01" },
+  { label: "About", href: "#about", index: "02" },
+  { label: "FAQ", href: "#faq", index: "03" },
+  { label: "Connect", href: "#connect", index: "04" },
 ];
 
 export const HeroSection = () => {
@@ -76,7 +77,7 @@ export const HeroSection = () => {
       aria-label="Hero section"
     >
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-white/[0.02] blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-[#B19EEF]/[0.03] blur-[120px] pointer-events-none" />
       </div>
 
       <div className="hero-sphere absolute inset-0 z-[1] hidden md:block pointer-events-none">
@@ -88,13 +89,13 @@ export const HeroSection = () => {
       <div className="absolute inset-0 z-[2] pointer-events-none bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent" />
       <div className="absolute inset-0 z-[2] pointer-events-none bg-gradient-to-t from-[#08080a] via-transparent to-[#08080a]/40" />
 
+
+
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-between py-10 md:py-12 pb-16 md:pb-20">
 
         <div className="flex items-start justify-between">
           <div className="hero-wordmark">
-            <span className="text-[13px] tracking-[0.4em] uppercase text-neutral-400 font-space font-medium">
-              AXIS
-            </span>
+
           </div>
         </div>
 
@@ -116,47 +117,56 @@ export const HeroSection = () => {
               </div>
               <div className="overflow-hidden mb-0.5">
                 <h1 className="hero-line text-[clamp(3rem,8vw,7rem)] font-semibold tracking-[-0.045em] text-neutral-500 leading-[0.9] font-space">
-                  with Precision
+                  with Precision on
                 </h1>
               </div>
               <div className="overflow-hidden">
                 <h1 className="hero-line text-[clamp(3rem,8vw,7rem)] font-bold tracking-[-0.045em] text-white leading-[0.9] font-space">
-                  on{" "}
-                  <span className="font-ibm-plex-sans font-medium italic text-white tracking-[-0.02em]">
-                    AXIS
+                  <span className="inline-flex items-center gap-3 md:gap-4 bg-[#B19EEF]/15 border border-[#B19EEF]/30 px-3 md:px-6 py-0 md:py-1 align-middle ml-2 md:ml-4 rounded-sm transform translate-y-[-0.05em]">
+                    <span className="text-[#B19EEF] text-[0.5em] font-bold leading-none translate-y-[0.05em]">
+                      ✱
+                    </span>
+                    <span className="text-[#B19EEF] text-[0.45em] font-bold tracking-widest font-space leading-none">
+                      AXIS
+                    </span>
                   </span>
                 </h1>
               </div>
             </div>
 
-            <div className="hero-rule origin-left w-12 h-px bg-neutral-700 mb-5" />
+            <div className="hero-rule origin-left w-12 h-px bg-[#B19EEF]/25 mb-5" />
 
             <p className="hero-sub max-w-sm text-[14px] text-neutral-500 font-ibm-plex-sans leading-[1.7] mb-8 opacity-0 translate-y-4">
               Trading execution terminal for systematic teams, combining low-latency routing, live risk, and position-aware controls in one surface.
             </p>
 
-            <div className="flex flex-row items-center gap-3">
-              <Link
-                href="/trading"
-                className="hero-cta group relative inline-flex items-center gap-2 px-6 py-2.5 bg-white text-[#08080a] text-[13px] font-medium tracking-wide transition-all duration-300 hover:bg-neutral-200 font-space opacity-0 translate-y-3"
-                tabIndex={0}
-                aria-label="Start trading"
-              >
-                <span>Start Trading</span>
-                <ArrowRight
-                  size={14}
-                  className="transition-transform duration-300 group-hover:translate-x-0.5"
-                />
-              </Link>
+            <div className="flex flex-row items-center gap-4">
+              <div className="hero-cta relative opacity-0 translate-y-3">
+                <Link
+                  href="/trading"
+                  className="relative z-10 group inline-flex items-center gap-2 px-6 py-2.5 bg-white text-[#08080a] text-[13px] font-medium tracking-wide transition-all duration-300 hover:bg-neutral-200 font-space"
+                  tabIndex={0}
+                  aria-label="Start trading"
+                >
+                  <span>Start Trading</span>
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5"
+                  />
+                </Link>
+              </div>
 
-              <Link
-                href="/signin"
-                className="hero-cta group inline-flex items-center px-6 py-2.5 text-[13px] font-medium text-neutral-500 hover:text-white border border-white/[0.08] hover:border-white/20 transition-all duration-300 font-space opacity-0 translate-y-3"
-                tabIndex={0}
-                aria-label="Sign in to your account"
-              >
-                Sign In
-              </Link>
+              <div className="hero-cta relative opacity-0 translate-y-3">
+                <div className="absolute inset-0 z-0 border border-white/10 group-hover:border-white/20 transition-colors duration-300" />
+                <Link
+                  href="/signin"
+                  className="relative z-10 group inline-flex items-center px-6 py-2.5 text-[13px] font-medium text-neutral-500 hover:text-white bg-transparent transition-all duration-300 font-space"
+                  tabIndex={0}
+                  aria-label="Sign in to your account"
+                >
+                  Sign In
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -175,7 +185,9 @@ export const HeroSection = () => {
                   <span className="text-[10px] text-neutral-700 font-mono transition-colors duration-300 group-hover:text-neutral-500">
                     {item.index}
                   </span>
-                  <span className="w-4 h-px bg-neutral-800 group-hover:bg-neutral-500 group-hover:w-6 transition-all duration-300" />
+                  <div className="relative w-8 h-1 flex items-center transition-all duration-300 group-hover:w-12">
+                    <span className="w-full h-px bg-neutral-800 group-hover:bg-white/50 transition-colors duration-300" />
+                  </div>
                   <span className="text-[11px] tracking-[0.2em] uppercase text-neutral-600 group-hover:text-white transition-colors duration-300 font-space font-medium">
                     {item.label}
                   </span>
@@ -186,6 +198,6 @@ export const HeroSection = () => {
         </div>
 
       </div>
-    </section>
+    </section >
   );
 };
