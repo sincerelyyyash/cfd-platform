@@ -52,7 +52,7 @@ export function BidAskTable({
 						className={
 							`group flex items-center justify-between rounded-[1px] px-3 py-2 transition-all duration-200 outline-none ` +
 							(isSelected
-								? "bg-white/[0.05] border border-[#B19EEF]/20 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
+								? "bg-white/[0.05] border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
 								: "bg-transparent border border-transparent hover:bg-white/[0.02] hover:border-white/5 focus:ring-1 focus:ring-white/10")
 						}
 					>

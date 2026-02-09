@@ -65,7 +65,7 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
 					height,
 					layout: {
 						textColor: "#a3a3a3",
-						background: { color: "#0E0E0F" },
+						background: { color: "#08080a" },
 					},
 					grid: {
 						vertLines: { color: "rgba(255, 255, 255, 0.03)" },
