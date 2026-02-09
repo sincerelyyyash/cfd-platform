@@ -20,68 +20,45 @@ export default function Navbar() {
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    tl.from(".nav-logo", {
-      y: -20,
+    tl.from(".nav-shell", {
+      y: -24,
       opacity: 0,
-      duration: 0.8,
+      duration: 0.7,
     })
-      .from(".nav-link", {
-        y: -20,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-      }, "-=0.4")
-      .from(".nav-cta", {
-        y: -20,
-        opacity: 0,
-        duration: 0.6,
-      }, "-=0.4");
-
+      .from(
+        ".nav-logo",
+        {
+          opacity: 0,
+          y: 10,
+          duration: 0.6,
+        },
+        "-=0.4",
+      );
   }, { scope: containerRef });
 
   return (
-    <nav ref={containerRef} className="fixed top-0 inset-x-0 z-50 bg-[#0E0E0F]/80 backdrop-blur-md h-[72px] opacity-0 animate-fade-in-nav">
-      <style jsx global>{`
-        .animate-fade-in-nav {
-          animation: fadeIn 0.1s forwards;
-        }
-        @keyframes fadeIn {
-          to { opacity: 1; }
-        }
-      `}</style>
-
+    <nav
+      ref={containerRef}
+      className="fixed top-0 inset-x-0 z-50 h-[72px] nav-shell"
+    >
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between relative">
 
         <div className="flex-shrink-0 flex items-center gap-2 nav-logo">
-        </div>
-
-        <div className="hidden md:flex items-center gap-8">
-          <div className="flex items-center gap-6">
-            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Features</Link>
-            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">About</Link>
-            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Architecture</Link>
-            <Link href="#" className="nav-link text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount">Contact</Link>
-          </div>
-
-          <div className="h-4 w-[1px] bg-white/10 nav-link" />
-
-          <div className="flex items-center gap-3 nav-cta">
-            <Link href="#" className="px-4 py-2 text-sm font-medium text-black bg-white border border-transparent hover:bg-neutral-200 transition-colors font-bitcount">
-              Sign Up
-            </Link>
-          </div>
+          <span className="text-xs tracking-[0.35em] uppercase text-neutral-500 font-space">
+            AXIS
+          </span>
         </div>
 
         <div className="md:hidden flex items-center">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-neutral-400 hover:text-white p-2"
+            aria-label="Toggle mobile menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
-
 
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -89,15 +66,15 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-black border-b border-white/10 overflow-hidden absolute top-[72px] left-0 right-0 shadow-2xl"
+            className="md:hidden bg-[#08080a] border-b border-white/10 overflow-hidden absolute top-[72px] left-0 right-0 shadow-2xl"
           >
             <div className="px-6 py-6 flex flex-col gap-4">
-              <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount py-2">Features</Link>
-              <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount py-2">About</Link>
-              <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount py-2">Architecture</Link>
-              <Link href="#" className="text-md font-medium text-neutral-400 hover:text-white transition-colors font-bitcount py-2">Contact</Link>
+              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Features</Link>
+              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">About</Link>
+              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Architecture</Link>
+              <Link href="#" className="text-sm font-medium text-neutral-500 hover:text-white transition-colors font-space py-2">Contact</Link>
               <div className="w-full h-px bg-white/10 my-2" />
-              <Link href="#" className="text-white font-medium py-2 font-bitcount">Log in</Link>
+              <Link href="/trading" className="text-white font-medium py-2 font-space">Launch Terminal</Link>
             </div>
           </motion.div>
         )}

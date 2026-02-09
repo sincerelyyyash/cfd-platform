@@ -12,10 +12,10 @@ type BrandProps = {
 
 export const Brand: React.FC<BrandProps> = ({ showText = true, className = "", textClassName = "" }) => {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`} aria-label="Compass logo">
+    <span className={`inline-flex items-center gap-2 ${className}`} aria-label="AXIS logo">
       {showText ? (
         <span className={`text-lg sm:text-xl font-bold tracking-tight text-white font-bitcount ${textClassName}`}>
-          Compass
+          AXIS
         </span>
       ) : null}
     </span>
