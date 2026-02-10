@@ -231,7 +231,7 @@ export default function TradingModal() {
 
 	if (!selectedAsset) {
 		return (
-			<div className="flex flex-col p-4 border-l border-white/5 bg-[#08080a] h-screen items-center justify-center text-zinc-400 font-ibm-plex-sans text-sm">
+			<div className="flex flex-col p-4 border-l border-white/5 bg-[#08080a] min-h-0 lg:h-screen items-center justify-center text-zinc-400 font-ibm-plex-sans text-sm">
 				Select an asset to start trading
 			</div>
 		);
@@ -240,7 +240,7 @@ export default function TradingModal() {
 	const trade = trades[selectedAsset];
 	if (!trade) {
 		return (
-			<div className="flex flex-col p-4 border-l border-white/5 bg-[#08080a] h-screen items-center justify-center text-zinc-400 font-ibm-plex-sans text-sm">
+			<div className="flex flex-col p-4 border-l border-white/5 bg-[#08080a] min-h-0 lg:h-screen items-center justify-center text-zinc-400 font-ibm-plex-sans text-sm">
 				Waiting for {selectedAsset} data...
 			</div>
 		);
@@ -250,7 +250,7 @@ export default function TradingModal() {
 	const logo = assetLogos[selectedAsset] || "/Bitcoin.png";
 
 	return (
-		<div className="flex h-screen flex-col bg-[#08080a] border-l border-white/5 p-4 font-ibm-plex-sans">
+		<div className="flex min-h-0 lg:h-screen flex-col bg-[#08080a] border-l border-white/5 p-4 pb-16 lg:pb-4 overflow-y-auto font-ibm-plex-sans">
 			<div className="flex items-center justify-between rounded-[1px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
 				<div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
 				<div className="flex flex-row items-center gap-3">

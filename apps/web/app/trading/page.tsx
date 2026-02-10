@@ -1,9 +1,11 @@
 "use client";
+import { useState } from "react";
 import AssetSidebar from "@/components/trading/AssetSidebar"
 import Charts from "@/components/trading/Chart"
 import TradePositions from "@/components/trading/TradePositions"
 import TradingAppbar from "@/components/trading/TradingAppbar"
 import TradingModal from "@/components/trading/TradingModal"
+import MobileBottomNav from "@/components/trading/MobileBottomNav"
 import {
   ResizableHandle,
   ResizablePanel,
@@ -11,11 +13,16 @@ import {
 } from "@/components/ui/resizable"
 export const dynamic = 'force-dynamic';
 
+type MobileTab = "chart" | "trade" | "markets" | "positions";
+
 export default function TradingPage() {
+  const [mobileTab, setMobileTab] = useState<MobileTab>("chart");
+
   return (
     <div className="h-screen bg-[#08080a]">
       <TradingAppbar />
-      <div className="flex h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
+
+      <div className="hidden lg:flex h-[calc(100vh-5rem)]">
         <div className="flex-1 min-w-0">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel defaultSize={26} minSize={24} maxSize={33}>
@@ -42,6 +49,16 @@ export default function TradingPage() {
         </div>
       </div>
 
+      <div className="lg:hidden flex flex-col h-[calc(100vh-3.5rem)] pb-14">
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          {mobileTab === "chart" && <Charts />}
+          {mobileTab === "trade" && <TradingModal />}
+          {mobileTab === "markets" && <AssetSidebar />}
+          {mobileTab === "positions" && <TradePositions />}
+        </div>
+      </div>
+
+      <MobileBottomNav activeTab={mobileTab} onTabChange={setMobileTab} />
     </div>
   )
 }

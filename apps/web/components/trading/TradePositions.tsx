@@ -292,7 +292,7 @@ const TradePositions = () => {
 	}
 
 	return (
-		<div className="flex flex-col bg-[#08080a] h-full">
+		<div className="flex flex-col bg-[#08080a] h-full pb-16 lg:pb-0">
 			<div className="flex flex-row items-center justify-between border-b border-white/5 bg-[#08080a] sticky top-0 z-10">
 				<div className="flex flex-row gap-1 p-2">
 					<div role="tablist" aria-label="Positions filter" className="flex items-center gap-1">
@@ -330,13 +330,13 @@ const TradePositions = () => {
 				</div>
 			</div>
 			<div className="flex-1 overflow-auto">
-				<div role="list" aria-label={`${activeTab} positions`} className="w-full">
+				<div role="list" aria-label={`${activeTab} positions`} className="w-full overflow-x-auto">
 					{rows.length === 0 ? (
 						<div className="flex items-center justify-center py-12 text-neutral-600 text-xs font-mono uppercase tracking-wider">
 							No {activeTab.toLowerCase()} positions
 						</div>
 					) : (
-						<div className="min-w-full">
+						<div className="min-w-[600px]">
 							<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-space font-bold sticky top-0 bg-[#08080a] z-10">
 								<div className="col-span-3">Asset</div>
 								<div className="col-span-2 text-right">Size</div>

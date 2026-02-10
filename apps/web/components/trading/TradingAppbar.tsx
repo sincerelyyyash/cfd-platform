@@ -11,7 +11,7 @@ export default function TradingAppbar() {
 	const { signedIn } = useAuth();
 
 	return (
-		<div className="sticky top-0 z-30 h-16 sm:h-20 bg-[#08080a] border-b border-white/5 flex items-center px-6 justify-between">
+		<div className="sticky top-0 z-30 h-14 lg:h-20 bg-[#08080a] border-b border-white/5 flex items-center px-3 lg:px-6 justify-between">
 			<div className="relative z-20 flex items-center gap-2 text-neutral-100">
 				<span className="inline-flex items-center gap-1.5 bg-[#B19EEF]/15 border border-[#B19EEF]/30 px-2.5 py-0.5">
 					<span className="text-[#B19EEF] text-sm md:text-base font-bold leading-none">
@@ -23,7 +23,7 @@ export default function TradingAppbar() {
 				</span>
 			</div>
 
-			<div className="flex items-center gap-3 sm:gap-4">
+			<div className="flex items-center gap-1.5 lg:gap-4">
 				<AssetButton
 					imageURL="/Bitcoin.png"
 					text="BTC"
@@ -44,7 +44,7 @@ export default function TradingAppbar() {
 				/>
 			</div>
 
-			<div className="flex items-center gap-2 sm:gap-3 min-w-[200px] justify-end">
+			<div className="flex items-center gap-1 lg:gap-3 min-w-0 lg:min-w-[200px] justify-end">
 				{signedIn ? (
 					<>
 						<div className="bg-neutral-900/30 hover:bg-neutral-800/40 transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">

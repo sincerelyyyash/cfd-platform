@@ -4,9 +4,33 @@ import CandlestickChart from "./TradingViewChart";
 import { CandlestickData } from "lightweight-charts";
 import { useTradeStore } from "@/store/useTradeStore";
 
+function useIsMobile(breakpoint = 1024) {
+	const [isMobile, setIsMobile] = useState(false);
+	const [mobileHeight, setMobileHeight] = useState(300);
+	useEffect(() => {
+		const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+		const update = () => {
+			setIsMobile(mql.matches);
+			if (mql.matches) {
+				setMobileHeight(window.innerHeight - 112);
+			}
+		};
+		update();
+		mql.addEventListener("change", update);
+		window.addEventListener("resize", update);
+		return () => {
+			mql.removeEventListener("change", update);
+			window.removeEventListener("resize", update);
+		};
+	}, [breakpoint]);
+	return { isMobile, mobileHeight };
+}
+
 export default function Charts() {
 	const [data, setData] = useState<CandlestickData[]>([]);
 	const selectedAsset = useTradeStore((s) => s.selectedAsset);
+	const { isMobile, mobileHeight } = useIsMobile();
+	const chartHeight = isMobile ? mobileHeight : 550;
 
 	useEffect(() => {
 		async function fetchData() {
@@ -38,9 +62,10 @@ export default function Charts() {
 	}, [selectedAsset]);
 
 	return (
-		<div className="w-full bg-[#08080a] border border-white/5 rounded-[1px]">
-			<CandlestickChart data={data} height={550} />
+		<div className="w-full h-full bg-[#08080a] border border-white/5 rounded-[1px]">
+			<CandlestickChart data={data} height={chartHeight} />
 		</div>
 	);
 }
+
 
