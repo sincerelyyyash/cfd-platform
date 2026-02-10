@@ -42,7 +42,7 @@ const AssetSidebar = () => {
 									`h-1 w-1 rounded-[1px] ${isLive ? "bg-white shadow-[0_0_4px_rgba(255,255,255,0.4)]" : "bg-neutral-600"}`
 								}
 							/>
-							<span className="text-[9px] font-medium text-neutral-400 uppercase tracking-wider font-sans">
+							<span className="text-[9px] font-medium text-neutral-400 uppercase tracking-wider font-mono">
 								{isLive ? "Live" : "Offline"}
 							</span>
 						</span>
@@ -79,7 +79,7 @@ const AssetSidebar = () => {
 
 			<footer className="bg-[#08080a] px-4 py-2 border-t border-white/5">
 				<div className="flex items-center gap-2 text-[9px] text-neutral-600">
-					<div className="w-1 h-1 bg-neutral-700 rounded-full" />
+					<div className="w-1 h-1 bg-neutral-700 rounded-[1px]" />
 					<span className="font-mono uppercase">System Normal</span>
 				</div>
 			</footer>

@@ -77,12 +77,12 @@ export const FaqSection = () => {
         <section
             ref={sectionRef}
             id="faq"
-            className="relative w-full bg-[#08080a] py-24 md:py-32 border-t border-white/[0.06]"
+            className="relative w-full bg-[#08080a] py-16 md:py-32 border-t border-white/[0.06]"
         >
-            <div className="absolute right-0 top-0 w-[500px] h-[500px] rounded-full bg-[#B19EEF]/[0.02] blur-[120px]" />
+            <div className="absolute right-0 top-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-[#B19EEF]/[0.02] blur-[120px]" />
 
             <div className="relative z-10 max-w-3xl mx-auto px-6">
-                <div className="faq-header text-center mb-16">
+                <div className="faq-header text-center mb-10 md:mb-16">
                     <div className="flex items-center justify-center gap-3 mb-6">
                         <div className="w-8 h-px bg-[#B19EEF]/40" />
                         <span className="text-[11px] text-[#B19EEF] font-space tracking-[0.2em] uppercase">
@@ -105,7 +105,7 @@ export const FaqSection = () => {
                             >
                                 <button
                                     onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                    className="w-full flex items-center justify-between p-6 text-left relative z-20"
+                                    className="w-full flex items-center justify-between p-4 md:p-6 text-left relative z-20"
                                 >
                                     <span className={`text-[15px] font-space font-medium transition-colors duration-300 ${openIndex === index ? "text-white" : "text-neutral-400"
                                         }`}>
@@ -126,7 +126,7 @@ export const FaqSection = () => {
                                         }`}
                                 >
                                     <div className="overflow-hidden">
-                                        <div className="p-6 pt-0 text-[14px] text-neutral-500 font-ibm-plex-sans leading-relaxed">
+                                        <div className="p-4 pt-0 md:p-6 md:pt-0 text-[14px] text-neutral-500 font-ibm-plex-sans leading-relaxed">
                                             {faq.answer}
                                         </div>
                                     </div>

@@ -308,7 +308,7 @@ export default function BalanceDropDown() {
 					{openOrders.length > 0 && (
 						<DropdownMenuItem className="text-neutral-400 hover:text-white hover:bg-white/5 font-space text-xs uppercase tracking-wide cursor-default focus:bg-white/5 focus:text-white transition-colors flex justify-between">
 							<span>Unrealized P&L</span>
-							<span className={`font-space ${totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>{formatCurrency(totalPnL)}</span>
+							<span className={`font-space ${totalPnL >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>{formatCurrency(totalPnL)}</span>
 						</DropdownMenuItem>
 					)}
 				</DropdownMenuContent>

@@ -65,8 +65,8 @@ export const FeatureSection = () => {
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] rounded-full bg-[#B19EEF]/[0.02] blur-[160px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-center min-h-screen py-24 md:py-32">
-        <div className="feature-headline mb-16 md:mb-20 max-w-4xl">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-center min-h-screen py-16 md:py-32">
+        <div className="feature-headline mb-12 md:mb-20 max-w-4xl">
           <h2 className="feature-headline-line text-[clamp(1.75rem,4.5vw,3.25rem)] font-bold leading-[1.2] tracking-[-0.03em] text-white font-space">
             Trade faster with better prices
           </h2>
@@ -88,7 +88,7 @@ export const FeatureSection = () => {
           </h2>
         </div>
 
-        <div className="feature-cards-grid grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-start">
+        <div className="feature-cards-grid grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-5 lg:gap-6 items-start">
           <div className="feature-card flex flex-col" role="article" aria-label="Direct Market Access feature">
             <PixelBlastCard>
               <TradeTapeIllustration />

@@ -337,7 +337,7 @@ const TradePositions = () => {
 						</div>
 					) : (
 						<div className="min-w-full">
-							<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-sans font-bold sticky top-0 bg-[#08080a] z-10">
+							<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-space font-bold sticky top-0 bg-[#08080a] z-10">
 								<div className="col-span-3">Asset</div>
 								<div className="col-span-2 text-right">Size</div>
 								<div className="col-span-2 text-right">Entry</div>

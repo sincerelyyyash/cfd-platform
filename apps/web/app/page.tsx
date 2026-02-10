@@ -16,29 +16,27 @@ export default function Home() {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 2.2,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 2,
+      touchMultiplier: 1.5,
     });
 
     lenisRef.current = lenis;
 
     lenis.on("scroll", ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    const rafCallback = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
 
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.add(rafCallback);
 
     return () => {
+      gsap.ticker.remove(rafCallback);
       lenis.destroy();
-      gsap.ticker.remove((time) => {
-        lenis.raf(time * 1000);
-      });
     };
   }, []);
 

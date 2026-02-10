@@ -109,12 +109,12 @@ export const AboutSection = () => {
         <section
             ref={sectionRef}
             id="about"
-            className="relative min-h-screen w-full bg-[#08080a] overflow-hidden flex flex-col items-center justify-center py-20"
+            className="relative min-h-screen w-full bg-[#08080a] overflow-hidden flex flex-col items-center justify-center py-12 md:py-20"
         >
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#B19EEF]/[0.02] blur-[120px]" />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[800px] md:h-[800px] rounded-full bg-[#B19EEF]/[0.02] blur-[120px]" />
 
             <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col items-center">
-                <div className="about-header text-center max-w-3xl mb-16 md:mb-24">
+                <div className="about-header text-center max-w-3xl mb-10 md:mb-24">
                     <div className="flex items-center justify-center gap-3 mb-6">
                         <div className="w-8 h-px bg-[#B19EEF]/40" />
                         <span className="text-[11px] text-[#B19EEF] font-space tracking-[0.2em] uppercase">
@@ -123,7 +123,7 @@ export const AboutSection = () => {
                         <div className="w-8 h-px bg-[#B19EEF]/40" />
                     </div>
 
-                    <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.1] tracking-[-0.03em] text-white font-space mb-6">
+                    <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold leading-[1.1] tracking-[-0.03em] text-white font-space mb-6">
                         A platform
                         <span className="text-neutral-500"> for cryptocurrency.</span>
                     </h2>
@@ -155,7 +155,7 @@ export const AboutSection = () => {
                     </div>
 
                     <div className="about-diagram relative flex justify-center py-8 lg:py-0">
-                        <div className="relative w-full max-w-[400px] aspect-square flex items-center justify-center">
+                        <div className="relative w-full max-w-[300px] md:max-w-[400px] aspect-square flex items-center justify-center">
                             <SystemArchitectureDiagram />
 
                             <div className="absolute inset-0 border border-white/[0.03] lg:hidden rounded-full" />

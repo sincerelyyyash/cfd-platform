@@ -47,7 +47,7 @@ export default function TradingAppbar() {
 			<div className="flex items-center gap-2 sm:gap-3 min-w-[200px] justify-end">
 				{signedIn ? (
 					<>
-						<div className="rounded-lg bg-neutral-900/30 hover:bg-neutral-800/40 transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+						<div className="bg-neutral-900/30 hover:bg-neutral-800/40 transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
 							<BalanceDropDown />
 						</div>
 						<div>

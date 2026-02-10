@@ -73,15 +73,15 @@ export const HeroSection = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen bg-[#08080a] overflow-hidden"
+      className="relative w-full min-h-screen bg-[#08080a] overflow-hidden flex flex-col"
       aria-label="Hero section"
     >
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-[#B19EEF]/[0.03] blur-[120px] pointer-events-none" />
       </div>
 
-      <div className="hero-sphere absolute inset-0 z-[1] hidden md:block pointer-events-none">
-        <div className="absolute top-20 right-0 w-[70%] lg:w-[65%] h-[calc(100%-5rem)]">
+      <div className="hero-sphere absolute inset-0 z-[1] pointer-events-none">
+        <div className="absolute top-[15%] right-0 w-full h-[60vh] opacity-40 md:opacity-100 md:top-20 md:w-[70%] lg:w-[65%] md:h-[calc(100%-5rem)]">
           <Sphere />
         </div>
       </div>
@@ -91,7 +91,7 @@ export const HeroSection = () => {
 
 
 
-      <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-between py-10 md:py-12 pb-16 md:pb-20">
+      <div className="relative z-10 flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-between py-10 md:py-12 pb-16 md:pb-20">
 
         <div className="flex items-start justify-between">
           <div className="hero-wordmark">
@@ -111,17 +111,17 @@ export const HeroSection = () => {
 
             <div className="mb-5">
               <div className="overflow-hidden mb-0.5">
-                <h1 className="hero-line text-[clamp(3rem,8vw,7rem)] font-bold tracking-[-0.045em] text-white leading-[0.9] font-space">
+                <h1 className="hero-line text-[clamp(2.5rem,8vw,7rem)] font-bold tracking-[-0.045em] text-white leading-[0.9] font-space">
                   Trade
                 </h1>
               </div>
               <div className="overflow-hidden mb-0.5">
-                <h1 className="hero-line text-[clamp(3rem,8vw,7rem)] font-semibold tracking-[-0.045em] text-neutral-500 leading-[0.9] font-space">
+                <h1 className="hero-line text-[clamp(2.5rem,8vw,7rem)] font-semibold tracking-[-0.045em] text-neutral-500 leading-[0.9] font-space">
                   with Precision on
                 </h1>
               </div>
               <div className="overflow-hidden">
-                <h1 className="hero-line text-[clamp(3rem,8vw,7rem)] font-bold tracking-[-0.045em] text-white leading-[0.9] font-space">
+                <h1 className="hero-line text-[clamp(2.5rem,8vw,7rem)] font-bold tracking-[-0.045em] text-white leading-[0.9] font-space">
                   <span className="inline-flex items-center gap-3 md:gap-4 bg-[#B19EEF]/15 border border-[#B19EEF]/30 px-3 md:px-6 py-0 md:py-1 align-middle ml-2 md:ml-4 rounded-sm transform translate-y-[-0.05em]">
                     <span className="text-[#B19EEF] text-[0.5em] font-bold leading-none translate-y-[0.05em]">
                       ✱
@@ -140,7 +140,7 @@ export const HeroSection = () => {
               Trading execution terminal for systematic teams, combining low-latency routing, live risk, and position-aware controls in one surface.
             </p>
 
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="hero-cta relative opacity-0 translate-y-3">
                 <Link
                   href="/trading"
@@ -149,10 +149,10 @@ export const HeroSection = () => {
                   aria-label="Start trading"
                 >
                   <span>Start Trading</span>
-                  <ArrowRight
+                  {/* <ArrowRight
                     size={14}
                     className="transition-transform duration-300 group-hover:translate-x-0.5"
-                  />
+                  /> */}
                 </Link>
               </div>
 

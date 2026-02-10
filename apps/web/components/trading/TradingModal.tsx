@@ -231,7 +231,7 @@ export default function TradingModal() {
 
 	if (!selectedAsset) {
 		return (
-			<div className="flex flex-col p-4 border-l border-white/5 bg-[#050505] h-screen items-center justify-center text-zinc-400 font-sans text-sm">
+			<div className="flex flex-col p-4 border-l border-white/5 bg-[#08080a] h-screen items-center justify-center text-zinc-400 font-ibm-plex-sans text-sm">
 				Select an asset to start trading
 			</div>
 		);
@@ -240,7 +240,7 @@ export default function TradingModal() {
 	const trade = trades[selectedAsset];
 	if (!trade) {
 		return (
-			<div className="flex flex-col p-4 border-l border-white/5 bg-[#050505] h-screen items-center justify-center text-zinc-400 font-sans text-sm">
+			<div className="flex flex-col p-4 border-l border-white/5 bg-[#08080a] h-screen items-center justify-center text-zinc-400 font-ibm-plex-sans text-sm">
 				Waiting for {selectedAsset} data...
 			</div>
 		);
@@ -250,8 +250,8 @@ export default function TradingModal() {
 	const logo = assetLogos[selectedAsset] || "/Bitcoin.png";
 
 	return (
-		<div className="flex h-screen flex-col bg-[#050505] border-l border-white/5 p-4 font-sans">
-			<div className="flex items-center justify-between rounded-[2px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
+		<div className="flex h-screen flex-col bg-[#08080a] border-l border-white/5 p-4 font-ibm-plex-sans">
+			<div className="flex items-center justify-between rounded-[1px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
 				<div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
 				<div className="flex flex-row items-center gap-3">
 					<div className="relative h-8 w-8 overflow-hidden rounded-full bg-white/5 border border-white/10 p-0.5">
@@ -275,8 +275,8 @@ export default function TradingModal() {
 
 
 
-			<div className="mt-4 w-full rounded-[2px] bg-[#0A0A0A] border border-white/5 p-4 shadow-xl">
-				<div className="flex w-full rounded-[1px] bg-black border border-white/5 p-[2px] gap-1">
+			<div className="mt-4 w-full rounded-[1px] bg-[#08080a] border border-white/5 p-4 shadow-xl">
+				<div className="flex w-full rounded-[1px] bg-[#08080a] border border-white/5 p-[2px] gap-1">
 					<button
 						className={
 							"flex-1 text-left px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 font-space border-l-2 " +
@@ -305,13 +305,13 @@ export default function TradingModal() {
 
 
 				<div className="mt-4">
-					<div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">
+					<div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-space">
 						<span>Market Price</span>
 						<span className={side === "buy" ? "text-emerald-400" : "text-rose-400"}>
 							{side === "buy" ? "(Ask)" : "(Bid)"}
 						</span>
 					</div>
-					<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-black border border-white/10 px-3 focus-within:border-white/20 transition-colors">
+					<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-[#08080a] border border-white/10 px-3 focus-within:border-white/20 transition-colors">
 						<input
 							value={displayedPrice ? displayedPrice.toFixed(priceInfo.decimals) : "0"}
 							readOnly
@@ -333,8 +333,8 @@ export default function TradingModal() {
 							-moz-appearance: textfield;
 						}
 					`}</style>
-					<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">Quantity</div>
-					<div className="flex w-full items-center justify-between rounded-[1px] bg-[#0A0A0A] border border-white/10 px-3 py-2 transition-colors focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/20">
+					<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-space">Quantity</div>
+					<div className="flex w-full items-center justify-between rounded-[1px] bg-[#08080a] border border-white/10 px-3 py-2 transition-colors focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/20">
 						<input
 							id="volume"
 							type="number"
@@ -405,7 +405,7 @@ export default function TradingModal() {
 						}
 					`}</style>
 					<div className="flex items-center justify-between mb-2">
-						<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider font-sans">Amount</div>
+						<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider font-space">Amount</div>
 						<div className="text-xs font-bold font-space text-white">{percent}%</div>
 					</div>
 					<input
@@ -444,14 +444,14 @@ export default function TradingModal() {
 			</div>
 
 			<div className="mt-4">
-				<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-sans">Order Value</div>
+				<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-space">Order Value</div>
 				<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-[#08080a] border border-white/5 px-3">
 					<div className="text-sm font-space text-zinc-300 tabular-nums font-space">{orderValue || 0}</div>
 					<span className="text-zinc-600 text-xs font-mono">USD</span>
 				</div>
 			</div>
 
-			<div className="mt-4 rounded-[2px] bg-[#0A0A0A] border border-white/5 p-3">
+			<div className="mt-4 rounded-[1px] bg-[#08080a] border border-white/5 p-3">
 				<div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-3">
 					<span>Leverage</span>
 					<span className="text-white font-space" aria-live="polite">{selectedLeverage}</span>
@@ -510,13 +510,13 @@ export default function TradingModal() {
 					<div className="mt-2 grid grid-cols-2 gap-2">
 						<div className="space-y-1">
 							<label htmlFor="take-profit" className="text-[9px] text-zinc-500 uppercase tracking-wide">Take Profit</label>
-							<div className="flex h-9 w-full items-center justify-end rounded-[1px] bg-black border border-white/10 px-2 focus-within:border-white/20 transition-colors">
+							<div className="flex h-9 w-full items-center justify-end rounded-[1px] bg-[#08080a] border border-white/10 px-2 focus-within:border-white/20 transition-colors">
 								<input
 									id="take-profit"
 									type="number"
 									value={takeProfit || ""}
 									onChange={(e) => handleNumericStringInput(e.target.value, setTakeProfit)}
-									className="block w-full rounded-[1px] border border-white/10 bg-[#0A0A0A] p-2.5 text-right text-sm font-bold font-space text-white placeholder-neutral-600 focus:border-white/30 focus:bg-black focus:outline-none focus:ring-1 focus:ring-white/20 transition-all"
+									className="block w-full bg-transparent text-right text-sm font-bold font-space text-white placeholder-neutral-600 outline-none"
 									placeholder="0.00"
 									aria-label="Take profit price"
 								/>
@@ -524,7 +524,7 @@ export default function TradingModal() {
 						</div>
 						<div className="space-y-1">
 							<label htmlFor="stop-loss" className="text-[9px] text-zinc-500 uppercase tracking-wide">Stop Loss</label>
-							<div className="flex h-9 w-full items-center justify-end rounded-[1px] bg-black border border-white/10 px-2 focus-within:border-white/20 transition-colors">
+							<div className="flex h-9 w-full items-center justify-end rounded-[1px] bg-[#08080a] border border-white/10 px-2 focus-within:border-white/20 transition-colors">
 								<input
 									id="stop-loss"
 									pattern="^[0-9]*[.,]?[0-9]*$"
