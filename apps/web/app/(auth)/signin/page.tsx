@@ -43,7 +43,7 @@ export default function SigninPage() {
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#B19EEF]/[0.03] blur-[120px]" />
 
       <div className="relative z-10 min-h-screen flex flex-col">
-        <header className="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+        <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex items-center justify-between">
           <Link
             href="/"
             className="signin-header group flex items-center gap-2 text-neutral-500 hover:text-white transition-colors duration-300"
@@ -62,9 +62,9 @@ export default function SigninPage() {
           </Link>
         </header>
 
-        <main className="flex-1 flex items-center justify-center px-6 py-12">
+        <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
           <div className="w-full max-w-md">
-            <div className="text-center mb-10">
+            <div className="text-center mb-6 sm:mb-10">
               <div className="signin-content flex items-center justify-center gap-3 mb-6">
                 <div className="w-8 h-px bg-[#B19EEF]/40" />
                 <span className="text-[11px] text-[#B19EEF] font-space tracking-[0.2em] uppercase">
@@ -73,7 +73,7 @@ export default function SigninPage() {
                 <div className="w-8 h-px bg-[#B19EEF]/40" />
               </div>
 
-              <h1 className="signin-content text-[clamp(2rem,5vw,3rem)] font-bold leading-[1.1] tracking-[-0.03em] text-white font-space mb-4">
+              <h1 className="signin-content text-[clamp(1.5rem,5vw,3rem)] font-bold leading-[1.1] tracking-[-0.03em] text-white font-space mb-3 sm:mb-4">
                 Sign in to{" "}
                 <span className="inline-flex items-center gap-2 bg-[#B19EEF]/15 border border-[#B19EEF]/30 px-3 py-1 align-middle mx-1">
                   <span className="text-[#B19EEF] text-[0.5em] font-bold leading-none">✱</span>
@@ -92,18 +92,18 @@ export default function SigninPage() {
               <SignInForm />
             </div>
 
-            <div className="signin-content mt-8 text-center">
+            {/* <div className="signin-content mt-8 text-center">
               <p className="text-neutral-600 text-[12px] font-ibm-plex-sans">
                 Don&apos;t have an account?{" "}
                 <Link href="/signin" className="text-[#B19EEF] hover:text-white transition-colors duration-300">
                   Create one
                 </Link>
               </p>
-            </div>
+            </div> */}
           </div>
         </main>
 
-        <footer className="signin-footer w-full max-w-7xl mx-auto px-6 py-6">
+        <footer className="signin-footer w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           <div className="flex items-center justify-center gap-6 text-neutral-600 text-[11px] font-ibm-plex-sans">
             <span>© {new Date().getFullYear()} AXIS Protocol</span>
             <span className="w-px h-3 bg-white/10" />

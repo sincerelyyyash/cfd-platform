@@ -47,7 +47,7 @@ export function SignInForm() {
   }
 
   return (
-    <div className="border border-white/[0.06] bg-white/[0.02] p-8">
+    <div className="border border-white/[0.06] bg-white/[0.02] p-5 sm:p-8">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label
