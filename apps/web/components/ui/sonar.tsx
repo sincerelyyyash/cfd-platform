@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { IconCheck, IconX, IconInfoCircle } from "@tabler/icons-react";
 
 type SonarType = "info" | "success" | "error";
 
@@ -55,37 +56,48 @@ export function Sonar() {
   }, [messages]);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 flex items-start justify-end p-4">
+    <div className="pointer-events-none fixed inset-0 z-[100] flex items-start justify-end p-4 sm:p-6">
       <div className="flex w-full max-w-sm flex-col gap-2">
         {messages.map((m) => {
-          const color =
+          const borderColor =
             m.type === "success"
-              ? "bg-emerald-500/10 text-emerald-200 border-emerald-600/40"
+              ? "border-l-emerald-500"
               : m.type === "error"
-              ? "bg-rose-500/10 text-rose-200 border-rose-600/40"
-              : "bg-neutral-800/70 text-zinc-200 border-neutral-700/60";
+                ? "border-l-rose-500"
+                : "border-l-blue-500";
+
+          const icon =
+            m.type === "success" ? (
+              <IconCheck className="h-5 w-5 text-emerald-500" />
+            ) : m.type === "error" ? (
+              <IconX className="h-5 w-5 text-rose-500" />
+            ) : (
+              <IconInfoCircle className="h-5 w-5 text-blue-500" />
+            );
+
           return (
             <div
               key={m.id}
               role="status"
               aria-live="polite"
-              className={`pointer-events-auto overflow-hidden rounded-xl border ${color} shadow-[0_8px_24px_rgba(0,0,0,0.6)] backdrop-blur-sm`}
+              className={`pointer-events-auto relative overflow-hidden rounded-[2px] border border-white/5 border-l-[3px] bg-[#09090b] shadow-2xl shadow-black/50 backdrop-blur-md ${borderColor}`}
             >
-              <div className="flex items-start gap-3 p-3">
-                <div className="flex-1">
-                  <div className="text-sm font-semibold">{m.title}</div>
+              <div className="flex items-start gap-3 p-4">
+                <div className="mt-0.5 shrink-0">{icon}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-bold text-zinc-100 font-space tracking-tight">{m.title}</div>
                   {m.description ? (
-                    <div className="mt-0.5 text-xs text-zinc-400">{m.description}</div>
+                    <div className="mt-1 text-xs text-zinc-400 font-medium leading-relaxed">{m.description}</div>
                   ) : null}
                 </div>
                 <button
                   aria-label="Dismiss notification"
-                  className="rounded-md p-1 text-xs text-zinc-400 hover:bg-white/5 hover:text-zinc-200"
+                  className="rounded-sm p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors"
                   onClick={() =>
                     setMessages((prev) => prev.filter((x) => x.id !== m.id))
                   }
                 >
-                  ✕
+                  <IconX className="h-4 w-4" />
                 </button>
               </div>
             </div>
