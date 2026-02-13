@@ -251,40 +251,39 @@ export default function TradingModal() {
 
 	return (
 		<div className="flex min-h-0 lg:h-screen flex-col bg-[#08080a] border-l border-white/5 p-4 pb-16 lg:pb-4 overflow-y-auto font-ibm-plex-sans">
-			<div className="rounded-[1px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
-				<div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
-				<div className="flex items-center gap-3 relative z-10">
-					<div className="relative h-8 w-8 overflow-hidden rounded-full bg-white/5 border border-white/10 p-0.5 shrink-0">
-						<Image src={logo} alt={selectedAsset} fill className="object-cover" />
-					</div>
-					<h2 className="text-lg font-bold tracking-tight text-white font-space">
-						{selectedAsset}
-					</h2>
+			{/* Asset Header */}
+			<div className="flex items-center gap-3 px-1 mb-3">
+				<div className="relative h-8 w-8 overflow-hidden rounded-full bg-white/5 border border-white/10 p-0.5 shrink-0">
+					<Image src={logo} alt={selectedAsset} fill className="object-cover" />
 				</div>
+				<h2 className="text-lg font-bold tracking-tight text-white font-space">
+					{selectedAsset}
+				</h2>
+			</div>
 
-				<div className="mt-3 flex items-center justify-end gap-4 relative z-10">
-					<div
-						className="flex flex-col items-end gap-0.5"
-						aria-label={`Bid price: ${(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}`}
-					>
-						<span className="text-[9px] font-bold uppercase tracking-wider text-emerald-500/80 font-space">
-							Bid
-						</span>
-						<span className="text-xs font-bold font-mono tabular-nums text-zinc-100">
-							{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
-						</span>
-					</div>
-					<div
-						className="flex flex-col items-end gap-0.5"
-						aria-label={`Ask price: ${(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}`}
-					>
-						<span className="text-[9px] font-bold uppercase tracking-wider text-rose-500/80 font-space">
-							Ask
-						</span>
-						<span className="text-xs font-bold font-mono tabular-nums text-zinc-100">
-							{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
-						</span>
-					</div>
+			{/* Bid / Ask Row */}
+			<div className="grid grid-cols-2 gap-2">
+				<div
+					className="rounded-[1px] border border-white/5 bg-[#08080a] px-3 py-2.5"
+					aria-label={`Bid price: ${(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}`}
+				>
+					<span className="block text-[9px] font-bold uppercase tracking-wider text-emerald-500/80 font-space mb-1">
+						Bid
+					</span>
+					<span className="block text-sm font-bold font-mono tabular-nums text-zinc-100">
+						{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
+					</span>
+				</div>
+				<div
+					className="rounded-[1px] border border-white/5 bg-[#08080a] px-3 py-2.5"
+					aria-label={`Ask price: ${(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}`}
+				>
+					<span className="block text-[9px] font-bold uppercase tracking-wider text-rose-500/80 font-space mb-1">
+						Ask
+					</span>
+					<span className="block text-sm font-bold font-mono tabular-nums text-zinc-100">
+						{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
+					</span>
 				</div>
 			</div>
 
