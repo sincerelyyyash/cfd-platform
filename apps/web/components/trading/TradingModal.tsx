@@ -262,26 +262,26 @@ export default function TradingModal() {
 					</h2>
 				</div>
 
-				<div className="mt-3 flex flex-col gap-1.5 relative z-10">
+				<div className="mt-3 flex items-center justify-end gap-4 relative z-10">
 					<div
-						className="flex items-center justify-between rounded-[1px] bg-emerald-500/[0.04] border border-emerald-500/10 px-3 py-1.5"
+						className="flex flex-col items-end gap-0.5"
 						aria-label={`Bid price: ${(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}`}
 					>
-						<span className="text-[9px] font-bold uppercase tracking-wider text-emerald-500/70 font-space">
+						<span className="text-[9px] font-bold uppercase tracking-wider text-emerald-500/80 font-space">
 							Bid
 						</span>
-						<span className="text-xs font-bold font-mono tabular-nums text-emerald-400">
+						<span className="text-xs font-bold font-mono tabular-nums text-zinc-100">
 							{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
 						</span>
 					</div>
 					<div
-						className="flex items-center justify-between rounded-[1px] bg-rose-500/[0.04] border border-rose-500/10 px-3 py-1.5"
+						className="flex flex-col items-end gap-0.5"
 						aria-label={`Ask price: ${(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}`}
 					>
-						<span className="text-[9px] font-bold uppercase tracking-wider text-rose-500/70 font-space">
+						<span className="text-[9px] font-bold uppercase tracking-wider text-rose-500/80 font-space">
 							Ask
 						</span>
-						<span className="text-xs font-bold font-mono tabular-nums text-rose-400">
+						<span className="text-xs font-bold font-mono tabular-nums text-zinc-100">
 							{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
 						</span>
 					</div>
