@@ -251,25 +251,40 @@ export default function TradingModal() {
 
 	return (
 		<div className="flex min-h-0 lg:h-screen flex-col bg-[#08080a] border-l border-white/5 p-4 pb-16 lg:pb-4 overflow-y-auto font-ibm-plex-sans">
-			<div className="flex items-center justify-between rounded-[1px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
+			<div className="rounded-[1px] bg-white/[0.02] border border-white/5 px-4 py-3 text-zinc-100 shadow-xl relative overflow-hidden">
 				<div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
-				<div className="flex flex-row items-center gap-3">
-					<div className="relative h-8 w-8 overflow-hidden rounded-full bg-white/5 border border-white/10 p-0.5">
+				<div className="flex items-center gap-3 relative z-10">
+					<div className="relative h-8 w-8 overflow-hidden rounded-full bg-white/5 border border-white/10 p-0.5 shrink-0">
 						<Image src={logo} alt={selectedAsset} fill className="object-cover" />
 					</div>
-					<div>
-						<h2 className="text-lg font-bold tracking-tight text-white font-space">
-							{selectedAsset}
-						</h2>
-					</div>
+					<h2 className="text-lg font-bold tracking-tight text-white font-space">
+						{selectedAsset}
+					</h2>
 				</div>
-				<div className="flex items-center gap-2 text-xs relative z-10 font-mono">
-					<span className="rounded-[1px] bg-white/5 border border-white/10 px-2 py-0.5 font-medium text-zinc-300 tabular-nums">
-						{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
-					</span>
-					<span className="rounded-[1px] bg-white/5 border border-white/10 px-2 py-0.5 font-medium text-zinc-300 tabular-nums">
-						{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
-					</span>
+
+				<div className="mt-3 flex flex-col gap-1.5 relative z-10">
+					<div
+						className="flex items-center justify-between rounded-[1px] bg-emerald-500/[0.04] border border-emerald-500/10 px-3 py-1.5"
+						aria-label={`Bid price: ${(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}`}
+					>
+						<span className="text-[9px] font-bold uppercase tracking-wider text-emerald-500/70 font-space">
+							Bid
+						</span>
+						<span className="text-xs font-bold font-mono tabular-nums text-emerald-400">
+							{(trade.bid / 10 ** trade.decimals).toFixed(trade.decimals)}
+						</span>
+					</div>
+					<div
+						className="flex items-center justify-between rounded-[1px] bg-rose-500/[0.04] border border-rose-500/10 px-3 py-1.5"
+						aria-label={`Ask price: ${(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}`}
+					>
+						<span className="text-[9px] font-bold uppercase tracking-wider text-rose-500/70 font-space">
+							Ask
+						</span>
+						<span className="text-xs font-bold font-mono tabular-nums text-rose-400">
+							{(trade.ask / 10 ** trade.decimals).toFixed(trade.decimals)}
+						</span>
+					</div>
 				</div>
 			</div>
 
@@ -315,7 +330,7 @@ export default function TradingModal() {
 						<input
 							value={displayedPrice ? displayedPrice.toFixed(priceInfo.decimals) : "0"}
 							readOnly
-							className="w-full bg-transparent text-lg font-space text-zinc-100 outline-none font-space"
+							className="w-full bg-transparent text-lg font-space text-zinc-100 outline-none"
 							aria-label="Display price"
 						/>
 						<span className="text-zinc-600 text-xs font-mono">USD</span>
@@ -446,7 +461,7 @@ export default function TradingModal() {
 			<div className="mt-4">
 				<div className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1.5 font-space">Order Value</div>
 				<div className="flex h-10 w-full items-center justify-between rounded-[1px] bg-[#08080a] border border-white/5 px-3">
-					<div className="text-sm font-space text-zinc-300 tabular-nums font-space">{orderValue || 0}</div>
+					<div className="text-sm font-space text-zinc-300 tabular-nums">{orderValue || 0}</div>
 					<span className="text-zinc-600 text-xs font-mono">USD</span>
 				</div>
 			</div>

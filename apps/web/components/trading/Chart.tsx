@@ -4,7 +4,16 @@ import CandlestickChart from "./TradingViewChart";
 import { CandlestickData } from "lightweight-charts";
 import { useTradeStore } from "@/store/useTradeStore";
 
-function useIsMobile(breakpoint = 1024) {
+type Timeframe = "1m" | "5m" | "15m" | "1h" | "4h" | "1d";
+
+const TIMEFRAMES: Timeframe[] = ["1m", "5m", "15m", "1h", "4h", "1d"];
+
+type ChartsProps = {
+	timeframe: Timeframe;
+	onTimeframeChange: (tf: Timeframe) => void;
+};
+
+const useIsMobile = (breakpoint = 1024) => {
 	const [isMobile, setIsMobile] = useState(false);
 	const [mobileHeight, setMobileHeight] = useState(300);
 	useEffect(() => {
@@ -24,18 +33,22 @@ function useIsMobile(breakpoint = 1024) {
 		};
 	}, [breakpoint]);
 	return { isMobile, mobileHeight };
-}
+};
 
-export default function Charts() {
+export default function Charts({ timeframe, onTimeframeChange }: ChartsProps) {
 	const [data, setData] = useState<CandlestickData[]>([]);
 	const selectedAsset = useTradeStore((s) => s.selectedAsset);
 	const { isMobile, mobileHeight } = useIsMobile();
-	const chartHeight = isMobile ? mobileHeight : 550;
+	const chartHeight = isMobile ? mobileHeight - 40 : 510;
 
 	useEffect(() => {
 		async function fetchData() {
 			try {
-				const params = new URLSearchParams({ asset: selectedAsset, ts: "1m", limit: "500" });
+				const params = new URLSearchParams({
+					asset: selectedAsset,
+					ts: timeframe,
+					limit: "500",
+				});
 
 				const url = `/api/v1/candles?${params.toString()}`;
 				const res = await fetch(url, { cache: "no-store" });
@@ -59,13 +72,37 @@ export default function Charts() {
 		}
 
 		fetchData();
-	}, [selectedAsset]);
+	}, [selectedAsset, timeframe]);
 
 	return (
-		<div className="w-full h-full bg-[#08080a] border border-white/5 rounded-[1px]">
-			<CandlestickChart data={data} height={chartHeight} />
+		<div className="flex h-full w-full flex-col bg-[#08080a] border border-white/5 rounded-[1px]">
+			<div
+				className="flex items-center gap-1 px-3 py-2 border-b border-white/5 overflow-x-auto scrollbar-none shrink-0"
+				role="group"
+				aria-label="Chart timeframe selector"
+			>
+				{TIMEFRAMES.map((tf) => {
+					const isActive = tf === timeframe;
+					return (
+						<button
+							key={tf}
+							onClick={() => onTimeframeChange(tf)}
+							aria-pressed={isActive}
+							className={
+								"px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider font-mono rounded-[1px] border transition-all duration-200 whitespace-nowrap " +
+								(isActive
+									? "bg-white/10 text-white border-white/20 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
+									: "bg-transparent text-zinc-500 border-transparent hover:bg-white/[0.04] hover:text-zinc-300")
+							}
+						>
+							{tf}
+						</button>
+					);
+				})}
+			</div>
+			<div className="flex-1 min-h-0">
+				<CandlestickChart data={data} height={chartHeight} timeframe={timeframe} />
+			</div>
 		</div>
 	);
 }
-
-

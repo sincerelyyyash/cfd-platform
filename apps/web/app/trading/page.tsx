@@ -14,9 +14,11 @@ import {
 export const dynamic = 'force-dynamic';
 
 type MobileTab = "chart" | "trade" | "markets" | "positions";
+type Timeframe = "1m" | "5m" | "15m" | "1h" | "4h" | "1d";
 
 export default function TradingPage() {
   const [mobileTab, setMobileTab] = useState<MobileTab>("chart");
+  const [timeframe, setTimeframe] = useState<Timeframe>("1m");
 
   return (
     <div className="h-screen bg-[#08080a]">
@@ -35,7 +37,7 @@ export default function TradingPage() {
               <ResizablePanelGroup direction="vertical" id="charts-positions-group">
                 <ResizablePanel defaultSize={60}>
                   <div className="min-w-0">
-                    <Charts />
+                    <Charts timeframe={timeframe} onTimeframeChange={setTimeframe} />
                   </div>
                 </ResizablePanel>
                 <ResizableHandle />
@@ -51,7 +53,7 @@ export default function TradingPage() {
 
       <div className="lg:hidden flex flex-col h-[calc(100vh-3.5rem)] pb-14">
         <div className="flex-1 min-h-0 overflow-y-auto">
-          {mobileTab === "chart" && <Charts />}
+          {mobileTab === "chart" && <Charts timeframe={timeframe} onTimeframeChange={setTimeframe} />}
           {mobileTab === "trade" && <TradingModal />}
           {mobileTab === "markets" && <AssetSidebar />}
           {mobileTab === "positions" && <TradePositions />}

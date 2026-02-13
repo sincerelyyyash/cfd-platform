@@ -4,14 +4,27 @@ import type { IChartApi, ISeriesApi, CandlestickData } from "lightweight-charts"
 import { useTradeStore } from "@/store/useTradeStore";
 type TradeStoreState = ReturnType<typeof useTradeStore.getState>;
 
+type Timeframe = "1m" | "5m" | "15m" | "1h" | "4h" | "1d";
+
+const BUCKET_SECONDS: Record<Timeframe, number> = {
+	"1m": 60,
+	"5m": 300,
+	"15m": 900,
+	"1h": 3600,
+	"4h": 14400,
+	"1d": 86400,
+};
+
 type CandlestickChartProps = {
 	data: CandlestickData[];
 	height?: number;
+	timeframe?: Timeframe;
 };
 
 const CandlestickChart: React.FC<CandlestickChartProps> = ({
 	data,
 	height = 500,
+	timeframe = "1m",
 }) => {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const chartRef = useRef<IChartApi | null>(null);
@@ -19,6 +32,12 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
 	const [isReady, setIsReady] = useState(false);
 
 	const lastBarRef = useRef<CandlestickData | null>(null);
+	const timeframeRef = useRef<Timeframe>(timeframe);
+
+
+	useEffect(() => {
+		timeframeRef.current = timeframe;
+	}, [timeframe]);
 
 	const inferDecimals = (value: number): number => {
 		if (!Number.isFinite(value)) return 2;
@@ -206,13 +225,14 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
 					if (ratio > 100 || ratio < 0.01) return;
 				}
 
+				const bucketSize = BUCKET_SECONDS[timeframeRef.current] ?? 60;
 				const nowSec = Math.floor(Date.now() / 1000);
-				const currentMinute = Math.floor(nowSec / 60) * 60;
-				const isNewBar = typeof last.time === "number" && last.time < currentMinute;
+				const currentBucket = Math.floor(nowSec / bucketSize) * bucketSize;
+				const isNewBar = typeof last.time === "number" && last.time < currentBucket;
 
 				const updated: CandlestickData = (isNewBar
 					? {
-						time: currentMinute as unknown as number,
+						time: currentBucket as unknown as number,
 						open: price as number,
 						high: price as number,
 						low: price as number,
