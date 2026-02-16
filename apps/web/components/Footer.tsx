@@ -154,6 +154,16 @@ export const Footer = () => {
           <p className="text-neutral-600 text-[12px] font-ibm-plex-sans">
             © {new Date().getFullYear()} AXIS Protocol. All rights reserved.
           </p>
+          <p className="text-neutral-600 text-[12px] font-ibm-plex-sans">
+            Designed and Developed by{" "}
+            <Link
+              href="https://sincerelyyyash.com"
+              target="_blank"
+              className="hover:text-[#B19EEF] transition-colors duration-200"
+            >
+              Yash Thakur
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
