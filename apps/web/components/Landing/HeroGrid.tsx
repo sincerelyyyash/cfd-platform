@@ -15,11 +15,11 @@ export const HeroGrid = () => {
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
         tl.from(".grid-card", {
-            y: 30,
+            y: 20,
             opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            delay: 0.2
+            duration: 0.5,
+            stagger: 0.05,
+            delay: 0.1
         });
 
         pingTweenRef.current = gsap.to(".ping-dot", {

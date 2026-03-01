@@ -21,12 +21,12 @@ export const FeatureSection = () => {
     () => {
       gsap.fromTo(
         ".feature-headline-line",
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          duration: 1,
-          stagger: 0.12,
+          duration: 0.6,
+          stagger: 0.08,
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".feature-headline",
@@ -37,12 +37,12 @@ export const FeatureSection = () => {
 
       gsap.fromTo(
         ".feature-card",
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.9,
-          stagger: 0.12,
+          duration: 0.6,
+          stagger: 0.08,
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".feature-cards-grid",

@@ -20,53 +20,53 @@ export const HeroSection = () => {
 
   useGSAP(() => {
     const tl = gsap.timeline({
-      defaults: { ease: "power4.out", duration: 1 },
+      defaults: { ease: "power4.out", duration: 0.7 },
     });
 
     tl.fromTo(
       ".hero-sphere",
       { opacity: 0, scale: 0.85 },
-      { opacity: 1, scale: 1, duration: 1.8, ease: "expo.out" }
+      { opacity: 1, scale: 1, duration: 1.2, ease: "expo.out" }
     )
       .fromTo(
         ".hero-wordmark",
         { opacity: 0, y: -10 },
-        { opacity: 1, y: 0, duration: 0.6 },
-        "-=1.4"
+        { opacity: 1, y: 0, duration: 0.4 },
+        "-=1.0"
       )
       .fromTo(
         ".hero-tag",
         { opacity: 0, x: -16 },
-        { opacity: 1, x: 0, duration: 0.7 },
-        "-=1.0"
+        { opacity: 1, x: 0, duration: 0.5 },
+        "-=0.8"
       )
       .fromTo(
         ".hero-line",
         { yPercent: 120, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.08 },
-        "-=0.8"
+        { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.05 },
+        "-=0.6"
       )
       .fromTo(
         ".hero-rule",
         { scaleX: 0 },
-        { scaleX: 1, duration: 0.8, ease: "power2.inOut" },
-        "-=0.5"
+        { scaleX: 1, duration: 0.6, ease: "power2.inOut" },
+        "-=0.4"
       )
       .to(
         ".hero-sub",
-        { opacity: 1, y: 0, duration: 0.8 },
-        "-=0.4"
+        { opacity: 1, y: 0, duration: 0.5 },
+        "-=0.3"
       )
       .to(
         ".hero-cta",
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 },
-        "-=0.4"
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 },
+        "-=0.3"
       )
       .fromTo(
         ".hero-nav-item",
         { opacity: 0, x: 20 },
-        { opacity: 1, x: 0, duration: 0.5, stagger: 0.06 },
-        "-=0.6"
+        { opacity: 1, x: 0, duration: 0.4, stagger: 0.04 },
+        "-=0.4"
       );
   }, { scope: containerRef });
 

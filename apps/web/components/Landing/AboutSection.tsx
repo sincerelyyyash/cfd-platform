@@ -40,11 +40,11 @@ export const AboutSection = () => {
         () => {
             gsap.fromTo(
                 ".about-header",
-                { opacity: 0, y: 40 },
+                { opacity: 0, y: 30 },
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 1,
+                    duration: 0.6,
                     ease: "power3.out",
                     scrollTrigger: {
                         trigger: sectionRef.current,
@@ -55,11 +55,11 @@ export const AboutSection = () => {
 
             gsap.fromTo(
                 ".about-diagram",
-                { opacity: 0, scale: 0.9 },
+                { opacity: 0, scale: 0.95 },
                 {
                     opacity: 1,
                     scale: 1,
-                    duration: 1,
+                    duration: 0.6,
                     ease: "power2.out",
                     scrollTrigger: {
                         trigger: ".about-diagram",
@@ -70,12 +70,12 @@ export const AboutSection = () => {
 
             gsap.fromTo(
                 ".about-step-left",
-                { opacity: 0, x: -30 },
+                { opacity: 0, x: -20 },
                 {
                     opacity: 1,
                     x: 0,
-                    duration: 0.8,
-                    stagger: 0.15,
+                    duration: 0.5,
+                    stagger: 0.08,
                     ease: "power2.out",
                     scrollTrigger: {
                         trigger: ".about-diagram",
@@ -86,12 +86,12 @@ export const AboutSection = () => {
 
             gsap.fromTo(
                 ".about-step-right",
-                { opacity: 0, x: 30 },
+                { opacity: 0, x: 20 },
                 {
                     opacity: 1,
                     x: 0,
-                    duration: 0.8,
-                    stagger: 0.15,
+                    duration: 0.5,
+                    stagger: 0.08,
                     ease: "power2.out",
                     scrollTrigger: {
                         trigger: ".about-diagram",
