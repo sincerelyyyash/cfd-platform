@@ -476,12 +476,13 @@ const TradePositions = () => {
 										</div>
 									</div>
 								))}
-							</div>
-					)}
+							</>
+						)}
 					</div>
 				</div>
 			</div>
-			);
+		</div>
+	);
 };
 
-			export default TradePositions;
+export default TradePositions;
