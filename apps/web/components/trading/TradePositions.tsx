@@ -331,128 +331,157 @@ const TradePositions = () => {
 			</div>
 			<div className="flex-1 overflow-auto">
 				<div role="list" aria-label={`${activeTab} positions`} className="w-full overflow-x-auto">
-					{rows.length === 0 ? (
-						<div className="flex items-center justify-center py-12 text-neutral-600 text-xs font-mono uppercase tracking-wider">
-							No {activeTab.toLowerCase()} positions
+					<div className="min-w-[600px]">
+						<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-space font-bold sticky top-0 bg-[#08080a] z-10">
+							<div className="col-span-3">Asset</div>
+							<div className="col-span-2 text-right">Size</div>
+							<div className="col-span-2 text-right">Entry</div>
+							<div className="col-span-2 text-right">Mark</div>
+							<div className="col-span-2 text-right">PnL</div>
+							<div className="col-span-1"></div>
 						</div>
-					) : (
-						<div className="min-w-[600px]">
-							<div className="grid grid-cols-12 px-4 py-2 border-b border-white/5 text-[9px] uppercase tracking-wider text-neutral-500 font-space font-bold sticky top-0 bg-[#08080a] z-10">
-								<div className="col-span-3">Asset</div>
-								<div className="col-span-2 text-right">Size</div>
-								<div className="col-span-2 text-right">Entry</div>
-								<div className="col-span-2 text-right">Mark</div>
-								<div className="col-span-2 text-right">PnL</div>
-								<div className="col-span-1"></div>
+
+						{loading && rows.length === 0 ? (
+							<div className="w-full">
+								{[0, 1, 2, 3].map((i) => (
+									<div key={`skeleton-${i}`} className="group grid grid-cols-12 items-center px-4 py-3 border-b border-white/[0.02] animate-pulse">
+										<div className="col-span-3 flex items-center gap-3">
+											<div className="w-5 h-5 rounded-full bg-white/5 shrink-0" />
+											<div className="flex flex-col gap-1.5 w-full">
+												<div className="h-3 w-16 bg-white/5 rounded-[1px]" />
+												<div className="h-2 w-12 bg-white/5 rounded-[1px]" />
+											</div>
+										</div>
+										<div className="col-span-2 flex justify-end">
+											<div className="h-3.5 w-12 bg-white/5 rounded-[1px]" />
+										</div>
+										<div className="col-span-2 flex justify-end">
+											<div className="h-3.5 w-16 bg-white/5 rounded-[1px]" />
+										</div>
+										<div className="col-span-2 flex justify-end">
+											<div className="h-3.5 w-16 bg-white/5 rounded-[1px]" />
+										</div>
+										<div className="col-span-2 flex justify-end">
+											<div className="h-3.5 w-14 bg-white/5 rounded-[1px]" />
+										</div>
+										<div className="col-span-1" />
+									</div>
+								))}
 							</div>
-							{rows.map((row) => (
-								<div
-									key={row.id}
-									role="listitem"
-									className="group grid grid-cols-12 items-center px-4 py-3 border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors"
-								>
-									<div className="col-span-3 flex items-center gap-3">
-										{(() => {
-											// Convert asset from backend format (BTC) to frontend format (BTCUSDT)
-											const frontendAsset = `${row.asset}USDT`;
-											const logo = assetLogos[frontendAsset] || "/Bitcoin.png";
-											const shortName = row.asset.replace("USDT", "");
+						) : rows.length === 0 ? (
+							<div className="flex items-center justify-center py-12 text-neutral-600 text-xs font-mono uppercase tracking-wider">
+								No {activeTab.toLowerCase()} positions
+							</div>
+						) : (
+							<>
+								{rows.map((row) => (
+									<div
+										key={row.id}
+										role="listitem"
+										className="group grid grid-cols-12 items-center px-4 py-3 border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors"
+									>
+										<div className="col-span-3 flex items-center gap-3">
+											{(() => {
+												// Convert asset from backend format (BTC) to frontend format (BTCUSDT)
+												const frontendAsset = `${row.asset}USDT`;
+												const logo = assetLogos[frontendAsset] || "/Bitcoin.png";
+												const shortName = row.asset.replace("USDT", "");
 
-											return (
-												<>
-													<Image
-														src={logo}
-														alt={`${shortName} logo`}
-														width={20}
-														height={20}
-														className="rounded-full"
-													/>
-													<div className="flex flex-col">
-														<span className="text-sm font-bold tracking-tight text-white font-space">{row.asset}</span>
-														<span className={`text-[10px] uppercase tracking-wider font-bold ${row.type === 'long' ? 'text-emerald-500' : 'text-rose-500'}`}>{row.type} {row.leverage}x</span>
-													</div>
-												</>
-											);
-										})()}
-									</div>
-									<div className="col-span-2 text-right text-sm font-bold font-space text-neutral-400">
-										{row.quantity}
-									</div>
-									<div className="col-span-2 text-right text-sm font-bold font-space text-neutral-300">
-										{(row.entryPrice / PRICE_DECIMAL).toFixed(2)}
-									</div>
+												return (
+													<>
+														<Image
+															src={logo}
+															alt={`${shortName} logo`}
+															width={20}
+															height={20}
+															className="rounded-full"
+														/>
+														<div className="flex flex-col">
+															<span className="text-sm font-bold tracking-tight text-white font-space">{row.asset}</span>
+															<span className={`text-[10px] uppercase tracking-wider font-bold ${row.type === 'long' ? 'text-emerald-500' : 'text-rose-500'}`}>{row.type} {row.leverage}x</span>
+														</div>
+													</>
+												);
+											})()}
+										</div>
+										<div className="col-span-2 text-right text-sm font-bold font-space text-neutral-400">
+											{row.quantity}
+										</div>
+										<div className="col-span-2 text-right text-sm font-bold font-space text-neutral-300">
+											{(row.entryPrice / PRICE_DECIMAL).toFixed(2)}
+										</div>
 
-									<div className="col-span-2 text-right">
-										{activeTab === "Open" && (() => {
-											const frontendAsset = `${row.asset}USDT`;
-											const currentTrade = trades[frontendAsset];
-											const markPrice = row.type === "long" ? currentTrade?.bid : currentTrade?.ask;
+										<div className="col-span-2 text-right">
+											{activeTab === "Open" && (() => {
+												const frontendAsset = `${row.asset}USDT`;
+												const currentTrade = trades[frontendAsset];
+												const markPrice = row.type === "long" ? currentTrade?.bid : currentTrade?.ask;
 
-											if (!markPrice || !currentTrade) return <span className="text-sm font-space text-neutral-600">-</span>;
+												if (!markPrice || !currentTrade) return <span className="text-sm font-space text-neutral-600">-</span>;
 
-											return (
+												return (
+													<span className="text-sm font-bold font-space text-neutral-300">
+														{(markPrice / (10 ** currentTrade.decimals)).toFixed(2)}
+													</span>
+												)
+											})()}
+											{activeTab === "Closed" && typeof row.exitPrice === "number" && (
 												<span className="text-sm font-bold font-space text-neutral-300">
-													{(markPrice / (10 ** currentTrade.decimals)).toFixed(2)}
+													{(row.exitPrice / PRICE_DECIMAL).toFixed(2)}
 												</span>
-											)
-										})()}
-										{activeTab === "Closed" && typeof row.exitPrice === "number" && (
-											<span className="text-sm font-bold font-space text-neutral-300">
-												{(row.exitPrice / PRICE_DECIMAL).toFixed(2)}
-											</span>
-										)}
+											)}
+										</div>
+
+										<div className="col-span-2 text-right">
+											{activeTab === "Open" && (() => {
+												const realTimePnL = calculateRealTimePnL(row);
+												const displayPnL = realTimePnL !== null ? realTimePnL : (typeof row.pnL === "number" ? row.pnL / BALANCE_DECIMAL : null);
+
+												if (displayPnL === null) return <span className="text-sm font-space text-neutral-600">-</span>;
+
+												return (
+													<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
+														? "text-emerald-400"
+														: "text-rose-500"
+														}`}>
+														{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
+													</div>
+												);
+											})()}
+											{activeTab === "Closed" && typeof row.pnL === "number" && (() => {
+												const displayPnL = row.pnL / BALANCE_DECIMAL;
+												return (
+													<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
+														? "text-emerald-400"
+														: "text-rose-500"
+														}`}>
+														{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
+													</div>
+												);
+											})()}
+										</div>
+
+										<div className="col-span-1 flex justify-end">
+											{activeTab === "Open" && (
+												<Button
+													variant="ghost"
+													className="px-2 py-0.5 text-[9px] h-6 bg-white/5 hover:bg-white/10 text-white rounded-[1px] border border-white/5 uppercase tracking-wide hover:border-red-500/50 hover:text-red-400 transition-colors"
+													onClick={() => handleCloseOrder(row.id)}
+													disabled={closingOrderId === row.id}
+													aria-label={`Close order ${row.id}`}
+												>
+													{closingOrderId === row.id ? "..." : "Close"}
+												</Button>
+											)}
+										</div>
 									</div>
-
-									<div className="col-span-2 text-right">
-										{activeTab === "Open" && (() => {
-											const realTimePnL = calculateRealTimePnL(row);
-											const displayPnL = realTimePnL !== null ? realTimePnL : (typeof row.pnL === "number" ? row.pnL / BALANCE_DECIMAL : null);
-
-											if (displayPnL === null) return <span className="text-sm font-space text-neutral-600">-</span>;
-
-											return (
-												<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
-													? "text-emerald-400"
-													: "text-rose-500"
-													}`}>
-													{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
-												</div>
-											);
-										})()}
-										{activeTab === "Closed" && typeof row.pnL === "number" && (() => {
-											const displayPnL = row.pnL / BALANCE_DECIMAL;
-											return (
-												<div className={`text-sm font-bold font-space tracking-tight ${displayPnL >= 0
-													? "text-emerald-400"
-													: "text-rose-500"
-													}`}>
-													{displayPnL >= 0 ? "+" : ""}{displayPnL.toFixed(2)}
-												</div>
-											);
-										})()}
-									</div>
-
-									<div className="col-span-1 flex justify-end">
-										{activeTab === "Open" && (
-											<Button
-												variant="ghost"
-												className="px-2 py-0.5 text-[9px] h-6 bg-white/5 hover:bg-white/10 text-white rounded-[1px] border border-white/5 uppercase tracking-wide hover:border-red-500/50 hover:text-red-400 transition-colors"
-												onClick={() => handleCloseOrder(row.id)}
-												disabled={closingOrderId === row.id}
-												aria-label={`Close order ${row.id}`}
-											>
-												{closingOrderId === row.id ? "..." : "Close"}
-											</Button>
-										)}
-									</div>
-								</div>
-							))}
-						</div>
+								))}
+							</div>
 					)}
+					</div>
 				</div>
 			</div>
-		</div>
-	);
+			);
 };
 
-export default TradePositions;
+			export default TradePositions;

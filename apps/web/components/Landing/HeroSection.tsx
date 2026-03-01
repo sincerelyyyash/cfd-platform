@@ -80,7 +80,10 @@ export const HeroSection = () => {
         <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-[#B19EEF]/[0.03] blur-[120px] pointer-events-none" />
       </div>
 
-      <div className="hero-sphere absolute inset-0 z-[1] pointer-events-none">
+      <div
+        className="hero-sphere absolute inset-0 z-[1] pointer-events-none"
+        style={{ willChange: "transform, opacity" }}
+      >
         <div className="absolute top-[15%] right-0 w-full h-[60vh] opacity-40 md:opacity-100 md:top-20 md:w-[70%] lg:w-[65%] md:h-[calc(100%-5rem)]">
           <Sphere />
         </div>

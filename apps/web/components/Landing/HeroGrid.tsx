@@ -6,6 +6,10 @@ import { TradingCard } from './TradingCard';
 
 export const HeroGrid = () => {
     const containerRef = useRef<HTMLDivElement>(null);
+    // Store the infinite tween so we can kill it on component unmount.
+    // Without this the animation leaks beyond the component's lifecycle,
+    // consuming CPU/GPU even when the user scrolls off screen.
+    const pingTweenRef = useRef<gsap.core.Tween | null>(null);
 
     useGSAP(() => {
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -18,13 +22,18 @@ export const HeroGrid = () => {
             delay: 0.2
         });
 
-        gsap.to(".ping-dot", {
+        pingTweenRef.current = gsap.to(".ping-dot", {
             scale: 2,
             opacity: 0,
             duration: 1.5,
             repeat: -1,
             stagger: 0.5
         });
+
+        // Cleanup: kill the infinite tween when the component unmounts
+        return () => {
+            pingTweenRef.current?.kill();
+        };
 
     }, { scope: containerRef });
 

@@ -5,6 +5,10 @@ const apiBase =
   "http://localhost:8000";
 
 const nextConfig: NextConfig = {
+  // Ensure @react-three packages are transpiled — prevents ESM-in-CJS issues
+  // in production that can cause 3D assets to silently fail to load.
+  transpilePackages: ["three", "@react-three/fiber", "@react-three/drei"],
+  compress: true,
   async rewrites() {
     return [
       {

@@ -6,8 +6,6 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SystemArchitectureDiagram } from "./SystemArchitectureDiagram";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const ARCHITECTURE_STEPS = [
     {
         id: "01",

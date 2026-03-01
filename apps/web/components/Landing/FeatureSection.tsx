@@ -14,8 +14,6 @@ import {
   SmallButtonCard,
 } from "./features";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export const FeatureSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
 

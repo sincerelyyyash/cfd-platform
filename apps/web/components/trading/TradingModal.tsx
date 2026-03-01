@@ -240,8 +240,81 @@ export default function TradingModal() {
 	const trade = trades[selectedAsset];
 	if (!trade) {
 		return (
-			<div className="flex flex-col p-4 border-l border-white/5 bg-[#08080a] min-h-0 lg:h-screen items-center justify-center text-zinc-400 font-ibm-plex-sans text-sm">
-				Waiting for {selectedAsset} data...
+			<div className="flex min-h-0 lg:h-screen flex-col bg-[#08080a] border-l border-white/5 p-4 pb-16 lg:pb-4 overflow-y-auto animate-pulse">
+				{/* Asset Header Skeleton */}
+				<div className="flex items-center gap-3 px-1 mb-3">
+					<div className="relative h-8 w-8 rounded-full bg-white/5 shrink-0" />
+					<div className="h-4 w-24 bg-white/5 rounded-[1px]" />
+				</div>
+
+				{/* Bid / Ask Row Skeleton */}
+				<div className="grid grid-cols-2 gap-2">
+					<div className="rounded-[1px] border border-white/5 bg-[#08080a] px-3 py-2.5 space-y-2">
+						<div className="h-2 w-8 bg-white/5 rounded-[1px]" />
+						<div className="h-4 w-16 bg-white/5 rounded-[1px]" />
+					</div>
+					<div className="rounded-[1px] border border-white/5 bg-[#08080a] px-3 py-2.5 space-y-2">
+						<div className="h-2 w-8 bg-white/5 rounded-[1px]" />
+						<div className="h-4 w-16 bg-white/5 rounded-[1px]" />
+					</div>
+				</div>
+
+				{/* Buy/Sell Tabs Skeleton */}
+				<div className="mt-4 w-full rounded-[1px] bg-[#08080a] border border-white/5 p-4">
+					<div className="flex w-full rounded-[1px] bg-[#08080a] border border-white/5 p-[2px] gap-1 h-9">
+						<div className="flex-1 bg-white/5 rounded-[1px]" />
+						<div className="flex-1" />
+					</div>
+
+					{/* Market Price Skeleton */}
+					<div className="mt-4 space-y-2">
+						<div className="flex justify-between">
+							<div className="h-2 w-16 bg-white/5 rounded-[1px]" />
+							<div className="h-2 w-12 bg-white/5 rounded-[1px]" />
+						</div>
+						<div className="h-10 w-full bg-white/5 rounded-[1px] border border-white/5" />
+					</div>
+
+					{/* Quantity Skeleton */}
+					<div className="mt-4 space-y-2">
+						<div className="h-2 w-16 bg-white/5 rounded-[1px]" />
+						<div className="h-10 w-full bg-white/5 rounded-[1px] border border-white/5" />
+					</div>
+
+					{/* Amount Slider Skeleton */}
+					<div className="mt-4 space-y-3">
+						<div className="flex justify-between">
+							<div className="h-2 w-12 bg-white/5 rounded-[1px]" />
+							<div className="h-2 w-8 bg-white/5 rounded-[1px]" />
+						</div>
+						<div className="h-1 w-full bg-white/5 rounded-[1px]" />
+						<div className="flex gap-1 h-6 pt-1">
+							{[1, 2, 3, 4].map(i => <div key={i} className="flex-1 bg-white/5 rounded-[1px]" />)}
+						</div>
+					</div>
+				</div>
+
+				{/* Order Value Skeleton */}
+				<div className="mt-4 space-y-2">
+					<div className="h-2 w-20 bg-white/5 rounded-[1px]" />
+					<div className="h-10 w-full bg-white/5 rounded-[1px] border border-white/5" />
+				</div>
+
+				{/* Leverage Skeleton */}
+				<div className="mt-4 rounded-[1px] bg-[#08080a] border border-white/5 p-3 space-y-3">
+					<div className="flex justify-between">
+						<div className="h-2 w-16 bg-white/5 rounded-[1px]" />
+						<div className="h-2 w-6 bg-white/5 rounded-[1px]" />
+					</div>
+					<div className="flex gap-1 h-8">
+						{[1, 2, 3, 4, 5].map(i => <div key={i} className="flex-1 bg-white/5 rounded-[1px]" />)}
+					</div>
+				</div>
+
+				{/* Submit Button Skeleton */}
+				<div className="mt-auto pt-4">
+					<div className="h-12 w-full bg-white/5 rounded-[1px] border border-white/5" />
+				</div>
 			</div>
 		);
 	}
